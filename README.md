@@ -30,7 +30,7 @@ Paso 6: Esperar a que te genere tu URL.
 ## Funcionalidades de la aplicación ##
 1. Venta\Consulta de productos.
 2. Registro de las entradas o salidas de dinero.
-3. Inventario de productos.  
+3. Inventario de productos.
 
 El dueño podrá ver el inventario de los productos en venta y revisar el estado de los pedidos realizados.
 Mientras que el cliente podrá ver el catálogo disponible, ya sea de aceites, refacciones, accesorios, etc., junto con la disponibilidad de cada uno. Además, podrá realizar compras en línea, pero deberá registrarse con una cuenta de correo y una contraseña. Posteriormente, tendrá que ingresar una dirección de entrega para que le hagan llegar sus artículos.
@@ -40,3 +40,4 @@ Ingresará a una ventana en la cual podrá ver el inventario de los productos di
 
 Cliente:
 Ingresará a la página principal para dirigirse al apartado de tienda. En la tienda podrá ver el catálogo de los productos disponibles y tendrá la opción de comprarlos. Al momento de seleccionar un producto, el sistema detectará si el usuario tiene una sesión activa; en caso de no ser así, será redirigido a la ventana de registro. Ahí se le pedirá una dirección de correo y una contraseña y, posteriormente, una dirección de envío para poder mandar sus artículos.
+
