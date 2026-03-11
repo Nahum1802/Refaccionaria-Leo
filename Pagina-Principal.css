@@ -1,0 +1,227 @@
+/* 1. VARIABLES CSS */
+:root {
+    --primario: #111827; 
+    --secundario: #2563EB; 
+    --acento: #DC2626; 
+    --fondo: #F8FAFC; 
+    --texto-principal: #475569; 
+    --texto-claro: #F1F5F9;
+    --blanco: #FFFFFF;
+    --sombra: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* 2. RESET Y TIPOGRAFÍA */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--fondo);
+    color: var(--texto-principal);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+a { text-decoration: none; }
+ul { list-style: none; }
+img { max-width: 100%; height: auto; display: block; border-radius: 8px; }
+
+/* 3. NAVEGACIÓN */
+.header {
+    background-color: var(--blanco);
+    box-shadow: var(--sombra);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    padding: 1rem 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--primario);
+    letter-spacing: -0.5px;
+}
+
+.logo span { color: var(--acento); }
+
+.nav-links {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.nav-links a {
+    color: var(--primario);
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover { color: var(--secundario); }
+
+.btn-urgencia {
+    background-color: var(--acento);
+    color: var(--blanco) !important;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    transition: background 0.3s ease;
+}
+
+.btn-urgencia:hover { background-color: #B91C1C; }
+
+/* 4. HERO SECTION */
+.hero {
+    background: linear-gradient(rgba(17, 24, 39, 0.8), rgba(17, 24, 39, 0.8)), 
+                url('https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?q=80&w=1920&auto=format&fit=crop') center/cover no-repeat;
+    min-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0 20px;
+    color: var(--texto-claro);
+}
+
+.hero h1 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    color: var(--blanco);
+}
+
+.hero p {
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin-bottom: 2rem;
+}
+
+.btn-principal {
+    background-color: var(--secundario);
+    color: var(--blanco);
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 6px;
+    transition: transform 0.2s ease, background 0.3s ease;
+}
+
+.btn-principal:hover {
+    background-color: #1D4ED8;
+    transform: translateY(-3px);
+}
+
+/* 5. SECCIONES GENERALES */
+section { padding: 5rem 5%; }
+
+.titulo-seccion {
+    text-align: center;
+    font-size: 2.5rem;
+    color: var(--primario);
+    margin-bottom: 3rem;
+}
+
+/* 6. SERVICIOS Y TIENDA */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.card {
+    background: var(--blanco);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: var(--sombra);
+    border-top: 4px solid var(--secundario);
+    transition: transform 0.3s ease;
+}
+
+.card:hover { transform: translateY(-5px); }
+
+.card h3 {
+    color: var(--primario);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.tienda-imagenes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.tienda-imagenes img {
+    height: 200px;
+    object-fit: cover;
+    width: 100%;
+}
+
+/* 7. FOOTER / CONTACTO */
+.footer {
+    background-color: var(--primario);
+    color: var(--texto-claro);
+    padding: 4rem 5% 2rem;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-titulo {
+    margin-bottom: 1.5rem;
+    color: var(--blanco);
+}
+
+.redes a {
+    color: var(--texto-claro);
+    display: block;
+    margin-bottom: 1rem;
+    transition: color 0.3s;
+}
+
+.redes a:hover { color: var(--secundario); }
+.redes i { width: 25px; color: var(--secundario); }
+
+.mapa-contenedor iframe {
+    width: 100%;
+    height: 250px;
+    border-radius: 8px;
+    border: none;
+}
+
+.copyright {
+    text-align: center;
+    margin-top: 3rem;
+    border-top: 1px solid #374151;
+    padding-top: 1.5rem;
+    color: #9CA3AF;
+}
+
+/* 8. RESPONSIVIDAD */
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+    }
+    .hero h1 { font-size: 2.5rem; }
+    .tienda-imagenes { grid-template-columns: 1fr; }
+}
