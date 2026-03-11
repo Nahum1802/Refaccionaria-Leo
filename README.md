@@ -25,4 +25,5 @@ Paso 3: Dar click en "broswe to upload"
 Paso 4: Poner en una carpeta todo lo que quieras subir  
 Paso 5: Seleccionar la carpeta que hiciste para subir tus archivos  
 Paso 6: Esperar a que te genere tu URL
+![Captura de pantalla del deployment](img1.jpeg)   
 
