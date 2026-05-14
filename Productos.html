@@ -7,1021 +7,446 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --amarillo: #FACC15;
-            --negro: #0a0a0a;
-            --gris-oscuro: #1a1a1a;
-            --gris-medio: #2a2a2a;
-            --gris-claro: #f5f5f0;
+    <style type="text/tailwindcss">
+        @theme {
+            --color-amarillo: #FACC15;
+            --color-negro: #0a0a0a;
+            --color-gris-oscuro: #1a1a1a;
+            --color-gris-medio: #2a2a2a;
+            --color-gris-claro: #f5f5f0;
+            --font-barlow: 'Barlow', sans-serif;
+            --font-bebas: 'Bebas Neue', sans-serif;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+        .reveal.visible { opacity: 1; transform: none; }
+        
+        .grupo-categoria { transition: opacity 0.3s; }
+        .grupo-categoria.oculto { display: none; }
 
-        body {
-            font-family: 'Barlow', sans-serif;
-            background: #0a0a0a;
-            color: #f5f5f0;
-            overflow-x: hidden;
-        }
-
-        /* ── NAV ── */
-        nav {
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            z-index: 100;
-            background: rgba(10,10,10,0.92);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(250,204,21,0.15);
-            padding: 14px 0;
-        }
-        .nav-inner {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-        }
-        .logo-icon {
-            width: 36px; height: 36px;
-            background: var(--amarillo);
-            border-radius: 6px;
-            display: flex; align-items: center; justify-content: center;
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 18px;
-            color: #000;
-        }
-        .logo-text {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 22px;
-            letter-spacing: 2px;
-            color: #fff;
-        }
-        .logo-text span { color: var(--amarillo); }
-
-        nav ul { list-style: none; display: flex; align-items: center; gap: 4px; }
-        nav ul a {
-            display: block;
-            padding: 7px 16px;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: 600;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            text-decoration: none;
-            color: rgba(255,255,255,0.75);
-            transition: color 0.2s, background 0.2s;
-        }
-        nav ul a:hover { color: #fff; background: rgba(255,255,255,0.07); }
-        nav ul a.activo { background: var(--amarillo); color: #000; }
-
-        /* ── HERO PRODUCTOS ── */
-        .hero-productos {
-            padding: 9rem 2rem 4rem;
-            position: relative;
-            overflow: hidden;
-        }
-        .hero-productos::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background:
-                linear-gradient(135deg, #0a0a0a 0%, #111 60%, #0a0a0a 100%);
-        }
-        .hero-productos::after {
-            content: '';
-            position: absolute;
-            top: -30%; right: -5%;
-            width: 600px; height: 600px;
-            background: radial-gradient(circle, rgba(250,204,21,0.1) 0%, transparent 65%);
-            border-radius: 50%;
-            pointer-events: none;
-        }
-        .hero-grid {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background-image:
-                linear-gradient(rgba(250,204,21,0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(250,204,21,0.03) 1px, transparent 1px);
-            background-size: 60px 60px;
-        }
-        .hero-inner {
-            position: relative;
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-between;
-            gap: 2rem;
-            flex-wrap: wrap;
-        }
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(250,204,21,0.12);
-            border: 1px solid rgba(250,204,21,0.3);
-            padding: 6px 14px;
-            border-radius: 100px;
-            font-size: 12px;
-            font-weight: 600;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: var(--amarillo);
-            margin-bottom: 1rem;
-        }
-        .hero-titulo {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: clamp(48px, 7vw, 80px);
-            letter-spacing: 2px;
-            line-height: 0.95;
-            margin-bottom: 1rem;
-        }
-        .hero-titulo span { color: var(--amarillo); }
-        .hero-desc {
-            font-size: 16px;
-            color: rgba(255,255,255,0.5);
-            max-width: 480px;
-            line-height: 1.7;
-        }
-        .hero-conteo {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-            flex-shrink: 0;
-        }
-        .conteo-item { text-align: center; }
-        .conteo-numero {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 48px;
-            color: var(--amarillo);
-            line-height: 1;
-            letter-spacing: 1px;
-        }
-        .conteo-label {
-            font-size: 12px;
-            color: rgba(255,255,255,0.4);
-            letter-spacing: 1px;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-        .conteo-sep {
-            width: 1px;
-            height: 60px;
-            background: rgba(255,255,255,0.1);
-        }
-
-        /* ── FILTROS ── */
-        .filtros-wrap {
-            background: var(--gris-oscuro);
-            border-top: 1px solid rgba(255,255,255,0.05);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            position: sticky;
-            top: 65px;
-            z-index: 50;
-        }
-        .filtros-inner {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            overflow-x: auto;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
-        .filtros-inner::-webkit-scrollbar { display: none; }
-        .filtro-btn {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 14px 20px;
-            font-size: 13px;
-            font-weight: 600;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            white-space: nowrap;
-            background: none;
-            border: none;
-            color: rgba(255,255,255,0.45);
-            cursor: pointer;
-            position: relative;
-            transition: color 0.2s;
-            font-family: 'Barlow', sans-serif;
-        }
         .filtro-btn::after {
-            content: '';
-            position: absolute;
-            bottom: 0; left: 0; right: 0;
-            height: 2px;
-            background: var(--amarillo);
-            transform: scaleX(0);
-            transition: transform 0.2s;
+            content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+            background: var(--color-amarillo); transform: scaleX(0); transition: transform 0.2s;
         }
-        .filtro-btn:hover { color: rgba(255,255,255,0.8); }
-        .filtro-btn.activo { color: var(--amarillo); }
+        .filtro-btn.activo { color: var(--color-amarillo); }
         .filtro-btn.activo::after { transform: scaleX(1); }
-        .filtro-icono { font-size: 16px; }
 
-        /* ── GRID DE PRODUCTOS ── */
-        .productos-section {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 3rem 2rem 5rem;
-        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Título de categoría */
-        .cat-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-        .cat-header-icono {
-            width: 44px; height: 44px;
-            background: rgba(250,204,21,0.12);
-            border: 1px solid rgba(250,204,21,0.25);
-            border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 20px;
-        }
-        .cat-header-titulo {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 28px;
-            letter-spacing: 2px;
-            color: #fff;
-        }
-        .cat-header-linea {
-            flex: 1;
-            height: 1px;
-            background: rgba(255,255,255,0.07);
-        }
-        .cat-header-count {
-            font-size: 12px;
-            color: rgba(255,255,255,0.3);
-            font-weight: 600;
-            letter-spacing: 1px;
-        }
-
-        .productos-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-            margin-bottom: 4rem;
-        }
-
-        /* Tarjeta de producto */
-        .prod-card {
-            background: var(--gris-oscuro);
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 16px;
-            overflow: hidden;
-            transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
-            cursor: default;
-            display: flex;
-            flex-direction: column;
-        }
-        .prod-card:hover {
-            border-color: rgba(250,204,21,0.3);
-            transform: translateY(-4px);
-            box-shadow: 0 16px 48px rgba(0,0,0,0.4), 0 0 0 1px rgba(250,204,21,0.1);
-        }
-
-        /* Zona visual de la tarjeta */
-        .prod-visual {
-            height: 160px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-        }
-        .prod-visual-emoji {
-            font-size: 72px;
-            position: relative;
-            z-index: 1;
-            transition: transform 0.3s;
-            filter: drop-shadow(0 8px 16px rgba(0,0,0,0.5));
-        }
-        .prod-card:hover .prod-visual-emoji { transform: scale(1.1) translateY(-4px); }
-        .prod-visual-bg {
-            position: absolute;
-            inset: 0;
-        }
-        .prod-visual-circle {
-            position: absolute;
-            width: 120px; height: 120px;
-            border-radius: 50%;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            opacity: 0.15;
-        }
-
-        /* Colores por categoría */
-        .cat-aceites .prod-visual-bg { background: linear-gradient(135deg, #1a1208 0%, #1a1a1a 100%); }
-        .cat-aceites .prod-visual-circle { background: #FACC15; }
-        .cat-aceites .prod-tag { background: rgba(250,204,21,0.12); color: #FACC15; border-color: rgba(250,204,21,0.25); }
-
-        .cat-filtros .prod-visual-bg { background: linear-gradient(135deg, #0d1a12 0%, #1a1a1a 100%); }
-        .cat-filtros .prod-visual-circle { background: #4ade80; }
-        .cat-filtros .prod-tag { background: rgba(74,222,128,0.1); color: #4ade80; border-color: rgba(74,222,128,0.2); }
-
-        .cat-accesorios .prod-visual-bg { background: linear-gradient(135deg, #0d1020 0%, #1a1a1a 100%); }
-        .cat-accesorios .prod-visual-circle { background: #60a5fa; }
-        .cat-accesorios .prod-tag { background: rgba(96,165,250,0.1); color: #60a5fa; border-color: rgba(96,165,250,0.2); }
-
-        .cat-bandas .prod-visual-bg { background: linear-gradient(135deg, #1a0d0d 0%, #1a1a1a 100%); }
-        .cat-bandas .prod-visual-circle { background: #f87171; }
-        .cat-bandas .prod-tag { background: rgba(248,113,113,0.1); color: #f87171; border-color: rgba(248,113,113,0.2); }
-
-        .cat-electrico .prod-visual-bg { background: linear-gradient(135deg, #0d1a18 0%, #1a1a1a 100%); }
-        .cat-electrico .prod-visual-circle { background: #34d399; }
-        .cat-electrico .prod-tag { background: rgba(52,211,153,0.1); color: #34d399; border-color: rgba(52,211,153,0.2); }
-
-        /* Info de la tarjeta */
-        .prod-info {
-            padding: 1.25rem;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-        .prod-top {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 8px;
-            margin-bottom: 6px;
-        }
-        .prod-nombre {
-            font-size: 16px;
-            font-weight: 700;
-            color: #fff;
-            line-height: 1.3;
-        }
-        .prod-tag {
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            padding: 3px 8px;
-            border-radius: 100px;
-            border: 1px solid;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-        .prod-desc {
-            font-size: 13px;
-            color: rgba(255,255,255,0.45);
-            line-height: 1.6;
-            margin-bottom: 1rem;
-            flex: 1;
-        }
-        .prod-footer {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding-top: 12px;
-            border-top: 1px solid rgba(255,255,255,0.06);
-        }
-        .prod-disponible {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 12px;
-            color: rgba(255,255,255,0.35);
-            font-weight: 600;
-        }
-        .prod-disponible::before {
-            content: '';
-            width: 6px; height: 6px;
-            background: #4ade80;
-            border-radius: 50%;
-        }
-        .prod-btn {
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            color: var(--amarillo);
-            background: rgba(250,204,21,0.08);
-            border: 1px solid rgba(250,204,21,0.2);
-            padding: 6px 14px;
-            border-radius: 6px;
-            text-decoration: none;
-            transition: background 0.2s, border-color 0.2s;
-            cursor: pointer;
-            font-family: 'Barlow', sans-serif;
-        }
-        .prod-btn:hover {
-            background: rgba(250,204,21,0.16);
-            border-color: rgba(250,204,21,0.4);
-        }
-
-        /* Tarjeta destacada (ancha) */
-        .prod-card.destacada {
-            grid-column: span 2;
-            flex-direction: row;
-        }
-        .prod-card.destacada .prod-visual {
-            width: 240px;
-            height: auto;
-            flex-shrink: 0;
-        }
-        .prod-card.destacada .prod-visual-emoji { font-size: 90px; }
-
-        /* ── BANNER MARCAS ── */
-        .marcas-wrap {
-            background: var(--gris-oscuro);
-            border-top: 1px solid rgba(255,255,255,0.05);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            padding: 2.5rem 2rem;
-            overflow: hidden;
-        }
-        .marcas-titulo {
-            text-align: center;
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: rgba(255,255,255,0.25);
-            margin-bottom: 1.5rem;
-        }
-        .marcas-row {
-            display: flex;
-            gap: 2rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-        .marca-item {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 20px;
-            letter-spacing: 3px;
-            color: rgba(255,255,255,0.15);
-            transition: color 0.3s;
-        }
-        .marca-item:hover { color: rgba(250,204,21,0.6); }
-
-        /* ── CTA ── */
-        .cta-wrap {
-            background: var(--amarillo);
-            padding: 5rem 2rem;
-            text-align: center;
-        }
-        .cta-titulo {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: clamp(36px, 5vw, 64px);
-            color: #000;
-            letter-spacing: 2px;
-            margin-bottom: 0.75rem;
-        }
-        .cta-subtitulo {
-            font-size: 17px;
-            color: rgba(0,0,0,0.65);
-            margin-bottom: 2rem;
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .btn-cta-negro {
-            background: #000;
-            color: var(--amarillo);
-            font-weight: 700;
-            font-size: 14px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            padding: 14px 36px;
-            border-radius: 8px;
-            text-decoration: none;
-            display: inline-block;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .btn-cta-negro:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-        }
-
-        /* ── FOOTER ── */
-        footer {
-            background: var(--gris-oscuro);
-            border-top: 1px solid rgba(255,255,255,0.06);
-        }
-        .footer-top {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 3rem 2rem 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 2rem;
-            flex-wrap: wrap;
-        }
-        .footer-nombre {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 22px;
-            letter-spacing: 2px;
-            color: #fff;
-        }
-        .footer-nombre span { color: var(--amarillo); }
-        .footer-links {
-            display: flex;
-            gap: 4px;
-        }
-        .footer-link {
-            padding: 7px 14px;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: 600;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            text-decoration: none;
-            color: rgba(255,255,255,0.4);
-            transition: color 0.2s, background 0.2s;
-        }
-        .footer-link:hover { color: #fff; background: rgba(255,255,255,0.05); }
-        .footer-bottom {
-            border-top: 1px solid rgba(255,255,255,0.05);
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 1.5rem 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 13px;
-            color: rgba(255,255,255,0.2);
-        }
-
-        /* Animaciones */
-        .reveal {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.5s ease, transform 0.5s ease;
-        }
-        .reveal.visible {
-            opacity: 1;
-            transform: none;
-        }
-
-        /* Estados oculto/visible para filtrado */
-        .grupo-categoria {
-            transition: opacity 0.3s;
-        }
-        .grupo-categoria.oculto {
-            display: none;
-        }
-
-        /* Toast de cotización */
-        .toast {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background: var(--gris-oscuro);
-            border: 1px solid rgba(250,204,21,0.3);
-            border-radius: 12px;
-            padding: 1rem 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 14px;
-            color: #fff;
-            z-index: 200;
-            transform: translateY(100px);
-            opacity: 0;
-            transition: transform 0.4s ease, opacity 0.4s ease;
-            pointer-events: none;
-            max-width: 320px;
-        }
-        .toast.visible {
-            transform: translateY(0);
-            opacity: 1;
-        }
-        .toast-icono { font-size: 22px; }
+        .toast { transform: translateY(100px); opacity: 0; transition: transform 0.4s ease, opacity 0.4s ease; pointer-events: none; }
+        .toast.visible { transform: translateY(0); opacity: 1; }
     </style>
 </head>
-<body>
+<body class="font-barlow bg-negro text-gris-claro overflow-x-hidden m-0 p-0 box-border">
 
-    <!-- NAV -->
-    <nav>
-        <div class="nav-inner">
-            <a href="index.html" class="logo">
-                <div class="logo-icon">RL</div>
-                <div class="logo-text">Refaccionaria <span>Leo</span></div>
+    <nav class="fixed top-0 left-0 right-0 z-[100] bg-negro/92 backdrop-blur-[12px] border-b border-amarillo/15 py-[14px]">
+        <div class="max-w-[1200px] mx-auto px-8 flex items-center justify-between relative">
+            <a href="index.html" class="flex items-center gap-[10px] no-underline">
+                <div class="w-[36px] h-[36px] bg-amarillo rounded-[6px] flex items-center justify-center font-bebas text-[18px] text-black"><img src="IMG/bardahl-top-logo-mobile.webp" alt="Logo Refaccionaria Leo"></div>
+                <div class="font-bebas text-[22px] tracking-[2px] text-white">Refaccionaria <span class="text-amarillo">Leo</span></div>
             </a>
-            <ul>
-                <li><a href="index.html">Inicio</a></li>
-                <li><a href="Productos.html" class="activo">Productos</a></li>
-                <li><a href="Contacto.html">Contacto</a></li>
-                <li><a href="Login.html">Iniciar sesión</a></li>
+            
+            <ul class="list-none m-0 p-0 hidden md:flex items-center gap-1">
+                <li><a href="index.html" class="block py-[7px] px-4 rounded-[6px] text-[13px] font-semibold tracking-[1.5px] uppercase no-underline text-white/75 transition-colors duration-200 hover:text-white hover:bg-white/10">Inicio</a></li>
+                <li><a href="Productos.html" class="block py-[7px] px-4 rounded-[6px] text-[13px] font-semibold tracking-[1.5px] uppercase no-underline transition-colors duration-200 bg-amarillo text-black hover:bg-yellow-500">Productos</a></li>
+                <li><a href="Contacto.html" class="block py-[7px] px-4 rounded-[6px] text-[13px] font-semibold tracking-[1.5px] uppercase no-underline text-white/75 transition-colors duration-200 hover:text-white hover:bg-white/10">Contacto</a></li>
+                <li><a href="Login.html" class="block py-[7px] px-4 rounded-[6px] text-[13px] font-semibold tracking-[1.5px] uppercase no-underline text-white/75 transition-colors duration-200 hover:text-white hover:bg-white/10">Iniciar sesión</a></li>
+            </ul>
+
+            <button id="menu-btn" class="md:hidden flex items-center justify-center p-2 text-white/80 hover:text-amarillo transition-colors focus:outline-none cursor-pointer">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+
+        <div id="mobile-menu" class="hidden absolute top-[100%] left-0 right-0 bg-negro/95 backdrop-blur-[12px] border-b border-amarillo/15 md:hidden shadow-2xl">
+            <ul class="list-none m-0 p-6 flex flex-col gap-3">
+                <li><a href="index.html" class="block py-3 px-4 rounded-lg text-[14px] font-semibold tracking-[1.5px] uppercase text-center text-white/80 hover:bg-white/10 hover:text-white transition-colors">Inicio</a></li>
+                <li><a href="Productos.html" class="block py-3 px-4 rounded-lg text-[14px] font-semibold tracking-[1.5px] uppercase text-center bg-amarillo text-black">Productos</a></li>
+                <li><a href="Contacto.html" class="block py-3 px-4 rounded-lg text-[14px] font-semibold tracking-[1.5px] uppercase text-center text-white/80 hover:bg-white/10 hover:text-white transition-colors">Contacto</a></li>
+                <li><a href="Login.html" class="block py-3 px-4 rounded-lg text-[14px] font-semibold tracking-[1.5px] uppercase text-center text-white/80 hover:bg-white/10 hover:text-white transition-colors">Iniciar sesión</a></li>
             </ul>
         </div>
     </nav>
 
-    <!-- HERO -->
-    <section class="hero-productos">
-        <div class="hero-grid"></div>
-        <div class="hero-inner">
+    <section class="pt-[9rem] pb-[4rem] px-8 relative overflow-hidden">
+        <div class="absolute inset-0 bg-[linear-gradient(135deg,#0a0a0a_0%,#111_60%,#0a0a0a_100%)]"></div>
+        <div class="absolute top-[-30%] right-[-5%] w-[600px] h-[600px] bg-[radial-gradient(circle,rgba(250,204,21,0.1)_0%,transparent_65%)] rounded-full pointer-events-none"></div>
+        <div class="absolute inset-0 bg-[linear-gradient(rgba(250,204,21,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(250,204,21,0.03)_1px,transparent_1px)] bg-[size:60px_60px]"></div>
+        
+        <div class="relative max-w-[1200px] mx-auto flex flex-col md:flex-row items-start md:items-end justify-between gap-8">
             <div>
-                <div class="hero-badge">Catálogo completo</div>
-                <h1 class="hero-titulo">Nuestros<br><span>productos</span></h1>
-                <p class="hero-desc">Todo lo que tu vehículo necesita en un solo lugar. Refacciones de calidad para las marcas más populares del mercado mexicano.</p>
+                <div class="inline-flex items-center gap-2 bg-amarillo/12 border border-amarillo/30 py-1.5 px-3.5 rounded-full text-[12px] font-semibold tracking-[2px] uppercase text-amarillo mb-4">Catálogo completo</div>
+                <h1 class="font-bebas text-[clamp(48px,7vw,80px)] tracking-[2px] leading-[0.95] mb-4">Nuestros<br><span class="text-amarillo">productos</span></h1>
+                <p class="text-[16px] text-white/50 max-w-[480px] leading-[1.7]">Todo lo que tu vehículo necesita en un solo lugar. Refacciones de calidad para las marcas más populares del mercado mexicano.</p>
             </div>
-            <div class="hero-conteo">
-                <div class="conteo-item">
-                    <div class="conteo-numero">+500</div>
-                    <div class="conteo-label">Productos</div>
+            <div class="flex gap-6 sm:gap-8 items-center shrink-0 flex-wrap">
+                <div class="text-center">
+                    <div class="font-bebas text-[48px] text-amarillo leading-none tracking-[1px]">+500</div>
+                    <div class="text-[12px] text-white/40 tracking-[1px] font-semibold uppercase">Productos</div>
                 </div>
-                <div class="conteo-sep"></div>
-                <div class="conteo-item">
-                    <div class="conteo-numero">5</div>
-                    <div class="conteo-label">Categorías</div>
+                <div class="w-px h-[60px] bg-white/10 hidden sm:block"></div>
+                <div class="text-center">
+                    <div class="font-bebas text-[48px] text-amarillo leading-none tracking-[1px]">5</div>
+                    <div class="text-[12px] text-white/40 tracking-[1px] font-semibold uppercase">Categorías</div>
                 </div>
-                <div class="conteo-sep"></div>
-                <div class="conteo-item">
-                    <div class="conteo-numero">15+</div>
-                    <div class="conteo-label">Marcas</div>
+                <div class="w-px h-[60px] bg-white/10 hidden sm:block"></div>
+                <div class="text-center">
+                    <div class="font-bebas text-[48px] text-amarillo leading-none tracking-[1px]">15+</div>
+                    <div class="text-[12px] text-white/40 tracking-[1px] font-semibold uppercase">Marcas</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- FILTROS -->
-    <div class="filtros-wrap">
-        <div class="filtros-inner">
-            <button class="filtro-btn activo" data-cat="todos" onclick="filtrar(this)">
-                <span class="filtro-icono">🔍</span> Todos
+    <div class="bg-gris-oscuro border-y border-white/5 sticky top-[64px] md:top-[68px] z-50">
+        <div class="max-w-[1200px] mx-auto px-8 flex items-center gap-2 overflow-x-auto hide-scrollbar">
+            <button class="flex items-center gap-2 py-3.5 px-5 text-[13px] font-semibold tracking-[1px] uppercase whitespace-nowrap bg-transparent border-none text-white/45 cursor-pointer relative transition-colors duration-200 hover:text-white/80 font-barlow filtro-btn activo" data-cat="todos" onclick="filtrar(this)">
+                <span class="text-[16px]">🔍</span> Todos
             </button>
-            <button class="filtro-btn" data-cat="aceites" onclick="filtrar(this)">
-                <span class="filtro-icono">🛢️</span> Aceites y lubricantes
+            <button class="flex items-center gap-2 py-3.5 px-5 text-[13px] font-semibold tracking-[1px] uppercase whitespace-nowrap bg-transparent border-none text-white/45 cursor-pointer relative transition-colors duration-200 hover:text-white/80 font-barlow filtro-btn" data-cat="aceites" onclick="filtrar(this)">
+                <span class="text-[16px]">🛢️</span> Aceites y lubricantes
             </button>
-            <button class="filtro-btn" data-cat="filtros" onclick="filtrar(this)">
-                <span class="filtro-icono">🔩</span> Filtros
+            <button class="flex items-center gap-2 py-3.5 px-5 text-[13px] font-semibold tracking-[1px] uppercase whitespace-nowrap bg-transparent border-none text-white/45 cursor-pointer relative transition-colors duration-200 hover:text-white/80 font-barlow filtro-btn" data-cat="filtros" onclick="filtrar(this)">
+                <span class="text-[16px]">🔩</span> Filtros
             </button>
-            <button class="filtro-btn" data-cat="accesorios" onclick="filtrar(this)">
-                <span class="filtro-icono">🔋</span> Accesorios
+            <button class="flex items-center gap-2 py-3.5 px-5 text-[13px] font-semibold tracking-[1px] uppercase whitespace-nowrap bg-transparent border-none text-white/45 cursor-pointer relative transition-colors duration-200 hover:text-white/80 font-barlow filtro-btn" data-cat="accesorios" onclick="filtrar(this)">
+                <span class="text-[16px]">🔋</span> Accesorios
             </button>
-            <button class="filtro-btn" data-cat="bandas" onclick="filtrar(this)">
-                <span class="filtro-icono">⚙️</span> Bandas y transmisión
+            <button class="flex items-center gap-2 py-3.5 px-5 text-[13px] font-semibold tracking-[1px] uppercase whitespace-nowrap bg-transparent border-none text-white/45 cursor-pointer relative transition-colors duration-200 hover:text-white/80 font-barlow filtro-btn" data-cat="bandas" onclick="filtrar(this)">
+                <span class="text-[16px]">⚙️</span> Bandas y transmisión
             </button>
-            <button class="filtro-btn" data-cat="electrico" onclick="filtrar(this)">
-                <span class="filtro-icono">⚡</span> Sistema eléctrico
+            <button class="flex items-center gap-2 py-3.5 px-5 text-[13px] font-semibold tracking-[1px] uppercase whitespace-nowrap bg-transparent border-none text-white/45 cursor-pointer relative transition-colors duration-200 hover:text-white/80 font-barlow filtro-btn" data-cat="electrico" onclick="filtrar(this)">
+                <span class="text-[16px]">⚡</span> Sistema eléctrico
             </button>
         </div>
     </div>
 
-    <!-- PRODUCTOS -->
-    <main class="productos-section">
+    <main class="max-w-[1200px] mx-auto py-12 px-8 pb-20">
 
-        <!-- ACEITES Y LUBRICANTES -->
-        <div class="grupo-categoria reveal" id="grupo-aceites" data-grupo="aceites">
-            <div class="cat-header">
-                <div class="cat-header-icono">🛢️</div>
-                <div class="cat-header-titulo">Aceites y lubricantes</div>
-                <div class="cat-header-linea"></div>
-                <div class="cat-header-count">6 productos</div>
+        <div class="grupo-categoria reveal mb-16" id="grupo-aceites" data-grupo="aceites">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="w-11 h-11 bg-amarillo/12 border border-amarillo/25 rounded-lg flex items-center justify-center text-[20px]">🛢️</div>
+                <div class="font-bebas text-[28px] tracking-[2px] text-white">Aceites y lubricantes</div>
+                <div class="flex-1 h-px bg-white/5"></div>
+                <div class="text-[12px] text-white/30 font-semibold tracking-[1px]">6 productos</div>
             </div>
-            <div class="productos-grid">
-                <div class="prod-card cat-aceites destacada">
-                    <div class="prod-visual">
-                        <div class="prod-visual-bg"></div>
-                        <div class="prod-visual-circle"></div>
-                        <div class="prod-visual-emoji">🛢️</div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="flex flex-col md:flex-row md:col-span-2 bg-gris-oscuro border border-white/5 rounded-2xl overflow-hidden transition-all duration-300 cursor-default hover:border-amarillo/30 hover:-translate-y-1 hover:shadow-[0_16px_48px_rgba(0,0,0,0.4),0_0_0_1px_rgba(250,204,21,0.1)] group">
+                    <div class="h-[160px] md:h-auto md:w-[240px] shrink-0 flex items-center justify-center relative overflow-hidden bg-[linear-gradient(135deg,#1a1208_0%,#1a1a1a_100%)]">
+                        <div class="absolute w-[120px] h-[120px] rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-15 bg-[#FACC15]"></div>
+                        <div class="text-[72px] md:text-[90px] relative z-10 transition-transform duration-300 drop-shadow-[0_8px_16px_rgba(0,0,0,0.5)] group-hover:scale-110 group-hover:-translate-y-1">🛢️</div>
                     </div>
-                    <div class="prod-info">
-                        <div class="prod-top">
-                            <div class="prod-nombre">Aceite de motor sintético 5W-30</div>
-                            <span class="prod-tag">Más vendido</span>
+                    <div class="p-5 flex-1 flex flex-col">
+                        <div class="flex items-start justify-between gap-2 mb-1.5">
+                            <div class="text-[16px] font-bold text-white leading-tight">Aceite de motor sintético 5W-30</div>
+                            <span class="text-[11px] font-bold tracking-[1px] uppercase py-0.5 px-2 rounded-full border whitespace-nowrap shrink-0 bg-amarillo/12 text-amarillo border-amarillo/25">Más vendido</span>
                         </div>
-                        <div class="prod-desc">Aceite sintético de alto rendimiento para motores modernos. Protección superior en frío y calor extremo. Compatible con gasolina y diésel. Marcas disponibles: Bardahl, Pennzoil, Mobil 1.</div>
-                        <div class="prod-footer">
-                            <div class="prod-disponible">En existencia</div>
-                            <button class="prod-btn" onclick="cotizar('Aceite de motor sintético 5W-30')">Cotizar</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="prod-card cat-aceites">
-                    <div class="prod-visual">
-                        <div class="prod-visual-bg"></div>
-                        <div class="prod-visual-circle"></div>
-                        <div class="prod-visual-emoji">🔧</div>
-                    </div>
-                    <div class="prod-info">
-                        <div class="prod-top">
-                            <div class="prod-nombre">Líquido de transmisión automática</div>
-                            <span class="prod-tag">Popular</span>
-                        </div>
-                        <div class="prod-desc">ATF para transmisiones automáticas. Reduce el desgaste y mejora el cambio de velocidades.</div>
-                        <div class="prod-footer">
-                            <div class="prod-disponible">En existencia</div>
-                            <button class="prod-btn" onclick="cotizar('Líquido de transmisión automática')">Cotizar</button>
+                        <div class="text-[13px] text-white/45 leading-[1.6] mb-4 flex-1">Aceite sintético de alto rendimiento para motores modernos. Protección superior en frío y calor extremo. Compatible con gasolina y diésel. Marcas disponibles: Bardahl, Pennzoil, Mobil 1.</div>
+                        <div class="flex items-center justify-between pt-3 border-t border-white/5">
+                            <div class="flex items-center gap-1.5 text-[12px] text-white/35 font-semibold before:content-[''] before:w-1.5 before:h-1.5 before:bg-[#4ade80] before:rounded-full">En existencia</div>
+                            <button class="text-[12px] font-bold tracking-[1px] uppercase text-amarillo bg-amarillo/10 border border-amarillo/20 py-1.5 px-3.5 rounded-md transition-all duration-200 cursor-pointer font-barlow hover:bg-amarillo/20 hover:border-amarillo/40" onclick="cotizar('Aceite de motor sintético 5W-30')">Cotizar</button>
                         </div>
                     </div>
                 </div>
-                <div class="prod-card cat-aceites">
-                    <div class="prod-visual">
-                        <div class="prod-visual-bg"></div>
-                        <div class="prod-visual-circle"></div>
-                        <div class="prod-visual-emoji">💧</div>
+                <div class="flex flex-col bg-gris-oscuro border border-white/5 rounded-2xl overflow-hidden transition-all duration-300 cursor-default hover:border-amarillo/30 hover:-translate-y-1 hover:shadow-[0_16px_48px_rgba(0,0,0,0.4),0_0_0_1px_rgba(250,204,21,0.1)] group">
+                    <div class="h-[160px] flex items-center justify-center relative overflow-hidden bg-[linear-gradient(135deg,#1a1208_0%,#1a1a1a_100%)]">
+                        <div class="absolute w-[120px] h-[120px] rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-15 bg-[#FACC15]"></div>
+                        <div class="text-[72px] relative z-10 transition-transform duration-300 drop-shadow-[0_8px_16px_rgba(0,0,0,0.5)] group-hover:scale-110 group-hover:-translate-y-1">🔧</div>
                     </div>
-                    <div class="prod-info">
-                        <div class="prod-top">
-                            <div class="prod-nombre">Refrigerante anticongelante</div>
-                            <span class="prod-tag">Esencial</span>
+                    <div class="p-5 flex-1 flex flex-col">
+                        <div class="flex items-start justify-between gap-2 mb-1.5">
+                            <div class="text-[16px] font-bold text-white leading-tight">Líquido de transmisión automática</div>
+                            <span class="text-[11px] font-bold tracking-[1px] uppercase py-0.5 px-2 rounded-full border whitespace-nowrap shrink-0 bg-amarillo/12 text-amarillo border-amarillo/25">Popular</span>
                         </div>
-                        <div class="prod-desc">Protege el motor del sobrecalentamiento y la corrosión. Concentrado y listo para usar.</div>
-                        <div class="prod-footer">
-                            <div class="prod-disponible">En existencia</div>
-                            <button class="prod-btn" onclick="cotizar('Refrigerante anticongelante')">Cotizar</button>
+                        <div class="text-[13px] text-white/45 leading-[1.6] mb-4 flex-1">ATF para transmisiones automáticas. Reduce el desgaste y mejora el cambio de velocidades.</div>
+                        <div class="flex items-center justify-between pt-3 border-t border-white/5">
+                            <div class="flex items-center gap-1.5 text-[12px] text-white/35 font-semibold before:content-[''] before:w-1.5 before:h-1.5 before:bg-[#4ade80] before:rounded-full">En existencia</div>
+                            <button class="text-[12px] font-bold tracking-[1px] uppercase text-amarillo bg-amarillo/10 border border-amarillo/20 py-1.5 px-3.5 rounded-md transition-all duration-200 cursor-pointer font-barlow hover:bg-amarillo/20 hover:border-amarillo/40" onclick="cotizar('Líquido de transmisión automática')">Cotizar</button>
                         </div>
                     </div>
                 </div>
-                <div class="prod-card cat-aceites">
-                    <div class="prod-visual">
-                        <div class="prod-visual-bg"></div>
-                        <div class="prod-visual-circle"></div>
-                        <div class="prod-visual-emoji">🩺</div>
+                <div class="flex flex-col bg-gris-oscuro border border-white/5 rounded-2xl overflow-hidden transition-all duration-300 cursor-default hover:border-amarillo/30 hover:-translate-y-1 hover:shadow-[0_16px_48px_rgba(0,0,0,0.4),0_0_0_1px_rgba(250,204,21,0.1)] group">
+                    <div class="h-[160px] flex items-center justify-center relative overflow-hidden bg-[linear-gradient(135deg,#1a1208_0%,#1a1a1a_100%)]">
+                        <div class="absolute w-[120px] h-[120px] rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-15 bg-[#FACC15]"></div>
+                        <div class="text-[72px] relative z-10 transition-transform duration-300 drop-shadow-[0_8px_16px_rgba(0,0,0,0.5)] group-hover:scale-110 group-hover:-translate-y-1">💧</div>
                     </div>
-                    <div class="prod-info">
-                        <div class="prod-top">
-                            <div class="prod-nombre">Líquido de frenos DOT 4</div>
-                            <span class="prod-tag">Seguridad</span>
+                    <div class="p-5 flex-1 flex flex-col">
+                        <div class="flex items-start justify-between gap-2 mb-1.5">
+                            <div class="text-[16px] font-bold text-white leading-tight">Refrigerante anticongelante</div>
+                            <span class="text-[11px] font-bold tracking-[1px] uppercase py-0.5 px-2 rounded-full border whitespace-nowrap shrink-0 bg-amarillo/12 text-amarillo border-amarillo/25">Esencial</span>
                         </div>
-                        <div class="prod-desc">Alto punto de ebullición para sistemas de frenos hidráulicos. Indispensable para seguridad vial.</div>
-                        <div class="prod-footer">
-                            <div class="prod-disponible">En existencia</div>
-                            <button class="prod-btn" onclick="cotizar('Líquido de frenos DOT 4')">Cotizar</button>
+                        <div class="text-[13px] text-white/45 leading-[1.6] mb-4 flex-1">Protege el motor del sobrecalentamiento y la corrosión. Concentrado y listo para usar.</div>
+                        <div class="flex items-center justify-between pt-3 border-t border-white/5">
+                            <div class="flex items-center gap-1.5 text-[12px] text-white/35 font-semibold before:content-[''] before:w-1.5 before:h-1.5 before:bg-[#4ade80] before:rounded-full">En existencia</div>
+                            <button class="text-[12px] font-bold tracking-[1px] uppercase text-amarillo bg-amarillo/10 border border-amarillo/20 py-1.5 px-3.5 rounded-md transition-all duration-200 cursor-pointer font-barlow hover:bg-amarillo/20 hover:border-amarillo/40" onclick="cotizar('Refrigerante anticongelante')">Cotizar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col bg-gris-oscuro border border-white/5 rounded-2xl overflow-hidden transition-all duration-300 cursor-default hover:border-amarillo/30 hover:-translate-y-1 hover:shadow-[0_16px_48px_rgba(0,0,0,0.4),0_0_0_1px_rgba(250,204,21,0.1)] group">
+                    <div class="h-[160px] flex items-center justify-center relative overflow-hidden bg-[linear-gradient(135deg,#1a1208_0%,#1a1a1a_100%)]">
+                        <div class="absolute w-[120px] h-[120px] rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-15 bg-[#FACC15]"></div>
+                        <div class="text-[72px] relative z-10 transition-transform duration-300 drop-shadow-[0_8px_16px_rgba(0,0,0,0.5)] group-hover:scale-110 group-hover:-translate-y-1">🩺</div>
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col">
+                        <div class="flex items-start justify-between gap-2 mb-1.5">
+                            <div class="text-[16px] font-bold text-white leading-tight">Líquido de frenos DOT 4</div>
+                            <span class="text-[11px] font-bold tracking-[1px] uppercase py-0.5 px-2 rounded-full border whitespace-nowrap shrink-0 bg-amarillo/12 text-amarillo border-amarillo/25">Seguridad</span>
+                        </div>
+                        <div class="text-[13px] text-white/45 leading-[1.6] mb-4 flex-1">Alto punto de ebullición para sistemas de frenos hidráulicos. Indispensable para seguridad vial.</div>
+                        <div class="flex items-center justify-between pt-3 border-t border-white/5">
+                            <div class="flex items-center gap-1.5 text-[12px] text-white/35 font-semibold before:content-[''] before:w-1.5 before:h-1.5 before:bg-[#4ade80] before:rounded-full">En existencia</div>
+                            <button class="text-[12px] font-bold tracking-[1px] uppercase text-amarillo bg-amarillo/10 border border-amarillo/20 py-1.5 px-3.5 rounded-md transition-all duration-200 cursor-pointer font-barlow hover:bg-amarillo/20 hover:border-amarillo/40" onclick="cotizar('Líquido de frenos DOT 4')">Cotizar</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- FILTROS -->
-        <div class="grupo-categoria reveal" id="grupo-filtros" data-grupo="filtros">
-            <div class="cat-header">
-                <div class="cat-header-icono">🔩</div>
-                <div class="cat-header-titulo">Filtros</div>
-                <div class="cat-header-linea"></div>
-                <div class="cat-header-count">4 productos</div>
+        <div class="grupo-categoria reveal mb-16" id="grupo-filtros" data-grupo="filtros">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="w-11 h-11 bg-[#4ade80]/10 border border-[#4ade80]/25 rounded-lg flex items-center justify-center text-[20px]">🔩</div>
+                <div class="font-bebas text-[28px] tracking-[2px] text-white">Filtros</div>
+                <div class="flex-1 h-px bg-white/5"></div>
+                <div class="text-[12px] text-white/30 font-semibold tracking-[1px]">4 productos</div>
             </div>
-            <div class="productos-grid">
-                <div class="prod-card cat-filtros destacada">
-                    <div class="prod-visual">
-                        <div class="prod-visual-bg"></div>
-                        <div class="prod-visual-circle"></div>
-                        <div class="prod-visual-emoji">🌬️</div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="flex flex-col md:flex-row md:col-span-2 bg-gris-oscuro border border-white/5 rounded-2xl overflow-hidden transition-all duration-300 cursor-default hover:border-amarillo/30 hover:-translate-y-1 hover:shadow-[0_16px_48px_rgba(0,0,0,0.4),0_0_0_1px_rgba(250,204,21,0.1)] group">
+                    <div class="h-[160px] md:h-auto md:w-[240px] shrink-0 flex items-center justify-center relative overflow-hidden bg-[linear-gradient(135deg,#0d1a12_0%,#1a1a1a_100%)]">
+                        <div class="absolute w-[120px] h-[120px] rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-15 bg-[#4ade80]"></div>
+                        <div class="text-[72px] md:text-[90px] relative z-10 transition-transform duration-300 drop-shadow-[0_8px_16px_rgba(0,0,0,0.5)] group-hover:scale-110 group-hover:-translate-y-1">🌬️</div>
                     </div>
-                    <div class="prod-info">
-                        <div class="prod-top">
-                            <div class="prod-nombre">Filtro de aire de alto flujo</div>
-                            <span class="prod-tag">Rendimiento</span>
+                    <div class="p-5 flex-1 flex flex-col">
+                        <div class="flex items-start justify-between gap-2 mb-1.5">
+                            <div class="text-[16px] font-bold text-white leading-tight">Filtro de aire de alto flujo</div>
+                            <span class="text-[11px] font-bold tracking-[1px] uppercase py-0.5 px-2 rounded-full border whitespace-nowrap shrink-0 bg-[#4ade80]/10 text-[#4ade80] border-[#4ade80]/20">Rendimiento</span>
                         </div>
-                        <div class="prod-desc">Maximiza el flujo de aire al motor para mejor combustión y eficiencia. Disponible para las marcas más comunes del mercado mexicano: Nissan, Chevrolet, Volkswagen, Toyota y más.</div>
-                        <div class="prod-footer">
-                            <div class="prod-disponible">En existencia</div>
-                            <button class="prod-btn" onclick="cotizar('Filtro de aire de alto flujo')">Cotizar</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="prod-card cat-filtros">
-                    <div class="prod-visual">
-                        <div class="prod-visual-bg"></div>
-                        <div class="prod-visual-circle"></div>
-                        <div class="prod-visual-emoji">🔩</div>
-                    </div>
-                    <div class="prod-info">
-                        <div class="prod-top">
-                            <div class="prod-nombre">Filtro de aceite</div>
-                            <span class="prod-tag">Esencial</span>
-                        </div>
-                        <div class="prod-desc">Retiene impurezas y prolonga la vida del motor. Compatible con la mayoría de vehículos.</div>
-                        <div class="prod-footer">
-                            <div class="prod-disponible">En existencia</div>
-                            <button class="prod-btn" onclick="cotizar('Filtro de aceite')">Cotizar</button>
+                        <div class="text-[13px] text-white/45 leading-[1.6] mb-4 flex-1">Maximiza el flujo de aire al motor para mejor combustión y eficiencia. Disponible para las marcas más comunes del mercado mexicano: Nissan, Chevrolet, Volkswagen, Toyota y más.</div>
+                        <div class="flex items-center justify-between pt-3 border-t border-white/5">
+                            <div class="flex items-center gap-1.5 text-[12px] text-white/35 font-semibold before:content-[''] before:w-1.5 before:h-1.5 before:bg-[#4ade80] before:rounded-full">En existencia</div>
+                            <button class="text-[12px] font-bold tracking-[1px] uppercase text-amarillo bg-amarillo/10 border border-amarillo/20 py-1.5 px-3.5 rounded-md transition-all duration-200 cursor-pointer font-barlow hover:bg-amarillo/20 hover:border-amarillo/40" onclick="cotizar('Filtro de aire de alto flujo')">Cotizar</button>
                         </div>
                     </div>
                 </div>
-                <div class="prod-card cat-filtros">
-                    <div class="prod-visual">
-                        <div class="prod-visual-bg"></div>
-                        <div class="prod-visual-circle"></div>
-                        <div class="prod-visual-emoji">⛽</div>
+                <div class="flex flex-col bg-gris-oscuro border border-white/5 rounded-2xl overflow-hidden transition-all duration-300 cursor-default hover:border-amarillo/30 hover:-translate-y-1 hover:shadow-[0_16px_48px_rgba(0,0,0,0.4),0_0_0_1px_rgba(250,204,21,0.1)] group">
+                    <div class="h-[160px] flex items-center justify-center relative overflow-hidden bg-[linear-gradient(135deg,#0d1a12_0%,#1a1a1a_100%)]">
+                        <div class="absolute w-[120px] h-[120px] rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-15 bg-[#4ade80]"></div>
+                        <div class="text-[72px] relative z-10 transition-transform duration-300 drop-shadow-[0_8px_16px_rgba(0,0,0,0.5)] group-hover:scale-110 group-hover:-translate-y-1">🔩</div>
                     </div>
-                    <div class="prod-info">
-                        <div class="prod-top">
-                            <div class="prod-nombre">Filtro de combustible</div>
-                            <span class="prod-tag">Protección</span>
+                    <div class="p-5 flex-1 flex flex-col">
+                        <div class="flex items-start justify-between gap-2 mb-1.5">
+                            <div class="text-[16px] font-bold text-white leading-tight">Filtro de aceite</div>
+                            <span class="text-[11px] font-bold tracking-[1px] uppercase py-0.5 px-2 rounded-full border whitespace-nowrap shrink-0 bg-[#4ade80]/10 text-[#4ade80] border-[#4ade80]/20">Esencial</span>
                         </div>
-                        <div class="prod-desc">Protege los inyectores y el carburador de partículas y sedimentos del combustible.</div>
-                        <div class="prod-footer">
-                            <div class="prod-disponible">En existencia</div>
-                            <button class="prod-btn" onclick="cotizar('Filtro de combustible')">Cotizar</button>
+                        <div class="text-[13px] text-white/45 leading-[1.6] mb-4 flex-1">Retiene impurezas y prolonga la vida del motor. Compatible con la mayoría de vehículos.</div>
+                        <div class="flex items-center justify-between pt-3 border-t border-white/5">
+                            <div class="flex items-center gap-1.5 text-[12px] text-white/35 font-semibold before:content-[''] before:w-1.5 before:h-1.5 before:bg-[#4ade80] before:rounded-full">En existencia</div>
+                            <button class="text-[12px] font-bold tracking-[1px] uppercase text-amarillo bg-amarillo/10 border border-amarillo/20 py-1.5 px-3.5 rounded-md transition-all duration-200 cursor-pointer font-barlow hover:bg-amarillo/20 hover:border-amarillo/40" onclick="cotizar('Filtro de aceite')">Cotizar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col bg-gris-oscuro border border-white/5 rounded-2xl overflow-hidden transition-all duration-300 cursor-default hover:border-amarillo/30 hover:-translate-y-1 hover:shadow-[0_16px_48px_rgba(0,0,0,0.4),0_0_0_1px_rgba(250,204,21,0.1)] group">
+                    <div class="h-[160px] flex items-center justify-center relative overflow-hidden bg-[linear-gradient(135deg,#0d1a12_0%,#1a1a1a_100%)]">
+                        <div class="absolute w-[120px] h-[120px] rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-15 bg-[#4ade80]"></div>
+                        <div class="text-[72px] relative z-10 transition-transform duration-300 drop-shadow-[0_8px_16px_rgba(0,0,0,0.5)] group-hover:scale-110 group-hover:-translate-y-1">⛽</div>
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col">
+                        <div class="flex items-start justify-between gap-2 mb-1.5">
+                            <div class="text-[16px] font-bold text-white leading-tight">Filtro de combustible</div>
+                            <span class="text-[11px] font-bold tracking-[1px] uppercase py-0.5 px-2 rounded-full border whitespace-nowrap shrink-0 bg-[#4ade80]/10 text-[#4ade80] border-[#4ade80]/20">Protección</span>
+                        </div>
+                        <div class="text-[13px] text-white/45 leading-[1.6] mb-4 flex-1">Protege los inyectores y el carburador de partículas y sedimentos del combustible.</div>
+                        <div class="flex items-center justify-between pt-3 border-t border-white/5">
+                            <div class="flex items-center gap-1.5 text-[12px] text-white/35 font-semibold before:content-[''] before:w-1.5 before:h-1.5 before:bg-[#4ade80] before:rounded-full">En existencia</div>
+                            <button class="text-[12px] font-bold tracking-[1px] uppercase text-amarillo bg-amarillo/10 border border-amarillo/20 py-1.5 px-3.5 rounded-md transition-all duration-200 cursor-pointer font-barlow hover:bg-amarillo/20 hover:border-amarillo/40" onclick="cotizar('Filtro de combustible')">Cotizar</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- ACCESORIOS -->
-        <div class="grupo-categoria reveal" id="grupo-accesorios" data-grupo="accesorios">
-            <div class="cat-header">
-                <div class="cat-header-icono">🔋</div>
-                <div class="cat-header-titulo">Accesorios</div>
-                <div class="cat-header-linea"></div>
-                <div class="cat-header-count">5 productos</div>
+        <div class="grupo-categoria reveal mb-16" id="grupo-accesorios" data-grupo="accesorios">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="w-11 h-11 bg-[#60a5fa]/10 border border-[#60a5fa]/25 rounded-lg flex items-center justify-center text-[20px]">🔋</div>
+                <div class="font-bebas text-[28px] tracking-[2px] text-white">Accesorios</div>
+                <div class="flex-1 h-px bg-white/5"></div>
+                <div class="text-[12px] text-white/30 font-semibold tracking-[1px]">5 productos</div>
             </div>
-            <div class="productos-grid">
-                <div class="prod-card cat-accesorios destacada">
-                    <div class="prod-visual">
-                        <div class="prod-visual-bg"></div>
-                        <div class="prod-visual-circle"></div>
-                        <div class="prod-visual-emoji">🔋</div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="flex flex-col md:flex-row md:col-span-2 bg-gris-oscuro border border-white/5 rounded-2xl overflow-hidden transition-all duration-300 cursor-default hover:border-amarillo/30 hover:-translate-y-1 hover:shadow-[0_16px_48px_rgba(0,0,0,0.4),0_0_0_1px_rgba(250,204,21,0.1)] group">
+                    <div class="h-[160px] md:h-auto md:w-[240px] shrink-0 flex items-center justify-center relative overflow-hidden bg-[linear-gradient(135deg,#0d1020_0%,#1a1a1a_100%)]">
+                        <div class="absolute w-[120px] h-[120px] rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-15 bg-[#60a5fa]"></div>
+                        <div class="text-[72px] md:text-[90px] relative z-10 transition-transform duration-300 drop-shadow-[0_8px_16px_rgba(0,0,0,0.5)] group-hover:scale-110 group-hover:-translate-y-1">🔋</div>
                     </div>
-                    <div class="prod-info">
-                        <div class="prod-top">
-                            <div class="prod-nombre">Baterías automotrices</div>
-                            <span class="prod-tag">Más vendido</span>
+                    <div class="p-5 flex-1 flex flex-col">
+                        <div class="flex items-start justify-between gap-2 mb-1.5">
+                            <div class="text-[16px] font-bold text-white leading-tight">Baterías automotrices</div>
+                            <span class="text-[11px] font-bold tracking-[1px] uppercase py-0.5 px-2 rounded-full border whitespace-nowrap shrink-0 bg-[#60a5fa]/10 text-[#60a5fa] border-[#60a5fa]/20">Más vendido</span>
                         </div>
-                        <div class="prod-desc">Baterías de 40 a 80 Ah para vehículos de pasajeros, camionetas y pickups. Marcas: Bosch, Varta, AC Delco. Incluye instalación sin costo adicional en tienda.</div>
-                        <div class="prod-footer">
-                            <div class="prod-disponible">En existencia</div>
-                            <button class="prod-btn" onclick="cotizar('Batería automotriz')">Cotizar</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="prod-card cat-accesorios">
-                    <div class="prod-visual">
-                        <div class="prod-visual-bg"></div>
-                        <div class="prod-visual-circle"></div>
-                        <div class="prod-visual-emoji">💡</div>
-                    </div>
-                    <div class="prod-info">
-                        <div class="prod-top">
-                            <div class="prod-nombre">Focos y luces LED</div>
-                            <span class="prod-tag">Actualización</span>
-                        </div>
-                        <div class="prod-desc">Focos H4, H7, H11 y LED de conversión para faros delanteros y traseros.</div>
-                        <div class="prod-footer">
-                            <div class="prod-disponible">En existencia</div>
-                            <button class="prod-btn" onclick="cotizar('Focos y luces LED')">Cotizar</button>
+                        <div class="text-[13px] text-white/45 leading-[1.6] mb-4 flex-1">Baterías de 40 a 80 Ah para vehículos de pasajeros, camionetas y pickups. Marcas: Bosch, Varta, AC Delco. Incluye instalación sin costo adicional en tienda.</div>
+                        <div class="flex items-center justify-between pt-3 border-t border-white/5">
+                            <div class="flex items-center gap-1.5 text-[12px] text-white/35 font-semibold before:content-[''] before:w-1.5 before:h-1.5 before:bg-[#4ade80] before:rounded-full">En existencia</div>
+                            <button class="text-[12px] font-bold tracking-[1px] uppercase text-amarillo bg-amarillo/10 border border-amarillo/20 py-1.5 px-3.5 rounded-md transition-all duration-200 cursor-pointer font-barlow hover:bg-amarillo/20 hover:border-amarillo/40" onclick="cotizar('Batería automotriz')">Cotizar</button>
                         </div>
                     </div>
                 </div>
-                <div class="prod-card cat-accesorios">
-                    <div class="prod-visual">
-                        <div class="prod-visual-bg"></div>
-                        <div class="prod-visual-circle"></div>
-                        <div class="prod-visual-emoji">🌧️</div>
+                <div class="flex flex-col bg-gris-oscuro border border-white/5 rounded-2xl overflow-hidden transition-all duration-300 cursor-default hover:border-amarillo/30 hover:-translate-y-1 hover:shadow-[0_16px_48px_rgba(0,0,0,0.4),0_0_0_1px_rgba(250,204,21,0.1)] group">
+                    <div class="h-[160px] flex items-center justify-center relative overflow-hidden bg-[linear-gradient(135deg,#0d1020_0%,#1a1a1a_100%)]">
+                        <div class="absolute w-[120px] h-[120px] rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-15 bg-[#60a5fa]"></div>
+                        <div class="text-[72px] relative z-10 transition-transform duration-300 drop-shadow-[0_8px_16px_rgba(0,0,0,0.5)] group-hover:scale-110 group-hover:-translate-y-1">💡</div>
                     </div>
-                    <div class="prod-info">
-                        <div class="prod-top">
-                            <div class="prod-nombre">Limpiaparabrisas</div>
-                            <span class="prod-tag">Seguridad</span>
+                    <div class="p-5 flex-1 flex flex-col">
+                        <div class="flex items-start justify-between gap-2 mb-1.5">
+                            <div class="text-[16px] font-bold text-white leading-tight">Focos y luces LED</div>
+                            <span class="text-[11px] font-bold tracking-[1px] uppercase py-0.5 px-2 rounded-full border whitespace-nowrap shrink-0 bg-[#60a5fa]/10 text-[#60a5fa] border-[#60a5fa]/20">Actualización</span>
                         </div>
-                        <div class="prod-desc">Plumas convencionales y de silicona. Limpieza perfecta sin rayaduras en el cristal.</div>
-                        <div class="prod-footer">
-                            <div class="prod-disponible">En existencia</div>
-                            <button class="prod-btn" onclick="cotizar('Limpiaparabrisas')">Cotizar</button>
+                        <div class="text-[13px] text-white/45 leading-[1.6] mb-4 flex-1">Focos H4, H7, H11 y LED de conversión para faros delanteros y traseros.</div>
+                        <div class="flex items-center justify-between pt-3 border-t border-white/5">
+                            <div class="flex items-center gap-1.5 text-[12px] text-white/35 font-semibold before:content-[''] before:w-1.5 before:h-1.5 before:bg-[#4ade80] before:rounded-full">En existencia</div>
+                            <button class="text-[12px] font-bold tracking-[1px] uppercase text-amarillo bg-amarillo/10 border border-amarillo/20 py-1.5 px-3.5 rounded-md transition-all duration-200 cursor-pointer font-barlow hover:bg-amarillo/20 hover:border-amarillo/40" onclick="cotizar('Focos y luces LED')">Cotizar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col bg-gris-oscuro border border-white/5 rounded-2xl overflow-hidden transition-all duration-300 cursor-default hover:border-amarillo/30 hover:-translate-y-1 hover:shadow-[0_16px_48px_rgba(0,0,0,0.4),0_0_0_1px_rgba(250,204,21,0.1)] group">
+                    <div class="h-[160px] flex items-center justify-center relative overflow-hidden bg-[linear-gradient(135deg,#0d1020_0%,#1a1a1a_100%)]">
+                        <div class="absolute w-[120px] h-[120px] rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-15 bg-[#60a5fa]"></div>
+                        <div class="text-[72px] relative z-10 transition-transform duration-300 drop-shadow-[0_8px_16px_rgba(0,0,0,0.5)] group-hover:scale-110 group-hover:-translate-y-1">🌧️</div>
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col">
+                        <div class="flex items-start justify-between gap-2 mb-1.5">
+                            <div class="text-[16px] font-bold text-white leading-tight">Limpiaparabrisas</div>
+                            <span class="text-[11px] font-bold tracking-[1px] uppercase py-0.5 px-2 rounded-full border whitespace-nowrap shrink-0 bg-[#60a5fa]/10 text-[#60a5fa] border-[#60a5fa]/20">Seguridad</span>
+                        </div>
+                        <div class="text-[13px] text-white/45 leading-[1.6] mb-4 flex-1">Plumas convencionales y de silicona. Limpieza perfecta sin rayaduras en el cristal.</div>
+                        <div class="flex items-center justify-between pt-3 border-t border-white/5">
+                            <div class="flex items-center gap-1.5 text-[12px] text-white/35 font-semibold before:content-[''] before:w-1.5 before:h-1.5 before:bg-[#4ade80] before:rounded-full">En existencia</div>
+                            <button class="text-[12px] font-bold tracking-[1px] uppercase text-amarillo bg-amarillo/10 border border-amarillo/20 py-1.5 px-3.5 rounded-md transition-all duration-200 cursor-pointer font-barlow hover:bg-amarillo/20 hover:border-amarillo/40" onclick="cotizar('Limpiaparabrisas')">Cotizar</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- BANDAS Y TRANSMISIÓN -->
-        <div class="grupo-categoria reveal" id="grupo-bandas" data-grupo="bandas">
-            <div class="cat-header">
-                <div class="cat-header-icono">⚙️</div>
-                <div class="cat-header-titulo">Bandas y transmisión</div>
-                <div class="cat-header-linea"></div>
-                <div class="cat-header-count">3 productos</div>
+        <div class="grupo-categoria reveal mb-16" id="grupo-bandas" data-grupo="bandas">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="w-11 h-11 bg-[#f87171]/10 border border-[#f87171]/25 rounded-lg flex items-center justify-center text-[20px]">⚙️</div>
+                <div class="font-bebas text-[28px] tracking-[2px] text-white">Bandas y transmisión</div>
+                <div class="flex-1 h-px bg-white/5"></div>
+                <div class="text-[12px] text-white/30 font-semibold tracking-[1px]">3 productos</div>
             </div>
-            <div class="productos-grid">
-                <div class="prod-card cat-bandas destacada">
-                    <div class="prod-visual">
-                        <div class="prod-visual-bg"></div>
-                        <div class="prod-visual-circle"></div>
-                        <div class="prod-visual-emoji">⚙️</div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="flex flex-col md:flex-row md:col-span-2 bg-gris-oscuro border border-white/5 rounded-2xl overflow-hidden transition-all duration-300 cursor-default hover:border-amarillo/30 hover:-translate-y-1 hover:shadow-[0_16px_48px_rgba(0,0,0,0.4),0_0_0_1px_rgba(250,204,21,0.1)] group">
+                    <div class="h-[160px] md:h-auto md:w-[240px] shrink-0 flex items-center justify-center relative overflow-hidden bg-[linear-gradient(135deg,#1a0d0d_0%,#1a1a1a_100%)]">
+                        <div class="absolute w-[120px] h-[120px] rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-15 bg-[#f87171]"></div>
+                        <div class="text-[72px] md:text-[90px] relative z-10 transition-transform duration-300 drop-shadow-[0_8px_16px_rgba(0,0,0,0.5)] group-hover:scale-110 group-hover:-translate-y-1">⚙️</div>
                     </div>
-                    <div class="prod-info">
-                        <div class="prod-top">
-                            <div class="prod-nombre">Kit de distribución completo</div>
-                            <span class="prod-tag">Crítico</span>
+                    <div class="p-5 flex-1 flex flex-col">
+                        <div class="flex items-start justify-between gap-2 mb-1.5">
+                            <div class="text-[16px] font-bold text-white leading-tight">Kit de distribución completo</div>
+                            <span class="text-[11px] font-bold tracking-[1px] uppercase py-0.5 px-2 rounded-full border whitespace-nowrap shrink-0 bg-[#f87171]/10 text-[#f87171] border-[#f87171]/20">Crítico</span>
                         </div>
-                        <div class="prod-desc">Banda de distribución + tensor + polea guía. Kit completo para un reemplazo correcto y sin sorpresas. Disponible para los modelos más comunes del mercado.</div>
-                        <div class="prod-footer">
-                            <div class="prod-disponible">En existencia</div>
-                            <button class="prod-btn" onclick="cotizar('Kit de distribución completo')">Cotizar</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="prod-card cat-bandas">
-                    <div class="prod-visual">
-                        <div class="prod-visual-bg"></div>
-                        <div class="prod-visual-circle"></div>
-                        <div class="prod-visual-emoji">🔄</div>
-                    </div>
-                    <div class="prod-info">
-                        <div class="prod-top">
-                            <div class="prod-nombre">Banda serpentina</div>
-                            <span class="prod-tag">Mantenimiento</span>
-                        </div>
-                        <div class="prod-desc">Acciona el alternador, la dirección hidráulica y el compresor del aire. Repuesto esencial.</div>
-                        <div class="prod-footer">
-                            <div class="prod-disponible">En existencia</div>
-                            <button class="prod-btn" onclick="cotizar('Banda serpentina')">Cotizar</button>
+                        <div class="text-[13px] text-white/45 leading-[1.6] mb-4 flex-1">Banda de distribución + tensor + polea guía. Kit completo para un reemplazo correcto y sin sorpresas. Disponible para los modelos más comunes del mercado.</div>
+                        <div class="flex items-center justify-between pt-3 border-t border-white/5">
+                            <div class="flex items-center gap-1.5 text-[12px] text-white/35 font-semibold before:content-[''] before:w-1.5 before:h-1.5 before:bg-[#4ade80] before:rounded-full">En existencia</div>
+                            <button class="text-[12px] font-bold tracking-[1px] uppercase text-amarillo bg-amarillo/10 border border-amarillo/20 py-1.5 px-3.5 rounded-md transition-all duration-200 cursor-pointer font-barlow hover:bg-amarillo/20 hover:border-amarillo/40" onclick="cotizar('Kit de distribución completo')">Cotizar</button>
                         </div>
                     </div>
                 </div>
-                <div class="prod-card cat-bandas">
-                    <div class="prod-visual">
-                        <div class="prod-visual-bg"></div>
-                        <div class="prod-visual-circle"></div>
-                        <div class="prod-visual-emoji">🎯</div>
+                <div class="flex flex-col bg-gris-oscuro border border-white/5 rounded-2xl overflow-hidden transition-all duration-300 cursor-default hover:border-amarillo/30 hover:-translate-y-1 hover:shadow-[0_16px_48px_rgba(0,0,0,0.4),0_0_0_1px_rgba(250,204,21,0.1)] group">
+                    <div class="h-[160px] flex items-center justify-center relative overflow-hidden bg-[linear-gradient(135deg,#1a0d0d_0%,#1a1a1a_100%)]">
+                        <div class="absolute w-[120px] h-[120px] rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-15 bg-[#f87171]"></div>
+                        <div class="text-[72px] relative z-10 transition-transform duration-300 drop-shadow-[0_8px_16px_rgba(0,0,0,0.5)] group-hover:scale-110 group-hover:-translate-y-1">🔄</div>
                     </div>
-                    <div class="prod-info">
-                        <div class="prod-top">
-                            <div class="prod-nombre">Tensor de banda</div>
-                            <span class="prod-tag">Precisión</span>
+                    <div class="p-5 flex-1 flex flex-col">
+                        <div class="flex items-start justify-between gap-2 mb-1.5">
+                            <div class="text-[16px] font-bold text-white leading-tight">Banda serpentina</div>
+                            <span class="text-[11px] font-bold tracking-[1px] uppercase py-0.5 px-2 rounded-full border whitespace-nowrap shrink-0 bg-[#f87171]/10 text-[#f87171] border-[#f87171]/20">Mantenimiento</span>
                         </div>
-                        <div class="prod-desc">Mantiene la tensión correcta de la banda de distribución. Siempre cámbialo junto con la banda.</div>
-                        <div class="prod-footer">
-                            <div class="prod-disponible">En existencia</div>
-                            <button class="prod-btn" onclick="cotizar('Tensor de banda')">Cotizar</button>
+                        <div class="text-[13px] text-white/45 leading-[1.6] mb-4 flex-1">Acciona el alternador, la dirección hidráulica y el compresor del aire. Repuesto esencial.</div>
+                        <div class="flex items-center justify-between pt-3 border-t border-white/5">
+                            <div class="flex items-center gap-1.5 text-[12px] text-white/35 font-semibold before:content-[''] before:w-1.5 before:h-1.5 before:bg-[#4ade80] before:rounded-full">En existencia</div>
+                            <button class="text-[12px] font-bold tracking-[1px] uppercase text-amarillo bg-amarillo/10 border border-amarillo/20 py-1.5 px-3.5 rounded-md transition-all duration-200 cursor-pointer font-barlow hover:bg-amarillo/20 hover:border-amarillo/40" onclick="cotizar('Banda serpentina')">Cotizar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col bg-gris-oscuro border border-white/5 rounded-2xl overflow-hidden transition-all duration-300 cursor-default hover:border-amarillo/30 hover:-translate-y-1 hover:shadow-[0_16px_48px_rgba(0,0,0,0.4),0_0_0_1px_rgba(250,204,21,0.1)] group">
+                    <div class="h-[160px] flex items-center justify-center relative overflow-hidden bg-[linear-gradient(135deg,#1a0d0d_0%,#1a1a1a_100%)]">
+                        <div class="absolute w-[120px] h-[120px] rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-15 bg-[#f87171]"></div>
+                        <div class="text-[72px] relative z-10 transition-transform duration-300 drop-shadow-[0_8px_16px_rgba(0,0,0,0.5)] group-hover:scale-110 group-hover:-translate-y-1">🎯</div>
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col">
+                        <div class="flex items-start justify-between gap-2 mb-1.5">
+                            <div class="text-[16px] font-bold text-white leading-tight">Tensor de banda</div>
+                            <span class="text-[11px] font-bold tracking-[1px] uppercase py-0.5 px-2 rounded-full border whitespace-nowrap shrink-0 bg-[#f87171]/10 text-[#f87171] border-[#f87171]/20">Precisión</span>
+                        </div>
+                        <div class="text-[13px] text-white/45 leading-[1.6] mb-4 flex-1">Mantiene la tensión correcta de la banda de distribución. Siempre cámbialo junto con la banda.</div>
+                        <div class="flex items-center justify-between pt-3 border-t border-white/5">
+                            <div class="flex items-center gap-1.5 text-[12px] text-white/35 font-semibold before:content-[''] before:w-1.5 before:h-1.5 before:bg-[#4ade80] before:rounded-full">En existencia</div>
+                            <button class="text-[12px] font-bold tracking-[1px] uppercase text-amarillo bg-amarillo/10 border border-amarillo/20 py-1.5 px-3.5 rounded-md transition-all duration-200 cursor-pointer font-barlow hover:bg-amarillo/20 hover:border-amarillo/40" onclick="cotizar('Tensor de banda')">Cotizar</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- SISTEMA ELÉCTRICO -->
-        <div class="grupo-categoria reveal" id="grupo-electrico" data-grupo="electrico">
-            <div class="cat-header">
-                <div class="cat-header-icono">⚡</div>
-                <div class="cat-header-titulo">Sistema eléctrico</div>
-                <div class="cat-header-linea"></div>
-                <div class="cat-header-count">3 productos</div>
+        <div class="grupo-categoria reveal mb-16" id="grupo-electrico" data-grupo="electrico">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="w-11 h-11 bg-[#34d399]/10 border border-[#34d399]/25 rounded-lg flex items-center justify-center text-[20px]">⚡</div>
+                <div class="font-bebas text-[28px] tracking-[2px] text-white">Sistema eléctrico</div>
+                <div class="flex-1 h-px bg-white/5"></div>
+                <div class="text-[12px] text-white/30 font-semibold tracking-[1px]">3 productos</div>
             </div>
-            <div class="productos-grid">
-                <div class="prod-card cat-electrico destacada">
-                    <div class="prod-visual">
-                        <div class="prod-visual-bg"></div>
-                        <div class="prod-visual-circle"></div>
-                        <div class="prod-visual-emoji">⚡</div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="flex flex-col md:flex-row md:col-span-2 bg-gris-oscuro border border-white/5 rounded-2xl overflow-hidden transition-all duration-300 cursor-default hover:border-amarillo/30 hover:-translate-y-1 hover:shadow-[0_16px_48px_rgba(0,0,0,0.4),0_0_0_1px_rgba(250,204,21,0.1)] group">
+                    <div class="h-[160px] md:h-auto md:w-[240px] shrink-0 flex items-center justify-center relative overflow-hidden bg-[linear-gradient(135deg,#0d1a18_0%,#1a1a1a_100%)]">
+                        <div class="absolute w-[120px] h-[120px] rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-15 bg-[#34d399]"></div>
+                        <div class="text-[72px] md:text-[90px] relative z-10 transition-transform duration-300 drop-shadow-[0_8px_16px_rgba(0,0,0,0.5)] group-hover:scale-110 group-hover:-translate-y-1">⚡</div>
                     </div>
-                    <div class="prod-info">
-                        <div class="prod-top">
-                            <div class="prod-nombre">Bujías de encendido</div>
-                            <span class="prod-tag">Esencial</span>
+                    <div class="p-5 flex-1 flex flex-col">
+                        <div class="flex items-start justify-between gap-2 mb-1.5">
+                            <div class="text-[16px] font-bold text-white leading-tight">Bujías de encendido</div>
+                            <span class="text-[11px] font-bold tracking-[1px] uppercase py-0.5 px-2 rounded-full border whitespace-nowrap shrink-0 bg-[#34d399]/10 text-[#34d399] border-[#34d399]/20">Esencial</span>
                         </div>
-                        <div class="prod-desc">Bujías estándar, de iridio y de platino. Un juego de bujías en buen estado mejora el arranque, el consumo de gasolina y la potencia del motor. Marcas: NGK, Bosch, Champion, Denso.</div>
-                        <div class="prod-footer">
-                            <div class="prod-disponible">En existencia</div>
-                            <button class="prod-btn" onclick="cotizar('Bujías de encendido')">Cotizar</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="prod-card cat-electrico">
-                    <div class="prod-visual">
-                        <div class="prod-visual-bg"></div>
-                        <div class="prod-visual-circle"></div>
-                        <div class="prod-visual-emoji">🔌</div>
-                    </div>
-                    <div class="prod-info">
-                        <div class="prod-top">
-                            <div class="prod-nombre">Cables de bujía</div>
-                            <span class="prod-tag">Ignición</span>
-                        </div>
-                        <div class="prod-desc">Juego de cables de alta tensión para encendido. Mejoran la chispa y el arranque en frío.</div>
-                        <div class="prod-footer">
-                            <div class="prod-disponible">En existencia</div>
-                            <button class="prod-btn" onclick="cotizar('Cables de bujía')">Cotizar</button>
+                        <div class="text-[13px] text-white/45 leading-[1.6] mb-4 flex-1">Bujías estándar, de iridio y de platino. Un juego de bujías en buen estado mejora el arranque, el consumo de gasolina y la potencia del motor. Marcas: NGK, Bosch, Champion, Denso.</div>
+                        <div class="flex items-center justify-between pt-3 border-t border-white/5">
+                            <div class="flex items-center gap-1.5 text-[12px] text-white/35 font-semibold before:content-[''] before:w-1.5 before:h-1.5 before:bg-[#4ade80] before:rounded-full">En existencia</div>
+                            <button class="text-[12px] font-bold tracking-[1px] uppercase text-amarillo bg-amarillo/10 border border-amarillo/20 py-1.5 px-3.5 rounded-md transition-all duration-200 cursor-pointer font-barlow hover:bg-amarillo/20 hover:border-amarillo/40" onclick="cotizar('Bujías de encendido')">Cotizar</button>
                         </div>
                     </div>
                 </div>
-                <div class="prod-card cat-electrico">
-                    <div class="prod-visual">
-                        <div class="prod-visual-bg"></div>
-                        <div class="prod-visual-circle"></div>
-                        <div class="prod-visual-emoji">🔆</div>
+                <div class="flex flex-col bg-gris-oscuro border border-white/5 rounded-2xl overflow-hidden transition-all duration-300 cursor-default hover:border-amarillo/30 hover:-translate-y-1 hover:shadow-[0_16px_48px_rgba(0,0,0,0.4),0_0_0_1px_rgba(250,204,21,0.1)] group">
+                    <div class="h-[160px] flex items-center justify-center relative overflow-hidden bg-[linear-gradient(135deg,#0d1a18_0%,#1a1a1a_100%)]">
+                        <div class="absolute w-[120px] h-[120px] rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-15 bg-[#34d399]"></div>
+                        <div class="text-[72px] relative z-10 transition-transform duration-300 drop-shadow-[0_8px_16px_rgba(0,0,0,0.5)] group-hover:scale-110 group-hover:-translate-y-1">🔌</div>
                     </div>
-                    <div class="prod-info">
-                        <div class="prod-top">
-                            <div class="prod-nombre">Alternador remanufacturado</div>
-                            <span class="prod-tag">Reconstruido</span>
+                    <div class="p-5 flex-1 flex flex-col">
+                        <div class="flex items-start justify-between gap-2 mb-1.5">
+                            <div class="text-[16px] font-bold text-white leading-tight">Cables de bujía</div>
+                            <span class="text-[11px] font-bold tracking-[1px] uppercase py-0.5 px-2 rounded-full border whitespace-nowrap shrink-0 bg-[#34d399]/10 text-[#34d399] border-[#34d399]/20">Ignición</span>
                         </div>
-                        <div class="prod-desc">Alternadores reconstruidos con garantía. Carga correctamente la batería y alimenta el sistema eléctrico.</div>
-                        <div class="prod-footer">
-                            <div class="prod-disponible">En existencia</div>
-                            <button class="prod-btn" onclick="cotizar('Alternador remanufacturado')">Cotizar</button>
+                        <div class="text-[13px] text-white/45 leading-[1.6] mb-4 flex-1">Juego de cables de alta tensión para encendido. Mejoran la chispa y el arranque en frío.</div>
+                        <div class="flex items-center justify-between pt-3 border-t border-white/5">
+                            <div class="flex items-center gap-1.5 text-[12px] text-white/35 font-semibold before:content-[''] before:w-1.5 before:h-1.5 before:bg-[#4ade80] before:rounded-full">En existencia</div>
+                            <button class="text-[12px] font-bold tracking-[1px] uppercase text-amarillo bg-amarillo/10 border border-amarillo/20 py-1.5 px-3.5 rounded-md transition-all duration-200 cursor-pointer font-barlow hover:bg-amarillo/20 hover:border-amarillo/40" onclick="cotizar('Cables de bujía')">Cotizar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col bg-gris-oscuro border border-white/5 rounded-2xl overflow-hidden transition-all duration-300 cursor-default hover:border-amarillo/30 hover:-translate-y-1 hover:shadow-[0_16px_48px_rgba(0,0,0,0.4),0_0_0_1px_rgba(250,204,21,0.1)] group">
+                    <div class="h-[160px] flex items-center justify-center relative overflow-hidden bg-[linear-gradient(135deg,#0d1a18_0%,#1a1a1a_100%)]">
+                        <div class="absolute w-[120px] h-[120px] rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-15 bg-[#34d399]"></div>
+                        <div class="text-[72px] relative z-10 transition-transform duration-300 drop-shadow-[0_8px_16px_rgba(0,0,0,0.5)] group-hover:scale-110 group-hover:-translate-y-1">🔆</div>
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col">
+                        <div class="flex items-start justify-between gap-2 mb-1.5">
+                            <div class="text-[16px] font-bold text-white leading-tight">Alternador remanufacturado</div>
+                            <span class="text-[11px] font-bold tracking-[1px] uppercase py-0.5 px-2 rounded-full border whitespace-nowrap shrink-0 bg-[#34d399]/10 text-[#34d399] border-[#34d399]/20">Reconstruido</span>
+                        </div>
+                        <div class="text-[13px] text-white/45 leading-[1.6] mb-4 flex-1">Alternadores reconstruidos con garantía. Carga correctamente la batería y alimenta el sistema eléctrico.</div>
+                        <div class="flex items-center justify-between pt-3 border-t border-white/5">
+                            <div class="flex items-center gap-1.5 text-[12px] text-white/35 font-semibold before:content-[''] before:w-1.5 before:h-1.5 before:bg-[#4ade80] before:rounded-full">En existencia</div>
+                            <button class="text-[12px] font-bold tracking-[1px] uppercase text-amarillo bg-amarillo/10 border border-amarillo/20 py-1.5 px-3.5 rounded-md transition-all duration-200 cursor-pointer font-barlow hover:bg-amarillo/20 hover:border-amarillo/40" onclick="cotizar('Alternador remanufacturado')">Cotizar</button>
                         </div>
                     </div>
                 </div>
@@ -1030,60 +455,61 @@
 
     </main>
 
-    <!-- MARCAS -->
-    <div class="marcas-wrap">
-        <div class="marcas-titulo">Marcas que manejamos</div>
-        <div class="marcas-row">
-            <div class="marca-item">BARDAHL</div>
-            <div class="marca-item">BOSCH</div>
-            <div class="marca-item">NGK</div>
-            <div class="marca-item">CHAMPION</div>
-            <div class="marca-item">DENSO</div>
-            <div class="marca-item">AC DELCO</div>
-            <div class="marca-item">VARTA</div>
-            <div class="marca-item">PENNZOIL</div>
-            <div class="marca-item">MOBIL 1</div>
-            <div class="marca-item">GATES</div>
-            <div class="marca-item">DAYCO</div>
+    <div class="bg-gris-oscuro border-y border-white/5 py-10 px-8 overflow-hidden">
+        <div class="text-center text-[12px] font-bold tracking-[3px] uppercase text-white/25 mb-6">Marcas que manejamos</div>
+        <div class="flex gap-8 justify-center flex-wrap items-center">
+            <div class="font-bebas text-[20px] tracking-[3px] text-white/15 transition-colors duration-300 hover:text-amarillo/60 cursor-default">BARDAHL</div>
+            <div class="font-bebas text-[20px] tracking-[3px] text-white/15 transition-colors duration-300 hover:text-amarillo/60 cursor-default">BOSCH</div>
+            <div class="font-bebas text-[20px] tracking-[3px] text-white/15 transition-colors duration-300 hover:text-amarillo/60 cursor-default">NGK</div>
+            <div class="font-bebas text-[20px] tracking-[3px] text-white/15 transition-colors duration-300 hover:text-amarillo/60 cursor-default">CHAMPION</div>
+            <div class="font-bebas text-[20px] tracking-[3px] text-white/15 transition-colors duration-300 hover:text-amarillo/60 cursor-default">DENSO</div>
+            <div class="font-bebas text-[20px] tracking-[3px] text-white/15 transition-colors duration-300 hover:text-amarillo/60 cursor-default">AC DELCO</div>
+            <div class="font-bebas text-[20px] tracking-[3px] text-white/15 transition-colors duration-300 hover:text-amarillo/60 cursor-default">VARTA</div>
+            <div class="font-bebas text-[20px] tracking-[3px] text-white/15 transition-colors duration-300 hover:text-amarillo/60 cursor-default">PENNZOIL</div>
+            <div class="font-bebas text-[20px] tracking-[3px] text-white/15 transition-colors duration-300 hover:text-amarillo/60 cursor-default">MOBIL 1</div>
+            <div class="font-bebas text-[20px] tracking-[3px] text-white/15 transition-colors duration-300 hover:text-amarillo/60 cursor-default">GATES</div>
+            <div class="font-bebas text-[20px] tracking-[3px] text-white/15 transition-colors duration-300 hover:text-amarillo/60 cursor-default">DAYCO</div>
         </div>
     </div>
 
-    <!-- CTA -->
-    <section class="cta-wrap">
-        <h2 class="cta-titulo">¿No encuentras lo que buscas?</h2>
-        <p class="cta-subtitulo">Dinos qué necesitas y lo conseguimos. Pregunta sin compromiso, cotizamos sin costo.</p>
-        <a href="Contacto.html" class="btn-cta-negro">Preguntar por una pieza</a>
+    <section class="bg-amarillo py-20 px-8 text-center">
+        <h2 class="font-bebas text-[clamp(36px,5vw,64px)] text-black tracking-[2px] mb-3">¿No encuentras lo que buscas?</h2>
+        <p class="text-[17px] text-black/65 mb-8 max-w-[500px] mx-auto">Dinos qué necesitas y lo conseguimos. Pregunta sin compromiso, cotizamos sin costo.</p>
+        <a href="Contacto.html" class="bg-black text-amarillo font-bold text-[14px] tracking-[2px] uppercase py-[14px] px-9 rounded-lg inline-block transition-all duration-200 no-underline hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.4)]">Preguntar por una pieza</a>
     </section>
 
-    <!-- FOOTER -->
-    <footer>
-        <div class="footer-top">
-            <div class="footer-nombre">Refaccionaria <span>Leo</span></div>
-            <div class="footer-links">
-                <a href="index.html" class="footer-link">Inicio</a>
-                <a href="Productos.html" class="footer-link">Productos</a>
-                <a href="Contacto.html" class="footer-link">Contacto</a>
-                <a href="Login.html" class="footer-link">Iniciar sesión</a>
+    <footer class="bg-gris-oscuro border-t border-white/5">
+        <div class="max-w-[1200px] mx-auto pt-12 pb-6 px-8 flex items-center justify-between gap-8 flex-wrap">
+            <div class="font-bebas text-[22px] tracking-[2px] text-white">Refaccionaria <span class="text-amarillo">Leo</span></div>
+            <div class="flex gap-1 flex-wrap justify-center">
+                <a href="index.html" class="py-[7px] px-3.5 rounded-[6px] text-[13px] font-semibold tracking-[1px] uppercase no-underline text-white/40 transition-colors duration-200 hover:text-white hover:bg-white/5">Inicio</a>
+                <a href="Productos.html" class="py-[7px] px-3.5 rounded-[6px] text-[13px] font-semibold tracking-[1px] uppercase no-underline text-white/40 transition-colors duration-200 hover:text-white hover:bg-white/5">Productos</a>
+                <a href="Contacto.html" class="py-[7px] px-3.5 rounded-[6px] text-[13px] font-semibold tracking-[1px] uppercase no-underline text-white/40 transition-colors duration-200 hover:text-white hover:bg-white/5">Contacto</a>
+                <a href="Login.html" class="py-[7px] px-3.5 rounded-[6px] text-[13px] font-semibold tracking-[1px] uppercase no-underline text-white/40 transition-colors duration-200 hover:text-white hover:bg-white/5">Iniciar sesión</a>
             </div>
-            <div style="font-size:13px;color:rgba(255,255,255,0.25);">Chimalhuacán, Estado de México</div>
+            <div class="text-[13px] text-white/25 w-full text-center md:w-auto">Chimalhuacán, Estado de México</div>
         </div>
-        <div class="footer-bottom">
+        <div class="border-t border-white/5 max-w-[1200px] mx-auto py-6 px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-[13px] text-white/20">
             <span>© 2025 Refaccionaria Leo — Todos los derechos reservados</span>
             <span>+52 123 456 7890</span>
         </div>
     </footer>
 
-    <!-- TOAST -->
-    <div class="toast" id="toast">
-        <div class="toast-icono">✅</div>
+    <div class="toast fixed bottom-8 right-8 bg-gris-oscuro border border-amarillo/30 rounded-xl py-4 px-6 flex items-center gap-3 text-[14px] text-white z-[200] max-w-[320px] shadow-[0_8px_32px_rgba(0,0,0,0.5)]" id="toast">
+        <div class="text-[22px] shrink-0">✅</div>
         <div>
-            <div style="font-weight:700;margin-bottom:2px;" id="toast-titulo">¡Listo!</div>
-            <div style="font-size:12px;color:rgba(255,255,255,0.5);" id="toast-msg">Llámanos al +52 123 456 7890 para cotizar.</div>
+            <div class="font-bold mb-0.5" id="toast-titulo">¡Listo!</div>
+            <div class="text-[12px] text-white/50" id="toast-msg">Llámanos al +52 123 456 7890 para cotizar.</div>
         </div>
     </div>
 
     <script>
-        // Filtros
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
         function filtrar(btn) {
             document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('activo'));
             btn.classList.add('activo');
@@ -1098,7 +524,6 @@
             });
         }
 
-        // Toast de cotización
         function cotizar(producto) {
             const toast = document.getElementById('toast');
             document.getElementById('toast-titulo').textContent = producto;
@@ -1107,7 +532,6 @@
             setTimeout(() => toast.classList.remove('visible'), 3500);
         }
 
-        // Scroll reveal
         const reveals = document.querySelectorAll('.reveal');
         const observer = new IntersectionObserver((entries) => {
             entries.forEach((entry, i) => {

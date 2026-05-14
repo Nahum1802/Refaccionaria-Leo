@@ -7,836 +7,235 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --amarillo: #FACC15;
-            --negro: #0a0a0a;
-            --gris-oscuro: #1a1a1a;
-            --gris-medio: #242424;
+    <style type="text/tailwindcss">
+        @theme {
+            --color-amarillo: #FACC15;
+            --color-negro: #0a0a0a;
+            --color-gris-oscuro: #1a1a1a;
+            --color-gris-medio: #242424;
+            --font-barlow: 'Barlow', sans-serif;
+            --font-bebas: 'Bebas Neue', sans-serif;
         }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-            font-family: 'Barlow', sans-serif;
-            background: #0a0a0a;
-            color: #f5f5f0;
-            min-height: 100vh;
-            overflow-x: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* ── NAV ── */
-        nav {
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            z-index: 100;
-            background: rgba(10,10,10,0.92);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(250,204,21,0.15);
-            padding: 14px 0;
-        }
-        .nav-inner {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-        }
-        .logo-icon {
-            width: 36px; height: 36px;
-            background: var(--amarillo);
-            border-radius: 6px;
-            display: flex; align-items: center; justify-content: center;
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 18px;
-            color: #000;
-        }
-        .logo-text {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 22px;
-            letter-spacing: 2px;
-            color: #fff;
-        }
-        .logo-text span { color: var(--amarillo); }
-        nav ul { list-style: none; display: flex; align-items: center; gap: 4px; }
-        nav ul a {
-            display: block;
-            padding: 7px 16px;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: 600;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            text-decoration: none;
-            color: rgba(255,255,255,0.75);
-            transition: color 0.2s, background 0.2s;
-        }
-        nav ul a:hover { color: #fff; background: rgba(255,255,255,0.07); }
-        nav ul a.activo { background: var(--amarillo); color: #000; }
-
-        /* ── LAYOUT PRINCIPAL ── */
-        .main-wrap {
-            flex: 1;
-            display: grid;
-            grid-template-columns: 1fr 1.3fr;
-            min-height: 100vh;
-        }
-
-        /* ── PANEL IZQUIERDO (decorativo) ── */
-        .panel-izq {
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            padding: 3rem;
-            background: #0d0d0d;
-        }
-        .panel-bg {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(160deg, #111 0%, #0a0a0a 60%);
-        }
-        .panel-glow-1 {
-            position: absolute;
-            top: -10%; right: -10%;
-            width: 500px; height: 500px;
-            background: radial-gradient(circle, rgba(250,204,21,0.1) 0%, transparent 65%);
-            border-radius: 50%;
-        }
-        .panel-glow-2 {
-            position: absolute;
-            bottom: 15%; left: -10%;
-            width: 350px; height: 350px;
-            background: radial-gradient(circle, rgba(250,204,21,0.06) 0%, transparent 65%);
-            border-radius: 50%;
-        }
-        .panel-grid {
-            position: absolute;
-            inset: 0;
-            background-image:
-                linear-gradient(rgba(250,204,21,0.04) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(250,204,21,0.04) 1px, transparent 1px);
-            background-size: 55px 55px;
-        }
-
-        /* Pasos decorativos */
-        .pasos-wrap {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -60%);
-            width: 80%;
-        }
-        .paso-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 16px;
-            margin-bottom: 20px;
-            animation: aparecer 0.5s ease both;
-        }
-        .paso-item:nth-child(1) { animation-delay: 0.1s; }
-        .paso-item:nth-child(2) { animation-delay: 0.25s; }
-        .paso-item:nth-child(3) { animation-delay: 0.4s; }
-        .paso-item:nth-child(4) { animation-delay: 0.55s; }
         @keyframes aparecer {
             from { opacity: 0; transform: translateX(-16px); }
-            to   { opacity: 1; transform: none; }
-        }
-        .paso-num {
-            width: 38px; height: 38px;
-            background: rgba(250,204,21,0.1);
-            border: 1px solid rgba(250,204,21,0.25);
-            border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 18px;
-            color: var(--amarillo);
-            flex-shrink: 0;
-        }
-        .paso-num.activo {
-            background: var(--amarillo);
-            color: #000;
-            box-shadow: 0 4px 16px rgba(250,204,21,0.35);
-        }
-        .paso-linea {
-            width: 1px;
-            height: 24px;
-            background: rgba(250,204,21,0.15);
-            margin-left: 19px;
-            margin-bottom: 0;
-        }
-        .paso-contenido { padding-top: 6px; }
-        .paso-titulo {
-            font-size: 15px;
-            font-weight: 700;
-            color: rgba(255,255,255,0.8);
-            margin-bottom: 3px;
-        }
-        .paso-desc {
-            font-size: 12px;
-            color: rgba(255,255,255,0.35);
-            line-height: 1.5;
-        }
-
-        /* Tarjetas flotantes */
-        .float-card {
-            position: absolute;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.07);
-            border-radius: 12px;
-            padding: 10px 14px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 13px;
-            font-weight: 600;
-            color: rgba(255,255,255,0.55);
-            backdrop-filter: blur(8px);
-            animation: flotar 4s ease-in-out infinite;
-        }
-        .float-card-icono {
-            width: 28px; height: 28px;
-            background: rgba(250,204,21,0.12);
-            border-radius: 7px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 14px;
-            flex-shrink: 0;
+            to { opacity: 1; transform: none; }
         }
         @keyframes flotar {
             0%, 100% { transform: translateY(0px); }
-            50%       { transform: translateY(-7px); }
+            50% { transform: translateY(-7px); }
         }
-        .fc-1 { top: 12%; left: 6%; animation-delay: 0s; }
-        .fc-2 { top: 14%; right: 5%; animation-delay: -1.8s; }
-
-        /* Texto inferior del panel */
-        .panel-texto { position: relative; z-index: 2; }
-        .panel-titulo {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 40px;
-            letter-spacing: 2px;
-            line-height: 1;
-            margin-bottom: 0.75rem;
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
-        .panel-titulo span { color: var(--amarillo); }
-        .panel-desc {
-            font-size: 14px;
-            color: rgba(255,255,255,0.4);
-            line-height: 1.7;
-            max-width: 320px;
-            margin-bottom: 1.5rem;
-        }
-        .panel-ya-cuenta {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 10px;
-            padding: 10px 16px;
-            font-size: 13px;
-            color: rgba(255,255,255,0.45);
-            text-decoration: none;
-            transition: border-color 0.2s, background 0.2s;
-        }
-        .panel-ya-cuenta:hover {
-            border-color: rgba(250,204,21,0.3);
-            background: rgba(250,204,21,0.05);
-            color: rgba(255,255,255,0.7);
-        }
-        .panel-ya-cuenta span { color: var(--amarillo); font-weight: 700; }
-
-        /* ── PANEL DERECHO: FORMULARIO ── */
-        .panel-der {
-            background: #0f0f0f;
-            position: relative;
-            overflow: hidden;
-            overflow-y: auto;
-            padding: 7rem 3.5rem 3rem;
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
-        }
-        .panel-der::before {
-            content: '';
-            position: absolute;
-            top: -10%; left: -10%;
-            width: 350px; height: 350px;
-            background: radial-gradient(circle, rgba(250,204,21,0.04) 0%, transparent 65%);
-            border-radius: 50%;
-            pointer-events: none;
-        }
-
-        .form-contenedor {
-            width: 100%;
-            max-width: 500px;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* Cabecera */
-        .form-head {
-            margin-bottom: 2rem;
-        }
-        .form-head-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            background: rgba(250,204,21,0.1);
-            border: 1px solid rgba(250,204,21,0.25);
-            padding: 5px 13px;
-            border-radius: 100px;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: var(--amarillo);
-            margin-bottom: 1rem;
-        }
-        .form-head-badge::before {
-            content: '';
-            width: 5px; height: 5px;
-            background: var(--amarillo);
-            border-radius: 50%;
-        }
-        .form-head-titulo {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 40px;
-            letter-spacing: 2px;
-            line-height: 1;
-            margin-bottom: 0.5rem;
-        }
-        .form-head-sub {
-            font-size: 14px;
-            color: rgba(255,255,255,0.4);
-            line-height: 1.6;
-        }
-
-        /* Separador de sección */
-        .sec-label {
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: rgba(255,255,255,0.2);
-            margin: 1.5rem 0 1rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .sec-label::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: rgba(255,255,255,0.06);
-        }
-
-        /* Grid de campos */
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-        .form-grupo { margin-bottom: 12px; }
-        .form-grupo.no-mb { margin-bottom: 0; }
-
-        label {
-            display: block;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            color: rgba(255,255,255,0.35);
-            margin-bottom: 7px;
-        }
-
-        .campo-wrap { position: relative; }
-        .campo-icono {
-            position: absolute;
-            left: 13px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 15px;
-            pointer-events: none;
-            opacity: 0.35;
-            transition: opacity 0.2s;
-        }
-        .campo-wrap:focus-within .campo-icono { opacity: 0.75; }
-
-        .campo {
-            width: 100%;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 10px;
-            padding: 12px 14px 12px 40px;
-            font-size: 14px;
-            color: #fff;
-            font-family: 'Barlow', sans-serif;
-            outline: none;
-            transition: border-color 0.25s, background 0.25s, box-shadow 0.25s;
-        }
-        .campo::placeholder { color: rgba(255,255,255,0.18); }
-        .campo:focus {
-            border-color: rgba(250,204,21,0.5);
-            background: rgba(250,204,21,0.04);
-            box-shadow: 0 0 0 3px rgba(250,204,21,0.07);
-        }
-        .campo.error {
-            border-color: rgba(248,113,113,0.5) !important;
-            box-shadow: 0 0 0 3px rgba(248,113,113,0.07) !important;
-        }
-        .campo.ok {
-            border-color: rgba(74,222,128,0.4) !important;
-        }
-        .campo-sin-icono { padding-left: 14px; }
-
-        /* Toggle contraseña */
-        .campo-pass-wrap { position: relative; }
-        .campo-pass { padding-right: 44px; }
-        .toggle-pass {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 15px;
-            color: rgba(255,255,255,0.3);
-            transition: color 0.2s;
-            padding: 4px;
-            line-height: 1;
-        }
-        .toggle-pass:hover { color: rgba(255,255,255,0.7); }
-
-        /* Indicador de fortaleza */
-        .fortaleza-wrap { margin-top: 8px; }
-        .fortaleza-barras {
-            display: flex;
-            gap: 4px;
-            margin-bottom: 5px;
-        }
-        .barra {
-            flex: 1;
-            height: 3px;
-            border-radius: 2px;
-            background: rgba(255,255,255,0.07);
-            transition: background 0.3s;
-        }
-        .barra.debil   { background: #f87171; }
-        .barra.media   { background: #fb923c; }
-        .barra.buena   { background: var(--amarillo); }
-        .barra.fuerte  { background: #4ade80; }
-        .fortaleza-texto {
-            font-size: 11px;
-            color: rgba(255,255,255,0.35);
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            transition: color 0.3s;
-        }
-
-        /* Mensaje de error */
-        .campo-error {
-            font-size: 11px;
-            color: #f87171;
-            margin-top: 5px;
-            display: none;
-            align-items: center;
-            gap: 4px;
-            line-height: 1.4;
-        }
-        .campo-error.visible { display: flex; }
-
-        /* Teléfono: prefijo + campo */
-        .tel-wrap {
-            display: flex;
-            gap: 8px;
-        }
-        .tel-prefijo {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 10px;
-            padding: 12px 12px;
-            font-size: 14px;
-            color: rgba(255,255,255,0.5);
-            font-family: 'Barlow', sans-serif;
-            font-weight: 600;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-        .tel-campo { flex: 1; padding-left: 14px; }
-
-        /* Términos y condiciones */
-        .terminos-wrap {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            margin: 1.25rem 0;
-            cursor: pointer;
-        }
-        .check-custom {
-            width: 20px; height: 20px;
-            border: 1.5px solid rgba(255,255,255,0.15);
-            border-radius: 6px;
-            background: rgba(255,255,255,0.04);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 11px;
-            color: transparent;
-            transition: all 0.2s;
-            flex-shrink: 0;
-            margin-top: 2px;
-        }
-        .check-custom.checked {
-            background: rgba(250,204,21,0.15);
-            border-color: rgba(250,204,21,0.5);
-            color: var(--amarillo);
-        }
-        .terminos-texto {
-            font-size: 13px;
-            color: rgba(255,255,255,0.45);
-            line-height: 1.55;
-        }
-        .terminos-texto a {
-            color: var(--amarillo);
-            text-decoration: none;
-            font-weight: 600;
-        }
-        .terminos-texto a:hover { opacity: 0.8; }
-        .terminos-error {
-            font-size: 11px;
-            color: #f87171;
-            display: none;
-            margin-top: -8px;
-            margin-bottom: 4px;
-        }
-        .terminos-error.visible { display: block; }
-
-        /* Botón de registro */
-        .btn-registro {
-            width: 100%;
-            background: var(--amarillo);
-            color: #000;
-            font-family: 'Barlow', sans-serif;
-            font-weight: 700;
-            font-size: 15px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            padding: 15px 24px;
-            border-radius: 10px;
-            border: none;
-            cursor: pointer;
-            transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 4px 20px rgba(250,204,21,0.25);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 1.25rem;
-        }
-        .btn-registro:hover {
-            background: #fde047;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(250,204,21,0.4);
-        }
-        .btn-registro:active { transform: none; }
-        .btn-registro.cargando { background: rgba(250,204,21,0.35); pointer-events: none; }
-
-        /* Spinner */
-        .spinner {
-            width: 18px; height: 18px;
-            border: 2px solid rgba(0,0,0,0.2);
-            border-top-color: #000;
-            border-radius: 50%;
-            animation: spin 0.7s linear infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* Ya tengo cuenta */
-        .ya-cuenta {
-            text-align: center;
-            font-size: 14px;
-            color: rgba(255,255,255,0.35);
-            margin-bottom: 1.5rem;
-        }
-        .ya-cuenta a {
-            color: var(--amarillo);
-            text-decoration: none;
-            font-weight: 700;
-            transition: opacity 0.2s;
-        }
-        .ya-cuenta a:hover { opacity: 0.8; }
-
-        /* Garantía */
-        .garantia-row {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        .garantia-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 11px;
-            color: rgba(255,255,255,0.2);
-            font-weight: 600;
-        }
-
-        /* Toast */
-        .toast {
-            position: fixed;
-            bottom: 2rem; right: 2rem;
-            background: #1a1a1a;
-            border: 1px solid rgba(74,222,128,0.35);
-            border-radius: 14px;
-            padding: 1rem 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            font-size: 14px;
-            color: #fff;
-            z-index: 300;
-            transform: translateY(100px);
-            opacity: 0;
-            transition: transform 0.4s ease, opacity 0.4s ease;
-            pointer-events: none;
-            max-width: 340px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-        }
-        .toast.visible { transform: translateY(0); opacity: 1; }
-        .toast-icono { font-size: 26px; flex-shrink: 0; }
-
-        /* Footer mínimo */
-        .mini-footer {
-            background: #0a0a0a;
-            border-top: 1px solid rgba(255,255,255,0.05);
-            padding: 1.25rem 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 12px;
-            color: rgba(255,255,255,0.2);
-        }
-        .mini-footer a {
-            color: rgba(255,255,255,0.3);
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-        .mini-footer a:hover { color: rgba(255,255,255,0.6); }
     </style>
 </head>
-<body>
+<body class="font-barlow bg-negro text-[#f5f5f0] min-h-screen overflow-x-hidden flex flex-col m-0 p-0 box-border">
 
-    <!-- NAV -->
-    <nav>
-        <div class="nav-inner">
-            <a href="index.html" class="logo">
-                <div class="logo-icon">RL</div>
-                <div class="logo-text">Refaccionaria <span>Leo</span></div>
+    <nav class="fixed top-0 left-0 right-0 z-[100] bg-negro/92 backdrop-blur-[12px] border-b border-amarillo/15 py-[14px]">
+        <div class="max-w-[1200px] mx-auto px-8 flex items-center justify-between relative">
+            <a href="index.html" class="flex items-center gap-[10px] no-underline">
+                <div class="w-[36px] h-[36px] bg-amarillo rounded-[6px] flex items-center justify-center font-bebas text-[18px] text-black"><img src="IMG/bardahl-top-logo-mobile.webp" alt="Logo Refaccionaria Leo"></div>
+                <div class="font-bebas text-[22px] tracking-[2px] text-white">Refaccionaria <span class="text-amarillo">Leo</span></div>
             </a>
-            <ul>
-                <li><a href="index.html">Inicio</a></li>
-                <li><a href="Productos.html">Productos</a></li>
-                <li><a href="Contacto.html">Contacto</a></li>
-                <li><a href="Login.html" class="activo">Iniciar sesión</a></li>
+            
+            <ul class="list-none m-0 p-0 hidden md:flex items-center gap-1">
+                <li><a href="index.html" class="block py-[7px] px-4 rounded-[6px] text-[13px] font-semibold tracking-[1.5px] uppercase no-underline text-white/75 transition-colors duration-200 hover:text-white hover:bg-white/10">Inicio</a></li>
+                <li><a href="Productos.html" class="block py-[7px] px-4 rounded-[6px] text-[13px] font-semibold tracking-[1.5px] uppercase no-underline text-white/75 transition-colors duration-200 hover:text-white hover:bg-white/10">Productos</a></li>
+                <li><a href="Contacto.html" class="block py-[7px] px-4 rounded-[6px] text-[13px] font-semibold tracking-[1.5px] uppercase no-underline text-white/75 transition-colors duration-200 hover:text-white hover:bg-white/10">Contacto</a></li>
+                <li><a href="Login.html" class="block py-[7px] px-4 rounded-[6px] text-[13px] font-semibold tracking-[1.5px] uppercase no-underline transition-colors duration-200 bg-amarillo text-black hover:bg-yellow-500">Iniciar sesión</a></li>
+            </ul>
+
+            <button id="menu-btn" class="md:hidden flex items-center justify-center p-2 text-white/80 hover:text-amarillo transition-colors focus:outline-none cursor-pointer">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+
+        <div id="mobile-menu" class="hidden absolute top-[100%] left-0 right-0 bg-negro/95 backdrop-blur-[12px] border-b border-amarillo/15 md:hidden shadow-2xl">
+            <ul class="list-none m-0 p-6 flex flex-col gap-3">
+                <li><a href="index.html" class="block py-3 px-4 rounded-lg text-[14px] font-semibold tracking-[1.5px] uppercase text-center text-white/80 hover:bg-white/10 hover:text-white transition-colors">Inicio</a></li>
+                <li><a href="Productos.html" class="block py-3 px-4 rounded-lg text-[14px] font-semibold tracking-[1.5px] uppercase text-center text-white/80 hover:bg-white/10 hover:text-white transition-colors">Productos</a></li>
+                <li><a href="Contacto.html" class="block py-3 px-4 rounded-lg text-[14px] font-semibold tracking-[1.5px] uppercase text-center text-white/80 hover:bg-white/10 hover:text-white transition-colors">Contacto</a></li>
+                <li><a href="Login.html" class="block py-3 px-4 rounded-lg text-[14px] font-semibold tracking-[1.5px] uppercase text-center bg-amarillo text-black">Iniciar sesión</a></li>
             </ul>
         </div>
     </nav>
 
-    <div class="main-wrap">
+    <div class="flex-1 flex flex-col lg:grid lg:grid-cols-[1fr_1.3fr] min-h-screen pt-[72px]">
 
-        <!-- PANEL IZQUIERDO -->
-        <div class="panel-izq">
-            <div class="panel-bg"></div>
-            <div class="panel-glow-1"></div>
-            <div class="panel-glow-2"></div>
-            <div class="panel-grid"></div>
+        <div class="relative hidden lg:flex flex-col justify-end p-12 bg-[#0d0d0d] overflow-hidden">
+            <div class="absolute inset-0 bg-[linear-gradient(160deg,#111_0%,#0a0a0a_60%)]"></div>
+            <div class="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-[radial-gradient(circle,rgba(250,204,21,0.1)_0%,transparent_65%)] rounded-full"></div>
+            <div class="absolute bottom-[15%] left-[-10%] w-[350px] h-[350px] bg-[radial-gradient(circle,rgba(250,204,21,0.06)_0%,transparent_65%)] rounded-full"></div>
+            <div class="absolute inset-0 bg-[linear-gradient(rgba(250,204,21,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(250,204,21,0.04)_1px,transparent_1px)] bg-[size:55px_55px]"></div>
 
-            <!-- Tarjetas flotantes -->
-            <div class="float-card fc-1">
-                <div class="float-card-icono">🎉</div>
+            <div class="absolute bg-white/5 border border-white/10 rounded-xl py-2.5 px-3.5 flex items-center gap-2.5 text-[13px] font-semibold text-white/55 backdrop-blur-[8px] animate-[flotar_4s_ease-in-out_infinite] top-[12%] left-[6%]">
+                <div class="w-7 h-7 bg-amarillo/12 rounded-md flex items-center justify-center text-[14px] shrink-0">🎉</div>
                 <div>¡Es gratis!</div>
             </div>
-            <div class="float-card fc-2">
-                <div class="float-card-icono">⚡</div>
+            <div class="absolute bg-white/5 border border-white/10 rounded-xl py-2.5 px-3.5 flex items-center gap-2.5 text-[13px] font-semibold text-white/55 backdrop-blur-[8px] animate-[flotar_4s_ease-in-out_infinite] top-[14%] right-[5%] delay-[-1.8s]">
+                <div class="w-7 h-7 bg-amarillo/12 rounded-md flex items-center justify-center text-[14px] shrink-0">⚡</div>
                 <div>Registro en 1 min</div>
             </div>
 
-            <!-- Pasos -->
-            <div class="pasos-wrap">
-                <div class="paso-item">
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[60%] w-[80%]">
+                <div class="flex items-start gap-4 mb-5 animate-[aparecer_0.5s_ease_both] delay-[0.1s]">
                     <div>
-                        <div class="paso-num activo">1</div>
-                        <div class="paso-linea"></div>
+                        <div class="w-[38px] h-[38px] bg-amarillo border border-amarillo/25 rounded-[10px] flex items-center justify-center font-bebas text-[18px] color-black text-black shadow-[0_4px_16px_rgba(250,204,21,0.35)] shrink-0">1</div>
+                        <div class="w-px h-[24px] bg-amarillo/15 ml-[19px]"></div>
                     </div>
-                    <div class="paso-contenido">
-                        <div class="paso-titulo">Crea tu cuenta</div>
-                        <div class="paso-desc">Llena el formulario con tus datos básicos. Solo toma un minuto.</div>
+                    <div class="pt-1.5">
+                        <div class="text-[15px] font-bold text-white/80 mb-[3px]">Crea tu cuenta</div>
+                        <div class="text-[12px] text-white/35 leading-[1.5]">Llena el formulario con tus datos básicos. Solo toma un minuto.</div>
                     </div>
                 </div>
-                <div class="paso-item">
+                <div class="flex items-start gap-4 mb-5 animate-[aparecer_0.5s_ease_both] delay-[0.25s]">
                     <div>
-                        <div class="paso-num">2</div>
-                        <div class="paso-linea"></div>
+                        <div class="w-[38px] h-[38px] bg-amarillo/10 border border-amarillo/25 rounded-[10px] flex items-center justify-center font-bebas text-[18px] text-amarillo shrink-0">2</div>
+                        <div class="w-px h-[24px] bg-amarillo/15 ml-[19px]"></div>
                     </div>
-                    <div class="paso-contenido">
-                        <div class="paso-titulo">Confirma tu correo</div>
-                        <div class="paso-desc">Te enviamos un enlace de verificación a tu email.</div>
+                    <div class="pt-1.5">
+                        <div class="text-[15px] font-bold text-white/80 mb-[3px]">Confirma tu correo</div>
+                        <div class="text-[12px] text-white/35 leading-[1.5]">Te enviamos un enlace de verificación a tu email.</div>
                     </div>
                 </div>
-                <div class="paso-item">
+                <div class="flex items-start gap-4 mb-5 animate-[aparecer_0.5s_ease_both] delay-[0.4s]">
                     <div>
-                        <div class="paso-num">3</div>
-                        <div class="paso-linea"></div>
+                        <div class="w-[38px] h-[38px] bg-amarillo/10 border border-amarillo/25 rounded-[10px] flex items-center justify-center font-bebas text-[18px] text-amarillo shrink-0">3</div>
+                        <div class="w-px h-[24px] bg-amarillo/15 ml-[19px]"></div>
                     </div>
-                    <div class="paso-contenido">
-                        <div class="paso-titulo">¡Listo para comprar!</div>
-                        <div class="paso-desc">Accede a tu historial, favoritos y cotizaciones personalizadas.</div>
+                    <div class="pt-1.5">
+                        <div class="text-[15px] font-bold text-white/80 mb-[3px]">¡Listo para comprar!</div>
+                        <div class="text-[12px] text-white/35 leading-[1.5]">Accede a tu historial, favoritos y cotizaciones personalizadas.</div>
                     </div>
                 </div>
-                <div class="paso-item">
+                <div class="flex items-start gap-4 mb-5 animate-[aparecer_0.5s_ease_both] delay-[0.55s]">
                     <div>
-                        <div class="paso-num">🏆</div>
+                        <div class="w-[38px] h-[38px] bg-amarillo/10 border border-amarillo/25 rounded-[10px] flex items-center justify-center font-bebas text-[18px] text-amarillo shrink-0">🏆</div>
                     </div>
-                    <div class="paso-contenido">
-                        <div class="paso-titulo">Cliente registrado</div>
-                        <div class="paso-desc">Atención prioritaria y notificaciones de disponibilidad.</div>
+                    <div class="pt-1.5">
+                        <div class="text-[15px] font-bold text-white/80 mb-[3px]">Cliente registrado</div>
+                        <div class="text-[12px] text-white/35 leading-[1.5]">Atención prioritaria y notificaciones de disponibilidad.</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Texto inferior -->
-            <div class="panel-texto">
-                <h2 class="panel-titulo">Únete a<br><span>Refaccionaria Leo</span></h2>
-                <p class="panel-desc">Más de 2,000 clientes ya confían en nosotros para mantener sus vehículos en perfectas condiciones.</p>
-                <a href="Login.html" class="panel-ya-cuenta">
-                    ¿Ya tienes cuenta? <span>Inicia sesión →</span>
+            <div class="relative z-10">
+                <h2 class="font-bebas text-[40px] tracking-[2px] leading-none mb-3">Únete a<br><span class="text-amarillo">Refaccionaria Leo</span></h2>
+                <p class="text-[14px] text-white/40 leading-[1.7] max-w-[320px] mb-6">Más de 2,000 clientes ya confían en nosotros para mantener sus vehículos en perfectas condiciones.</p>
+                <a href="Login.html" class="inline-flex items-center gap-2.5 bg-white/5 border border-white/10 rounded-[10px] py-2.5 px-4 text-[13px] text-white/45 no-underline transition-all duration-200 hover:border-amarillo/30 hover:bg-amarillo/5 hover:text-white/70">
+                    ¿Ya tienes cuenta? <span class="text-amarillo font-bold">Inicia sesión →</span>
                 </a>
             </div>
         </div>
 
-        <!-- PANEL DERECHO: FORMULARIO -->
-        <div class="panel-der">
-            <div class="form-contenedor">
+        <div class="bg-[#0f0f0f] relative overflow-hidden overflow-y-auto px-8 py-16 lg:py-28 flex items-start justify-center">
+            <div class="absolute top-[-10%] left-[-10%] w-[350px] h-[350px] bg-[radial-gradient(circle,rgba(250,204,21,0.04)_0%,transparent_65%)] rounded-full pointer-events-none"></div>
 
-                <!-- Cabecera -->
-                <div class="form-head">
-                    <div class="form-head-badge">Registro gratuito</div>
-                    <h1 class="form-head-titulo">Crea tu cuenta</h1>
-                    <p class="form-head-sub">Completa tus datos para comenzar. Solo toma un minuto.</p>
+            <div class="w-full max-w-[500px] relative z-10">
+
+                <div class="mb-8">
+                    <div class="inline-flex items-center gap-2 bg-amarillo/10 border border-amarillo/25 py-1 px-3 rounded-full text-[11px] font-bold tracking-[2px] uppercase text-amarillo mb-4 before:content-[''] before:w-1.5 before:h-1.5 before:bg-amarillo before:rounded-full">Registro gratuito</div>
+                    <h1 class="font-bebas text-[40px] tracking-[2px] leading-none mb-2">Crea tu cuenta</h1>
+                    <p class="text-[14px] text-white/40 leading-[1.6]">Completa tus datos para comenzar. Solo toma un minuto.</p>
                 </div>
 
-                <!-- DATOS PERSONALES -->
-                <div class="sec-label">Datos personales</div>
+                <div class="text-[11px] font-bold tracking-[3px] uppercase text-white/20 my-6 mb-4 flex items-center gap-2.5 after:content-[''] after:flex-1 after:h-px after:bg-white/5">Datos personales</div>
 
-                <div class="form-row">
-                    <div class="form-grupo no-mb">
-                        <label for="nombre">Nombre(s)</label>
-                        <div class="campo-wrap">
-                            <input type="text" id="nombre" class="campo" placeholder="Tu nombre" oninput="validarCampo('nombre')">
-                            <span class="campo-icono">👤</span>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+                    <div>
+                        <label for="nombre" class="block text-[11px] font-bold tracking-[1.5px] uppercase text-white/35 mb-2">Nombre(s)</label>
+                        <div class="relative group">
+                            <input type="text" id="nombre" class="w-full bg-white/5 border border-white/10 rounded-[10px] py-3 px-3.5 pl-10 text-[14px] text-white font-barlow outline-none transition-all duration-250 focus:border-amarillo/50 focus:bg-amarillo/5 focus:shadow-[0_0_0_3px_rgba(250,204,21,0.07)] placeholder:text-white/20" placeholder="Tu nombre" oninput="validarCampo('nombre')">
+                            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-[15px] pointer-events-none opacity-35 transition-opacity duration-200 group-focus-within:opacity-75">👤</span>
                         </div>
-                        <div class="campo-error" id="error-nombre">⚠ Ingresa tu nombre</div>
+                        <div class="text-[11px] text-red-400 mt-1.5 items-center gap-1 hidden" id="error-nombre">⚠ Ingresa tu nombre</div>
                     </div>
-                    <div class="form-grupo no-mb">
-                        <label for="apellidos">Apellidos</label>
-                        <div class="campo-wrap">
-                            <input type="text" id="apellidos" class="campo" placeholder="Tus apellidos" oninput="validarCampo('apellidos')">
-                            <span class="campo-icono">👤</span>
+                    <div>
+                        <label for="apellidos" class="block text-[11px] font-bold tracking-[1.5px] uppercase text-white/35 mb-2">Apellidos</label>
+                        <div class="relative group">
+                            <input type="text" id="apellidos" class="w-full bg-white/5 border border-white/10 rounded-[10px] py-3 px-3.5 pl-10 text-[14px] text-white font-barlow outline-none transition-all duration-250 focus:border-amarillo/50 focus:bg-amarillo/5 focus:shadow-[0_0_0_3px_rgba(250,204,21,0.07)] placeholder:text-white/20" placeholder="Tus apellidos" oninput="validarCampo('apellidos')">
+                            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-[15px] pointer-events-none opacity-35 transition-opacity duration-200 group-focus-within:opacity-75">👤</span>
                         </div>
-                        <div class="campo-error" id="error-apellidos">⚠ Ingresa tus apellidos</div>
+                        <div class="text-[11px] text-red-400 mt-1.5 items-center gap-1 hidden" id="error-apellidos">⚠ Ingresa tus apellidos</div>
                     </div>
                 </div>
 
-                <div class="form-grupo">
-                    <label for="telefono">Teléfono celular</label>
-                    <div class="tel-wrap">
-                        <div class="tel-prefijo">🇲🇽 +52</div>
-                        <div class="campo-wrap" style="flex:1;">
-                            <input type="tel" id="telefono" class="campo tel-campo" placeholder="55 1234 5678" maxlength="10" oninput="soloNumeros(this); validarCampo('telefono')">
+                <div class="mb-3">
+                    <label for="telefono" class="block text-[11px] font-bold tracking-[1.5px] uppercase text-white/35 mb-2">Teléfono celular</label>
+                    <div class="flex gap-2">
+                        <div class="bg-white/5 border border-white/10 rounded-[10px] p-3 text-[14px] text-white/50 font-barlow font-semibold whitespace-nowrap shrink-0">🇲🇽 +52</div>
+                        <div class="relative group flex-1">
+                            <input type="tel" id="telefono" class="w-full bg-white/5 border border-white/10 rounded-[10px] py-3 px-3.5 pl-3.5 text-[14px] text-white font-barlow outline-none transition-all duration-250 focus:border-amarillo/50 focus:bg-amarillo/5 focus:shadow-[0_0_0_3px_rgba(250,204,21,0.07)] placeholder:text-white/20" placeholder="55 1234 5678" maxlength="10" oninput="soloNumeros(this); validarCampo('telefono')">
                         </div>
                     </div>
-                    <div class="campo-error" id="error-telefono">⚠ Ingresa un número de 10 dígitos</div>
+                    <div class="text-[11px] text-red-400 mt-1.5 items-center gap-1 hidden" id="error-telefono">⚠ Ingresa un número de 10 dígitos</div>
                 </div>
 
-                <!-- DATOS DE ACCESO -->
-                <div class="sec-label">Datos de acceso</div>
+                <div class="text-[11px] font-bold tracking-[3px] uppercase text-white/20 my-6 mb-4 flex items-center gap-2.5 after:content-[''] after:flex-1 after:h-px after:bg-white/5">Datos de acceso</div>
 
-                <div class="form-grupo">
-                    <label for="email">Correo electrónico</label>
-                    <div class="campo-wrap">
-                        <input type="email" id="email" class="campo" placeholder="tu@correo.com" oninput="validarCampo('email')">
-                        <span class="campo-icono">✉️</span>
+                <div class="mb-3">
+                    <label for="email" class="block text-[11px] font-bold tracking-[1.5px] uppercase text-white/35 mb-2">Correo electrónico</label>
+                    <div class="relative group">
+                        <input type="email" id="email" class="w-full bg-white/5 border border-white/10 rounded-[10px] py-3 px-3.5 pl-10 text-[14px] text-white font-barlow outline-none transition-all duration-250 focus:border-amarillo/50 focus:bg-amarillo/5 focus:shadow-[0_0_0_3px_rgba(250,204,21,0.07)] placeholder:text-white/20" placeholder="tu@correo.com" oninput="validarCampo('email')">
+                        <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-[15px] pointer-events-none opacity-35 transition-opacity duration-200 group-focus-within:opacity-75">✉️</span>
                     </div>
-                    <div class="campo-error" id="error-email">⚠ Ingresa un correo electrónico válido</div>
+                    <div class="text-[11px] text-red-400 mt-1.5 items-center gap-1 hidden" id="error-email">⚠ Ingresa un correo electrónico válido</div>
                 </div>
 
-                <div class="form-grupo">
-                    <label for="password">Contraseña</label>
-                    <div class="campo-wrap campo-pass-wrap">
-                        <input type="password" id="password" class="campo campo-pass" placeholder="Mínimo 8 caracteres" oninput="evaluarPass(); validarCampo('password')">
-                        <span class="campo-icono">🔒</span>
-                        <button class="toggle-pass" type="button" onclick="togglePass('password','toggle1')" id="toggle1">👁</button>
+                <div class="mb-3">
+                    <label for="password" class="block text-[11px] font-bold tracking-[1.5px] uppercase text-white/35 mb-2">Contraseña</label>
+                    <div class="relative group">
+                        <input type="password" id="password" class="w-full bg-white/5 border border-white/10 rounded-[10px] py-3 px-3.5 pl-10 pr-11 text-[14px] text-white font-barlow outline-none transition-all duration-250 focus:border-amarillo/50 focus:bg-amarillo/5 focus:shadow-[0_0_0_3px_rgba(250,204,21,0.07)] placeholder:text-white/20" placeholder="Mínimo 8 caracteres" oninput="evaluarPass(); validarCampo('password')">
+                        <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-[15px] pointer-events-none opacity-35 transition-opacity duration-200 group-focus-within:opacity-75">🔒</span>
+                        <button class="absolute right-3 top-1/2 -translate-y-1/2 bg-none border-none cursor-pointer text-[15px] text-white/30 transition-colors p-1 leading-none hover:text-white/70" type="button" onclick="togglePass('password','toggle1')" id="toggle1">👁</button>
                     </div>
-                    <div class="fortaleza-wrap" id="fortaleza-wrap" style="display:none;">
-                        <div class="fortaleza-barras">
-                            <div class="barra" id="b1"></div>
-                            <div class="barra" id="b2"></div>
-                            <div class="barra" id="b3"></div>
-                            <div class="barra" id="b4"></div>
+                    <div class="mt-2 hidden" id="fortaleza-wrap">
+                        <div class="flex gap-1 mb-1.5">
+                            <div class="flex-1 h-[3px] rounded-[2px] bg-white/5 transition-colors duration-300" id="b1"></div>
+                            <div class="flex-1 h-[3px] rounded-[2px] bg-white/5 transition-colors duration-300" id="b2"></div>
+                            <div class="flex-1 h-[3px] rounded-[2px] bg-white/5 transition-colors duration-300" id="b3"></div>
+                            <div class="flex-1 h-[3px] rounded-[2px] bg-white/5 transition-colors duration-300" id="b4"></div>
                         </div>
-                        <div class="fortaleza-texto" id="fortaleza-texto">Contraseña débil</div>
+                        <div class="text-[11px] text-white/35 font-semibold tracking-[0.5px] transition-colors duration-300" id="fortaleza-texto">Contraseña débil</div>
                     </div>
-                    <div class="campo-error" id="error-password">⚠ La contraseña debe tener al menos 8 caracteres</div>
+                    <div class="text-[11px] text-red-400 mt-1.5 items-center gap-1 hidden" id="error-password">⚠ La contraseña debe tener al menos 8 caracteres</div>
                 </div>
 
-                <div class="form-grupo">
-                    <label for="confirmar">Confirmar contraseña</label>
-                    <div class="campo-wrap campo-pass-wrap">
-                        <input type="password" id="confirmar" class="campo campo-pass" placeholder="Repite tu contraseña" oninput="validarCampo('confirmar')">
-                        <span class="campo-icono">🔒</span>
-                        <button class="toggle-pass" type="button" onclick="togglePass('confirmar','toggle2')" id="toggle2">👁</button>
+                <div class="mb-3">
+                    <label for="confirmar" class="block text-[11px] font-bold tracking-[1.5px] uppercase text-white/35 mb-2">Confirmar contraseña</label>
+                    <div class="relative group">
+                        <input type="password" id="confirmar" class="w-full bg-white/5 border border-white/10 rounded-[10px] py-3 px-3.5 pl-10 pr-11 text-[14px] text-white font-barlow outline-none transition-all duration-250 focus:border-amarillo/50 focus:bg-amarillo/5 focus:shadow-[0_0_0_3px_rgba(250,204,21,0.07)] placeholder:text-white/20" placeholder="Repite tu contraseña" oninput="validarCampo('confirmar')">
+                        <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-[15px] pointer-events-none opacity-35 transition-opacity duration-200 group-focus-within:opacity-75">🔒</span>
+                        <button class="absolute right-3 top-1/2 -translate-y-1/2 bg-none border-none cursor-pointer text-[15px] text-white/30 transition-colors p-1 leading-none hover:text-white/70" type="button" onclick="togglePass('confirmar','toggle2')" id="toggle2">👁</button>
                     </div>
-                    <div class="campo-error" id="error-confirmar">⚠ Las contraseñas no coinciden</div>
+                    <div class="text-[11px] text-red-400 mt-1.5 items-center gap-1 hidden" id="error-confirmar">⚠ Las contraseñas no coinciden</div>
                 </div>
 
-                <!-- TÉRMINOS -->
-                <div class="terminos-wrap" onclick="toggleTerminos()">
-                    <div class="check-custom" id="check-terminos"></div>
-                    <div class="terminos-texto">
-                        Acepto los <a href="#" onclick="return false;">Términos y Condiciones</a> y el <a href="#" onclick="return false;">Aviso de Privacidad</a> de Refaccionaria Leo.
+                <div class="flex items-start gap-2.5 my-5 cursor-pointer" onclick="toggleTerminos()">
+                    <div class="w-5 h-5 border-[1.5px] border-white/15 rounded-md bg-white/5 flex items-center justify-center text-[11px] text-transparent transition-all duration-200 shrink-0 mt-[2px]" id="check-terminos"></div>
+                    <div class="text-[13px] text-white/45 leading-[1.55]">
+                        Acepto los <a href="#" class="text-amarillo no-underline font-semibold hover:opacity-80" onclick="return false;">Términos y Condiciones</a> y el <a href="#" class="text-amarillo no-underline font-semibold hover:opacity-80" onclick="return false;">Aviso de Privacidad</a> de Refaccionaria Leo.
                     </div>
                 </div>
-                <div class="terminos-error" id="error-terminos">⚠ Debes aceptar los términos para continuar</div>
+                <div class="text-[11px] text-red-400 hidden -mt-2 mb-1" id="error-terminos">⚠ Debes aceptar los términos para continuar</div>
 
-                <!-- BOTÓN -->
-                <button class="btn-registro" id="btn-registro" onclick="registrar()">
+                <button class="w-full bg-amarillo text-black font-barlow font-bold text-[15px] tracking-[2px] uppercase py-[15px] px-6 rounded-[10px] border-none cursor-pointer transition-all duration-200 shadow-[0_4px_20px_rgba(250,204,21,0.25)] flex items-center justify-center gap-2.5 mb-5 hover:bg-[#fde047] hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(250,204,21,0.4)] active:translate-y-0" id="btn-registro" onclick="registrar()">
                     <span id="btn-texto">Crear mi cuenta</span>
                     <span id="btn-icono">→</span>
                 </button>
 
-                <div class="ya-cuenta">
-                    ¿Ya tienes cuenta? <a href="Login.html">Inicia sesión aquí</a>
+                <div class="text-center text-[14px] text-white/35 mb-6">
+                    ¿Ya tienes cuenta? <a href="Login.html" class="text-amarillo no-underline font-bold transition-opacity duration-200 hover:opacity-80">Inicia sesión aquí</a>
                 </div>
 
-                <!-- Garantías -->
-                <div class="garantia-row">
-                    <div class="garantia-item">🔒 Datos seguros</div>
-                    <div class="garantia-item" style="color:rgba(255,255,255,0.08);">|</div>
-                    <div class="garantia-item">🎉 100% gratis</div>
-                    <div class="garantia-item" style="color:rgba(255,255,255,0.08);">|</div>
-                    <div class="garantia-item">📵 Sin spam</div>
+                <div class="flex gap-2 justify-center flex-wrap">
+                    <div class="flex items-center gap-1.5 text-[11px] text-white/20 font-semibold">🔒 Datos seguros</div>
+                    <div class="flex items-center gap-1.5 text-[11px] text-white/20 font-semibold text-white/10">|</div>
+                    <div class="flex items-center gap-1.5 text-[11px] text-white/20 font-semibold">🎉 100% gratis</div>
+                    <div class="flex items-center gap-1.5 text-[11px] text-white/20 font-semibold text-white/10">|</div>
+                    <div class="flex items-center gap-1.5 text-[11px] text-white/20 font-semibold">📵 Sin spam</div>
                 </div>
 
             </div>
@@ -844,48 +243,53 @@
 
     </div>
 
-    <!-- FOOTER MÍNIMO -->
-    <div class="mini-footer">
+    <div class="bg-negro border-t border-white/5 py-5 px-8 flex items-center justify-between text-[12px] text-white/20 flex-col md:flex-row gap-4">
         <span>© 2025 Refaccionaria Leo</span>
-        <div style="display:flex;gap:1.5rem;">
-            <a href="index.html">Inicio</a>
-            <a href="Productos.html">Productos</a>
-            <a href="Contacto.html">Contacto</a>
+        <div class="flex gap-6">
+            <a href="index.html" class="text-white/30 no-underline transition-colors duration-200 hover:text-white/60">Inicio</a>
+            <a href="Productos.html" class="text-white/30 no-underline transition-colors duration-200 hover:text-white/60">Productos</a>
+            <a href="Contacto.html" class="text-white/30 no-underline transition-colors duration-200 hover:text-white/60">Contacto</a>
         </div>
         <span>Chimalhuacán, Estado de México</span>
     </div>
 
-    <!-- TOAST -->
-    <div class="toast" id="toast">
-        <div class="toast-icono">🎉</div>
+    <div class="fixed bottom-8 right-8 bg-[#1a1a1a] border border-[#4ade80]/35 rounded-[14px] py-4 px-6 flex items-center gap-3.5 text-[14px] text-white z-[300] translate-y-[100px] opacity-0 transition-all duration-400 ease-out pointer-events-none max-w-[340px] shadow-[0_8px_32px_rgba(0,0,0,0.5)]" id="toast">
+        <div class="text-[26px] shrink-0">🎉</div>
         <div>
-            <div style="font-weight:700;margin-bottom:3px;">¡Cuenta creada!</div>
-            <div style="font-size:12px;color:rgba(255,255,255,0.5);">Revisa tu correo para confirmar tu cuenta.</div>
+            <div class="font-bold mb-[3px]">¡Cuenta creada!</div>
+            <div class="text-[12px] text-white/50">Revisa tu correo para confirmar tu cuenta.</div>
         </div>
     </div>
 
     <script>
         let terminosAceptados = false;
-        let pass1Visible = false;
-        let pass2Visible = false;
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
 
-        // Toggle checkboxes
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
         function toggleTerminos() {
             terminosAceptados = !terminosAceptados;
             const el = document.getElementById('check-terminos');
-            el.classList.toggle('checked', terminosAceptados);
-            el.textContent = terminosAceptados ? '✓' : '';
             if (terminosAceptados) {
-                document.getElementById('error-terminos').classList.remove('visible');
+                el.classList.replace('bg-white/5', 'bg-amarillo/15');
+                el.classList.replace('border-white/15', 'border-amarillo/50');
+                el.classList.replace('text-transparent', 'text-amarillo');
+                document.getElementById('error-terminos').classList.replace('block', 'hidden');
+            } else {
+                el.classList.replace('bg-amarillo/15', 'bg-white/5');
+                el.classList.replace('border-amarillo/50', 'border-white/15');
+                el.classList.replace('text-amarillo', 'text-transparent');
             }
+            el.textContent = terminosAceptados ? '✓' : '';
         }
 
-        // Solo números en teléfono
         function soloNumeros(el) {
             el.value = el.value.replace(/\D/g, '');
         }
 
-        // Toggle visibilidad de contraseña
         function togglePass(idCampo, idBtn) {
             const inp = document.getElementById(idCampo);
             const btn = document.getElementById(idBtn);
@@ -894,40 +298,42 @@
             btn.textContent = visible ? '👁' : '🙈';
         }
 
-        // Evaluador de fortaleza de contraseña
         function evaluarPass() {
             const val = document.getElementById('password').value;
             const wrap = document.getElementById('fortaleza-wrap');
             const texto = document.getElementById('fortaleza-texto');
             const barras = ['b1','b2','b3','b4'];
 
-            if (!val) { wrap.style.display = 'none'; return; }
-            wrap.style.display = 'block';
+            if (!val) { wrap.classList.replace('block', 'hidden'); return; }
+            wrap.classList.replace('hidden', 'block');
 
             let puntos = 0;
-            if (val.length >= 8)              puntos++;
-            if (/[A-Z]/.test(val))            puntos++;
-            if (/[0-9]/.test(val))            puntos++;
-            if (/[^A-Za-z0-9]/.test(val))     puntos++;
+            if (val.length >= 8) puntos++;
+            if (/[A-Z]/.test(val)) puntos++;
+            if (/[0-9]/.test(val)) puntos++;
+            if (/[^A-Za-z0-9]/.test(val)) puntos++;
 
             const niveles = [
-                { clase: 'debil',  label: 'Contraseña débil',    color: '#f87171' },
-                { clase: 'media',  label: 'Contraseña regular',   color: '#fb923c' },
-                { clase: 'buena',  label: 'Contraseña buena',     color: '#FACC15' },
-                { clase: 'fuerte', label: 'Contraseña muy fuerte',color: '#4ade80' },
+                { clase: 'bg-[#f87171]', label: 'Contraseña débil', color: '#f87171' },
+                { clase: 'bg-[#fb923c]', label: 'Contraseña regular', color: '#fb923c' },
+                { clase: 'bg-[#FACC15]', label: 'Contraseña buena', color: '#FACC15' },
+                { clase: 'bg-[#4ade80]', label: 'Contraseña muy fuerte', color: '#4ade80' },
             ];
 
             const nivel = niveles[puntos - 1] || niveles[0];
             barras.forEach((id, i) => {
                 const b = document.getElementById(id);
-                b.className = 'barra';
-                if (i < puntos) b.classList.add(nivel.clase);
+                b.className = 'flex-1 h-[3px] rounded-[2px] transition-colors duration-300';
+                if (i < puntos) {
+                    b.classList.add(nivel.clase);
+                } else {
+                    b.classList.add('bg-white/5');
+                }
             });
             texto.textContent = nivel.label;
             texto.style.color = nivel.color;
         }
 
-        // Validación de campos individuales al escribir
         function validarCampo(id) {
             const campo = document.getElementById(id);
             const error = document.getElementById('error-' + id);
@@ -946,16 +352,23 @@
             }
 
             if (val === '' || campo.value === '') {
-                campo.classList.remove('error','ok');
-                error.classList.remove('visible');
+                campo.classList.remove('border-red-400/50', 'shadow-[0_0_0_3px_rgba(248,113,113,0.07)]', 'border-[#4ade80]/40');
+                campo.classList.add('border-white/10');
+                error.classList.replace('flex', 'hidden');
                 return;
             }
-            campo.classList.toggle('error', !valido);
-            campo.classList.toggle('ok', valido);
-            error.classList.toggle('visible', !valido);
+            
+            if (!valido) {
+                campo.classList.remove('border-white/10', 'border-[#4ade80]/40');
+                campo.classList.add('border-red-400/50', 'shadow-[0_0_0_3px_rgba(248,113,113,0.07)]');
+                error.classList.replace('hidden', 'flex');
+            } else {
+                campo.classList.remove('border-red-400/50', 'shadow-[0_0_0_3px_rgba(248,113,113,0.07)]', 'border-white/10');
+                campo.classList.add('border-[#4ade80]/40');
+                error.classList.replace('flex', 'hidden');
+            }
         }
 
-        // Validación completa al enviar
         function registrar() {
             const campos = ['nombre','apellidos','telefono','email','password','confirmar'];
             let valido = true;
@@ -973,28 +386,28 @@
                 if (id === 'confirmar') ok = campo.value === document.getElementById('password').value && campo.value.length > 0;
 
                 if (!ok) {
-                    campo.classList.add('error');
-                    campo.classList.remove('ok');
-                    error.classList.add('visible');
+                    campo.classList.remove('border-white/10', 'border-[#4ade80]/40');
+                    campo.classList.add('border-red-400/50', 'shadow-[0_0_0_3px_rgba(248,113,113,0.07)]');
+                    error.classList.replace('hidden', 'flex');
                     valido = false;
                 }
             });
 
             if (!terminosAceptados) {
-                document.getElementById('error-terminos').classList.add('visible');
+                document.getElementById('error-terminos').classList.replace('hidden', 'block');
                 valido = false;
             }
 
             if (!valido) return;
 
-            // Animación de carga
             const btn = document.getElementById('btn-registro');
-            btn.classList.add('cargando');
+            btn.classList.add('bg-amarillo/35', 'pointer-events-none');
+            btn.classList.remove('hover:-translate-y-0.5', 'hover:bg-[#fde047]', 'shadow-[0_4px_20px_rgba(250,204,21,0.25)]');
             document.getElementById('btn-texto').textContent = 'Creando cuenta...';
-            document.getElementById('btn-icono').innerHTML = '<div class="spinner"></div>';
+            document.getElementById('btn-icono').innerHTML = '<div class="w-[18px] h-[18px] border-2 border-black/20 border-t-black rounded-full animate-[spin_0.7s_linear_infinite]"></div>';
 
             setTimeout(() => {
-                btn.classList.remove('cargando');
+                btn.classList.remove('bg-amarillo/35', 'pointer-events-none');
                 document.getElementById('btn-texto').textContent = '¡Cuenta creada!';
                 document.getElementById('btn-icono').textContent = '✓';
                 btn.style.background = 'rgba(74,222,128,0.18)';
@@ -1002,19 +415,21 @@
                 btn.style.boxShadow = '0 4px 20px rgba(74,222,128,0.12)';
 
                 const toast = document.getElementById('toast');
-                toast.classList.add('visible');
+                toast.classList.replace('translate-y-[100px]', 'translate-y-0');
+                toast.classList.replace('opacity-0', 'opacity-100');
 
                 setTimeout(() => {
-                    toast.classList.remove('visible');
-                    // En producción: window.location.href = 'Login.html';
+                    toast.classList.replace('translate-y-0', 'translate-y-[100px]');
+                    toast.classList.replace('opacity-100', 'opacity-0');
+                    
                     btn.style.background = '';
                     btn.style.color = '';
                     btn.style.boxShadow = '';
+                    btn.classList.add('hover:-translate-y-0.5', 'hover:bg-[#fde047]', 'shadow-[0_4px_20px_rgba(250,204,21,0.25)]');
                     btn.innerHTML = '<span id="btn-texto">Crear mi cuenta</span><span id="btn-icono">→</span>';
                 }, 4000);
             }, 1800);
         }
     </script>
-
 </body>
 </html>
