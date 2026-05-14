@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacto | Refaccionaria Leo</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --amarillo: #FACC15;
+            --negro: #0a0a0a;
+            --gris-oscuro: #1a1a1a;
+            --gris-medio: #2a2a2a;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Barlow', sans-serif;
+            background: #0a0a0a;
+            color: #f5f5f0;
+            overflow-x: hidden;
+        }
+
+        /* ── NAV ── */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            background: rgba(10,10,10,0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(250,204,21,0.15);
+            padding: 14px 0;
+        }
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+        .logo-icon {
+            width: 36px; height: 36px;
+            background: var(--amarillo);
+            border-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 18px;
+            color: #000;
+        }
+        .logo-text {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 22px;
+            letter-spacing: 2px;
+            color: #fff;
+        }
+        .logo-text span { color: var(--amarillo); }
+        nav ul { list-style: none; display: flex; align-items: center; gap: 4px; }
+        nav ul a {
+            display: block;
+            padding: 7px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: rgba(255,255,255,0.75);
+            transition: color 0.2s, background 0.2s;
+        }
+        nav ul a:hover { color: #fff; background: rgba(255,255,255,0.07); }
+        nav ul a.activo { background: var(--amarillo); color: #000; }
+
+        /* ── HERO ── */
+        .hero {
+            padding: 9rem 2rem 5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #0a0a0a 0%, #111 60%, #0a0a0a 100%);
+        }
+        .hero-glow {
+            position: absolute;
+            top: -20%; right: -5%;
+            width: 650px; height: 650px;
+            background: radial-gradient(circle, rgba(250,204,21,0.09) 0%, transparent 65%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .hero-glow-2 {
+            position: absolute;
+            bottom: -20%; left: -5%;
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(250,204,21,0.05) 0%, transparent 65%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .hero-grid {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(250,204,21,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(250,204,21,0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
+        .hero-inner {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(250,204,21,0.12);
+            border: 1px solid rgba(250,204,21,0.3);
+            padding: 6px 18px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--amarillo);
+            margin-bottom: 1.5rem;
+            animation: fadeUp 0.5s ease both;
+        }
+        .hero-badge::before {
+            content: '';
+            width: 6px; height: 6px;
+            background: var(--amarillo);
+            border-radius: 50%;
+            animation: pulso 2s infinite;
+        }
+        @keyframes pulso {
+            0%,100% { opacity:1; transform:scale(1); }
+            50%      { opacity:0.4; transform:scale(1.4); }
+        }
+        .hero-titulo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(56px, 8vw, 96px);
+            line-height: 0.9;
+            letter-spacing: 3px;
+            margin-bottom: 1.25rem;
+            animation: fadeUp 0.5s 0.1s ease both;
+        }
+        .hero-titulo span { color: var(--amarillo); }
+        .hero-desc {
+            font-size: 17px;
+            color: rgba(255,255,255,0.5);
+            line-height: 1.7;
+            max-width: 520px;
+            margin: 0 auto 3rem;
+            animation: fadeUp 0.5s 0.2s ease both;
+        }
+        .acceso-rapido {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            animation: fadeUp 0.5s 0.3s ease both;
+        }
+        .acceso-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 14px 22px;
+            text-decoration: none;
+            color: rgba(255,255,255,0.7);
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: border-color 0.2s, background 0.2s, color 0.2s, transform 0.2s;
+        }
+        .acceso-btn:hover {
+            border-color: rgba(250,204,21,0.35);
+            background: rgba(250,204,21,0.06);
+            color: var(--amarillo);
+            transform: translateY(-2px);
+        }
+        .acceso-btn-icono { font-size: 20px; }
+
+        @keyframes fadeUp {
+            from { opacity:0; transform:translateY(18px); }
+            to   { opacity:1; transform:none; }
+        }
+
+        /* ── SECCIÓN PRINCIPAL ── */
+        .contacto-wrap {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 5rem 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1.15fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        .divisor {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .divisor-linea { flex:1; height:1px; background:rgba(255,255,255,0.08); }
+        .divisor-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.2);
+        }
+
+        .info-titulo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 42px;
+            letter-spacing: 2px;
+            line-height: 1;
+            margin-bottom: 0.75rem;
+        }
+        .info-titulo span { color: var(--amarillo); }
+        .info-subtitulo {
+            font-size: 15px;
+            color: rgba(255,255,255,0.45);
+            line-height: 1.7;
+            margin-bottom: 2.5rem;
+        }
+
+        .contacto-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 2.5rem;
+        }
+        .contacto-card {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: var(--gris-oscuro);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 14px;
+            padding: 1.1rem 1.25rem;
+            text-decoration: none;
+            transition: border-color 0.2s, background 0.2s, transform 0.2s;
+        }
+        .contacto-card:hover {
+            border-color: rgba(250,204,21,0.3);
+            background: rgba(250,204,21,0.04);
+            transform: translateX(4px);
+        }
+        .contacto-card-icono {
+            width: 46px; height: 46px;
+            background: rgba(250,204,21,0.1);
+            border: 1px solid rgba(250,204,21,0.2);
+            border-radius: 11px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        .contacto-card-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.3);
+            margin-bottom: 3px;
+        }
+        .contacto-card-valor {
+            font-size: 15px;
+            font-weight: 600;
+            color: #fff;
+        }
+        .contacto-card-flecha {
+            margin-left: auto;
+            font-size: 20px;
+            color: rgba(255,255,255,0.2);
+            transition: color 0.2s, transform 0.2s;
+        }
+        .contacto-card:hover .contacto-card-flecha {
+            color: var(--amarillo);
+            transform: translateX(3px);
+        }
+
+        .horarios-titulo {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.25);
+            margin-bottom: 1rem;
+        }
+        .horarios-grid {
+            background: var(--gris-oscuro);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 14px;
+            overflow: hidden;
+        }
+        .horario-fila {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 18px;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            font-size: 14px;
+            transition: background 0.15s;
+        }
+        .horario-fila:last-child { border-bottom: none; }
+        .horario-fila:hover { background: rgba(255,255,255,0.02); }
+        .horario-dia { color: rgba(255,255,255,0.6); font-weight: 500; }
+        .horario-hora { color: rgba(255,255,255,0.85); font-weight: 600; }
+        .horario-fila.hoy .horario-dia { color: var(--amarillo); font-weight: 700; }
+        .horario-fila.hoy .horario-hora { color: var(--amarillo); }
+        .horario-fila.cerrado .horario-hora { color: rgba(255,255,255,0.25); }
+        .badge-hoy {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            background: rgba(250,204,21,0.15);
+            color: var(--amarillo);
+            padding: 2px 8px;
+            border-radius: 100px;
+            border: 1px solid rgba(250,204,21,0.3);
+            margin-left: 8px;
+        }
+
+        /* ── FORMULARIO ── */
+        .form-card {
+            background: var(--gris-oscuro);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 20px;
+            padding: 2.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .form-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--amarillo), rgba(250,204,21,0.3));
+        }
+        .form-titulo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 32px;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+        .form-subtitulo {
+            font-size: 14px;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+        .form-grupo {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+        label {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.4);
+        }
+        .campo {
+            width: 100%;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            padding: 13px 16px;
+            font-size: 15px;
+            color: #fff;
+            font-family: 'Barlow', sans-serif;
+            outline: none;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .campo::placeholder { color: rgba(255,255,255,0.2); }
+        .campo:focus {
+            border-color: rgba(250,204,21,0.5);
+            background: rgba(250,204,21,0.04);
+        }
+        textarea.campo {
+            resize: vertical;
+            min-height: 120px;
+            line-height: 1.6;
+        }
+
+        .chips-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 4px;
+        }
+        .chip {
+            padding: 7px 14px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.03);
+            font-size: 13px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: all 0.15s;
+            user-select: none;
+        }
+        .chip:hover { border-color: rgba(250,204,21,0.3); color: rgba(255,255,255,0.8); }
+        .chip.activo {
+            background: rgba(250,204,21,0.12);
+            border-color: rgba(250,204,21,0.4);
+            color: var(--amarillo);
+        }
+
+        .btn-enviar {
+            width: 100%;
+            background: var(--amarillo);
+            color: #000;
+            font-family: 'Barlow', sans-serif;
+            font-weight: 700;
+            font-size: 15px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 15px 24px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+            margin-top: 8px;
+            box-shadow: 0 4px 20px rgba(250,204,21,0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .btn-enviar:hover {
+            background: #fde047;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(250,204,21,0.4);
+        }
+        .btn-enviar:active { transform: translateY(0); }
+        .btn-enviar.enviando { background: rgba(250,204,21,0.4); pointer-events: none; }
+        .btn-flecha { font-size: 18px; transition: transform 0.2s; }
+        .btn-enviar:hover .btn-flecha { transform: translateX(4px); }
+
+        .form-nota {
+            font-size: 12px;
+            color: rgba(255,255,255,0.2);
+            text-align: center;
+            margin-top: 1rem;
+            line-height: 1.6;
+        }
+
+        /* ── MAPA ── */
+        .mapa-wrap {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem 5rem;
+        }
+        .mapa-header {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .mapa-titulo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 36px;
+            letter-spacing: 2px;
+        }
+        .mapa-titulo span { color: var(--amarillo); }
+        .mapa-dir {
+            font-size: 14px;
+            color: rgba(255,255,255,0.4);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .mapa-dir::before { content: '📍'; font-size: 16px; }
+        .mapa-frame {
+            width: 100%;
+            height: 380px;
+            border-radius: 18px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.07);
+        }
+        .mapa-frame iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            display: block;
+        }
+
+        /* ── CTA ── */
+        .cta-wrap {
+            background: var(--amarillo);
+            padding: 5rem 2rem;
+            text-align: center;
+        }
+        .cta-titulo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(36px, 5vw, 60px);
+            color: #000;
+            letter-spacing: 2px;
+            margin-bottom: 0.75rem;
+        }
+        .cta-subtitulo {
+            font-size: 16px;
+            color: rgba(0,0,0,0.6);
+            margin-bottom: 2rem;
+            max-width: 460px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .cta-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+        .btn-negro {
+            background: #000;
+            color: var(--amarillo);
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 13px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-negro:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+        .btn-trans {
+            background: rgba(0,0,0,0.1);
+            color: rgba(0,0,0,0.7);
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 13px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            border: 1px solid rgba(0,0,0,0.15);
+            transition: background 0.2s;
+        }
+        .btn-trans:hover { background: rgba(0,0,0,0.15); }
+
+        /* ── FOOTER ── */
+        footer {
+            background: var(--gris-oscuro);
+            border-top: 1px solid rgba(255,255,255,0.06);
+        }
+        .footer-top {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2.5rem 2rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        .footer-nombre {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 22px;
+            letter-spacing: 2px;
+            color: #fff;
+        }
+        .footer-nombre span { color: var(--amarillo); }
+        .footer-links { display: flex; gap: 4px; }
+        .footer-link {
+            padding: 7px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: rgba(255,255,255,0.4);
+            transition: color 0.2s, background 0.2s;
+        }
+        .footer-link:hover { color: #fff; background: rgba(255,255,255,0.05); }
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.05);
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13px;
+            color: rgba(255,255,255,0.2);
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 2rem; right: 2rem;
+            background: #1a1a1a;
+            border: 1px solid rgba(74,222,128,0.35);
+            border-radius: 14px;
+            padding: 1.1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 14px;
+            color: #fff;
+            z-index: 300;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: transform 0.4s ease, opacity 0.4s ease;
+            pointer-events: none;
+            max-width: 340px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+        }
+        .toast.visible { transform: translateY(0); opacity: 1; }
+        .toast-icono { font-size: 28px; flex-shrink: 0; }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.55s ease, transform 0.55s ease;
+        }
+        .reveal.visible { opacity:1; transform:none; }
+    </style>
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav>
+        <div class="nav-inner">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">RL</div>
+                <div class="logo-text">Refaccionaria <span>Leo</span></div>
+            </a>
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="Productos.html">Productos</a></li>
+                <li><a href="Contacto.html" class="activo">Contacto</a></li>
+                <li><a href="Login.html">Iniciar sesión</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-glow"></div>
+        <div class="hero-glow-2"></div>
+        <div class="hero-grid"></div>
+        <div class="hero-inner">
+            <div class="hero-badge">Estamos para ayudarte</div>
+            <h1 class="hero-titulo">Hablemos<br><span>hoy mismo</span></h1>
+            <p class="hero-desc">¿Tienes una duda, necesitas una cotización o quieres saber si tenemos tu refacción? Contáctanos por el medio que prefieras.</p>
+            <div class="acceso-rapido">
+                <a href="tel:+521234567890" class="acceso-btn">
+                    <span class="acceso-btn-icono">📞</span> Llamar ahora
+                </a>
+                <a href="https://wa.me/521234567890" target="_blank" class="acceso-btn">
+                    <span class="acceso-btn-icono">💬</span> WhatsApp
+                </a>
+                <a href="mailto:contacto@refaccionarialeo.mx" class="acceso-btn">
+                    <span class="acceso-btn-icono">✉️</span> Correo
+                </a>
+                <a href="#mapa" class="acceso-btn">
+                    <span class="acceso-btn-icono">📍</span> Cómo llegar
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FORMULARIO + INFO -->
+    <section>
+        <div class="contacto-wrap">
+
+            <!-- INFO -->
+            <div class="reveal">
+                <div class="divisor">
+                    <div class="divisor-linea"></div>
+                    <div class="divisor-label">Información</div>
+                    <div class="divisor-linea"></div>
+                </div>
+                <h2 class="info-titulo">Encuéntranos<br><span>fácilmente</span></h2>
+                <p class="info-subtitulo">Visítanos en tienda, llámanos o escríbenos. Respondemos rápido porque sabemos que tu auto no puede esperar.</p>
+
+                <div class="contacto-cards">
+                    <a href="tel:+521234567890" class="contacto-card">
+                        <div class="contacto-card-icono">📞</div>
+                        <div>
+                            <div class="contacto-card-label">Teléfono</div>
+                            <div class="contacto-card-valor">+52 123 456 7890</div>
+                        </div>
+                        <div class="contacto-card-flecha">›</div>
+                    </a>
+                    <a href="https://wa.me/521234567890" target="_blank" class="contacto-card">
+                        <div class="contacto-card-icono">💬</div>
+                        <div>
+                            <div class="contacto-card-label">WhatsApp</div>
+                            <div class="contacto-card-valor">+52 123 456 7890</div>
+                        </div>
+                        <div class="contacto-card-flecha">›</div>
+                    </a>
+                    <a href="mailto:contacto@refaccionarialeo.mx" class="contacto-card">
+                        <div class="contacto-card-icono">✉️</div>
+                        <div>
+                            <div class="contacto-card-label">Correo electrónico</div>
+                            <div class="contacto-card-valor">contacto@refaccionarialeo.mx</div>
+                        </div>
+                        <div class="contacto-card-flecha">›</div>
+                    </a>
+                    <div class="contacto-card" style="cursor:default;">
+                        <div class="contacto-card-icono">📍</div>
+                        <div>
+                            <div class="contacto-card-label">Dirección</div>
+                            <div class="contacto-card-valor" style="font-size:13px;line-height:1.5;">Av. de los Patos M4 L35, Herreros,<br>56334 Chimalhuacán, Méx.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="horarios-titulo">Horarios de atención</div>
+                <div class="horarios-grid">
+                    <div class="horario-fila" id="fila-lunes">
+                        <span class="horario-dia">Lunes</span>
+                        <span class="horario-hora">9:00 am – 7:00 pm</span>
+                    </div>
+                    <div class="horario-fila" id="fila-martes">
+                        <span class="horario-dia">Martes</span>
+                        <span class="horario-hora">9:00 am – 7:00 pm</span>
+                    </div>
+                    <div class="horario-fila" id="fila-miercoles">
+                        <span class="horario-dia">Miércoles</span>
+                        <span class="horario-hora">9:00 am – 7:00 pm</span>
+                    </div>
+                    <div class="horario-fila" id="fila-jueves">
+                        <span class="horario-dia">Jueves</span>
+                        <span class="horario-hora">9:00 am – 7:00 pm</span>
+                    </div>
+                    <div class="horario-fila" id="fila-viernes">
+                        <span class="horario-dia">Viernes</span>
+                        <span class="horario-hora">9:00 am – 7:00 pm</span>
+                    </div>
+                    <div class="horario-fila" id="fila-sabado">
+                        <span class="horario-dia">Sábado</span>
+                        <span class="horario-hora">9:00 am – 3:00 pm</span>
+                    </div>
+                    <div class="horario-fila cerrado" id="fila-domingo">
+                        <span class="horario-dia">Domingo</span>
+                        <span class="horario-hora">Cerrado</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FORMULARIO -->
+            <div class="reveal">
+                <div class="form-card">
+                    <h2 class="form-titulo">Envíanos un mensaje</h2>
+                    <p class="form-subtitulo">Te respondemos en menos de 24 horas. Para urgencias, llámanos directamente.</p>
+
+                    <div style="margin-bottom:14px;">
+                        <label style="display:block;margin-bottom:8px;">Motivo de contacto</label>
+                        <div class="chips-wrap">
+                            <div class="chip activo" onclick="selChip(this)">Cotización</div>
+                            <div class="chip" onclick="selChip(this)">Disponibilidad</div>
+                            <div class="chip" onclick="selChip(this)">Información</div>
+                            <div class="chip" onclick="selChip(this)">Otro</div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-grupo">
+                            <label for="nombre">Nombre</label>
+                            <input type="text" id="nombre" class="campo" placeholder="Tu nombre">
+                        </div>
+                        <div class="form-grupo">
+                            <label for="apellido">Apellido</label>
+                            <input type="text" id="apellido" class="campo" placeholder="Tu apellido">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-grupo">
+                            <label for="tel">Teléfono</label>
+                            <input type="tel" id="tel" class="campo" placeholder="+52 55 0000 0000">
+                        </div>
+                        <div class="form-grupo">
+                            <label for="email">Correo electrónico</label>
+                            <input type="email" id="email" class="campo" placeholder="tu@correo.com">
+                        </div>
+                    </div>
+
+                    <div class="form-grupo">
+                        <label for="auto">Marca y modelo de tu auto (opcional)</label>
+                        <input type="text" id="auto" class="campo" placeholder="Ej: Nissan Tsuru 2015, Chevy 2004...">
+                    </div>
+
+                    <div class="form-grupo">
+                        <label for="mensaje">Tu mensaje</label>
+                        <textarea id="mensaje" class="campo" placeholder="Cuéntanos qué necesitas. Mientras más detalle, mejor te podemos ayudar..."></textarea>
+                    </div>
+
+                    <button class="btn-enviar" id="btn-enviar" onclick="enviarForm()">
+                        <span>Enviar mensaje</span>
+                        <span class="btn-flecha">→</span>
+                    </button>
+                    <p class="form-nota">Tu información es confidencial y solo se usará para responderte. No compartimos datos con terceros.</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- MAPA -->
+    <section id="mapa">
+        <div class="mapa-wrap reveal">
+            <div class="mapa-header">
+                <div>
+                    <h2 class="mapa-titulo">Cómo <span>llegar</span></h2>
+                    <p style="font-size:14px;color:rgba(255,255,255,0.35);margin-top:4px;">A 5 minutos del centro de Chimalhuacán</p>
+                </div>
+                <div class="mapa-dir">Av. de los Patos M4 L35, Herreros, 56334 Chimalhuacán, Méx.</div>
+            </div>
+            <div class="mapa-frame">
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3762.47739266527!2d-98.94940962411016!3d19.434973640603893!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1e38ccc08c36d%3A0x5697fc3cc06b7c52!2sRefaccionaria%20Leo!5e0!3m2!1ses!2smx!4v1778628328421!5m2!1ses!2smx"
+                    allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-wrap">
+        <h2 class="cta-titulo">¿Listo para mantener tu auto?</h2>
+        <p class="cta-subtitulo">Visítanos hoy o explora nuestro catálogo de productos. Tenemos lo que necesitas.</p>
+        <div class="cta-btns">
+            <a href="Productos.html" class="btn-negro">Ver productos</a>
+            <a href="tel:+521234567890" class="btn-trans">Llamar ahora</a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-top">
+            <div class="footer-nombre">Refaccionaria <span>Leo</span></div>
+            <div class="footer-links">
+                <a href="index.html" class="footer-link">Inicio</a>
+                <a href="Productos.html" class="footer-link">Productos</a>
+                <a href="Contacto.html" class="footer-link">Contacto</a>
+                <a href="Login.html" class="footer-link">Iniciar sesión</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>© 2025 Refaccionaria Leo — Todos los derechos reservados</span>
+            <span>Chimalhuacán, Estado de México</span>
+        </div>
+    </footer>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast">
+        <div class="toast-icono">✅</div>
+        <div>
+            <div style="font-weight:700;margin-bottom:3px;">¡Mensaje enviado!</div>
+            <div style="font-size:13px;color:rgba(255,255,255,0.5);">Te responderemos a la brevedad. ¡Gracias por contactarnos!</div>
+        </div>
+    </div>
+
+    <script>
+        // Chips
+        function selChip(el) {
+            document.querySelectorAll('.chip').forEach(c => c.classList.remove('activo'));
+            el.classList.add('activo');
+        }
+
+        // Envío demo
+        function enviarForm() {
+            const nombre = document.getElementById('nombre').value.trim();
+            const btn = document.getElementById('btn-enviar');
+            if (!nombre) {
+                const inp = document.getElementById('nombre');
+                inp.style.borderColor = 'rgba(248,113,113,0.6)';
+                inp.focus();
+                setTimeout(() => inp.style.borderColor = '', 2200);
+                return;
+            }
+            btn.classList.add('enviando');
+            btn.innerHTML = '<span>Enviando...</span>';
+            setTimeout(() => {
+                btn.classList.remove('enviando');
+                btn.innerHTML = '<span>¡Mensaje enviado!</span><span>✓</span>';
+                btn.style.background = 'rgba(74,222,128,0.18)';
+                btn.style.color = '#4ade80';
+                btn.style.boxShadow = '0 4px 20px rgba(74,222,128,0.15)';
+                const toast = document.getElementById('toast');
+                toast.classList.add('visible');
+                setTimeout(() => toast.classList.remove('visible'), 4000);
+                setTimeout(() => {
+                    btn.innerHTML = '<span>Enviar mensaje</span><span class="btn-flecha">→</span>';
+                    btn.style.background = '';
+                    btn.style.color = '';
+                    btn.style.boxShadow = '';
+                }, 5000);
+            }, 1400);
+        }
+
+        // Día actual en horarios
+        const mapaDias = { 0:'domingo', 1:'lunes', 2:'martes', 3:'miercoles', 4:'jueves', 5:'viernes', 6:'sabado' };
+        const diaHoy = mapaDias[new Date().getDay()];
+        const filaHoy = document.getElementById('fila-' + diaHoy);
+        if (filaHoy && !filaHoy.classList.contains('cerrado')) {
+            filaHoy.classList.add('hoy');
+            const diaSpan = filaHoy.querySelector('.horario-dia');
+            const badge = document.createElement('span');
+            badge.className = 'badge-hoy';
+            badge.textContent = 'Hoy';
+            diaSpan.appendChild(badge);
+        }
+
+        // Scroll reveal
+        const reveals = document.querySelectorAll('.reveal');
+        const obs = new IntersectionObserver(entries => {
+            entries.forEach((e, i) => {
+                if (e.isIntersecting) {
+                    setTimeout(() => e.target.classList.add('visible'), i * 100);
+                    obs.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.08 });
+        reveals.forEach(el => obs.observe(el));
+    </script>
+
+</body>
+</html>

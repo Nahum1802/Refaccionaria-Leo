@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos | Refaccionaria Leo</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --amarillo: #FACC15;
+            --negro: #0a0a0a;
+            --gris-oscuro: #1a1a1a;
+            --gris-medio: #2a2a2a;
+            --gris-claro: #f5f5f0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Barlow', sans-serif;
+            background: #0a0a0a;
+            color: #f5f5f0;
+            overflow-x: hidden;
+        }
+
+        /* ── NAV ── */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            background: rgba(10,10,10,0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(250,204,21,0.15);
+            padding: 14px 0;
+        }
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+        .logo-icon {
+            width: 36px; height: 36px;
+            background: var(--amarillo);
+            border-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 18px;
+            color: #000;
+        }
+        .logo-text {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 22px;
+            letter-spacing: 2px;
+            color: #fff;
+        }
+        .logo-text span { color: var(--amarillo); }
+
+        nav ul { list-style: none; display: flex; align-items: center; gap: 4px; }
+        nav ul a {
+            display: block;
+            padding: 7px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: rgba(255,255,255,0.75);
+            transition: color 0.2s, background 0.2s;
+        }
+        nav ul a:hover { color: #fff; background: rgba(255,255,255,0.07); }
+        nav ul a.activo { background: var(--amarillo); color: #000; }
+
+        /* ── HERO PRODUCTOS ── */
+        .hero-productos {
+            padding: 9rem 2rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-productos::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background:
+                linear-gradient(135deg, #0a0a0a 0%, #111 60%, #0a0a0a 100%);
+        }
+        .hero-productos::after {
+            content: '';
+            position: absolute;
+            top: -30%; right: -5%;
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(250,204,21,0.1) 0%, transparent 65%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .hero-grid {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(250,204,21,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(250,204,21,0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
+        .hero-inner {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(250,204,21,0.12);
+            border: 1px solid rgba(250,204,21,0.3);
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--amarillo);
+            margin-bottom: 1rem;
+        }
+        .hero-titulo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(48px, 7vw, 80px);
+            letter-spacing: 2px;
+            line-height: 0.95;
+            margin-bottom: 1rem;
+        }
+        .hero-titulo span { color: var(--amarillo); }
+        .hero-desc {
+            font-size: 16px;
+            color: rgba(255,255,255,0.5);
+            max-width: 480px;
+            line-height: 1.7;
+        }
+        .hero-conteo {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .conteo-item { text-align: center; }
+        .conteo-numero {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 48px;
+            color: var(--amarillo);
+            line-height: 1;
+            letter-spacing: 1px;
+        }
+        .conteo-label {
+            font-size: 12px;
+            color: rgba(255,255,255,0.4);
+            letter-spacing: 1px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .conteo-sep {
+            width: 1px;
+            height: 60px;
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* ── FILTROS ── */
+        .filtros-wrap {
+            background: var(--gris-oscuro);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            position: sticky;
+            top: 65px;
+            z-index: 50;
+        }
+        .filtros-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .filtros-inner::-webkit-scrollbar { display: none; }
+        .filtro-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 20px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            white-space: nowrap;
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.45);
+            cursor: pointer;
+            position: relative;
+            transition: color 0.2s;
+            font-family: 'Barlow', sans-serif;
+        }
+        .filtro-btn::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 2px;
+            background: var(--amarillo);
+            transform: scaleX(0);
+            transition: transform 0.2s;
+        }
+        .filtro-btn:hover { color: rgba(255,255,255,0.8); }
+        .filtro-btn.activo { color: var(--amarillo); }
+        .filtro-btn.activo::after { transform: scaleX(1); }
+        .filtro-icono { font-size: 16px; }
+
+        /* ── GRID DE PRODUCTOS ── */
+        .productos-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem 5rem;
+        }
+
+        /* Título de categoría */
+        .cat-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .cat-header-icono {
+            width: 44px; height: 44px;
+            background: rgba(250,204,21,0.12);
+            border: 1px solid rgba(250,204,21,0.25);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px;
+        }
+        .cat-header-titulo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 28px;
+            letter-spacing: 2px;
+            color: #fff;
+        }
+        .cat-header-linea {
+            flex: 1;
+            height: 1px;
+            background: rgba(255,255,255,0.07);
+        }
+        .cat-header-count {
+            font-size: 12px;
+            color: rgba(255,255,255,0.3);
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .productos-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 4rem;
+        }
+
+        /* Tarjeta de producto */
+        .prod-card {
+            background: var(--gris-oscuro);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+            cursor: default;
+            display: flex;
+            flex-direction: column;
+        }
+        .prod-card:hover {
+            border-color: rgba(250,204,21,0.3);
+            transform: translateY(-4px);
+            box-shadow: 0 16px 48px rgba(0,0,0,0.4), 0 0 0 1px rgba(250,204,21,0.1);
+        }
+
+        /* Zona visual de la tarjeta */
+        .prod-visual {
+            height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .prod-visual-emoji {
+            font-size: 72px;
+            position: relative;
+            z-index: 1;
+            transition: transform 0.3s;
+            filter: drop-shadow(0 8px 16px rgba(0,0,0,0.5));
+        }
+        .prod-card:hover .prod-visual-emoji { transform: scale(1.1) translateY(-4px); }
+        .prod-visual-bg {
+            position: absolute;
+            inset: 0;
+        }
+        .prod-visual-circle {
+            position: absolute;
+            width: 120px; height: 120px;
+            border-radius: 50%;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.15;
+        }
+
+        /* Colores por categoría */
+        .cat-aceites .prod-visual-bg { background: linear-gradient(135deg, #1a1208 0%, #1a1a1a 100%); }
+        .cat-aceites .prod-visual-circle { background: #FACC15; }
+        .cat-aceites .prod-tag { background: rgba(250,204,21,0.12); color: #FACC15; border-color: rgba(250,204,21,0.25); }
+
+        .cat-filtros .prod-visual-bg { background: linear-gradient(135deg, #0d1a12 0%, #1a1a1a 100%); }
+        .cat-filtros .prod-visual-circle { background: #4ade80; }
+        .cat-filtros .prod-tag { background: rgba(74,222,128,0.1); color: #4ade80; border-color: rgba(74,222,128,0.2); }
+
+        .cat-accesorios .prod-visual-bg { background: linear-gradient(135deg, #0d1020 0%, #1a1a1a 100%); }
+        .cat-accesorios .prod-visual-circle { background: #60a5fa; }
+        .cat-accesorios .prod-tag { background: rgba(96,165,250,0.1); color: #60a5fa; border-color: rgba(96,165,250,0.2); }
+
+        .cat-bandas .prod-visual-bg { background: linear-gradient(135deg, #1a0d0d 0%, #1a1a1a 100%); }
+        .cat-bandas .prod-visual-circle { background: #f87171; }
+        .cat-bandas .prod-tag { background: rgba(248,113,113,0.1); color: #f87171; border-color: rgba(248,113,113,0.2); }
+
+        .cat-electrico .prod-visual-bg { background: linear-gradient(135deg, #0d1a18 0%, #1a1a1a 100%); }
+        .cat-electrico .prod-visual-circle { background: #34d399; }
+        .cat-electrico .prod-tag { background: rgba(52,211,153,0.1); color: #34d399; border-color: rgba(52,211,153,0.2); }
+
+        /* Info de la tarjeta */
+        .prod-info {
+            padding: 1.25rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .prod-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        .prod-nombre {
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.3;
+        }
+        .prod-tag {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 100px;
+            border: 1px solid;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .prod-desc {
+            font-size: 13px;
+            color: rgba(255,255,255,0.45);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            flex: 1;
+        }
+        .prod-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+        }
+        .prod-disponible {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.35);
+            font-weight: 600;
+        }
+        .prod-disponible::before {
+            content: '';
+            width: 6px; height: 6px;
+            background: #4ade80;
+            border-radius: 50%;
+        }
+        .prod-btn {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--amarillo);
+            background: rgba(250,204,21,0.08);
+            border: 1px solid rgba(250,204,21,0.2);
+            padding: 6px 14px;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: background 0.2s, border-color 0.2s;
+            cursor: pointer;
+            font-family: 'Barlow', sans-serif;
+        }
+        .prod-btn:hover {
+            background: rgba(250,204,21,0.16);
+            border-color: rgba(250,204,21,0.4);
+        }
+
+        /* Tarjeta destacada (ancha) */
+        .prod-card.destacada {
+            grid-column: span 2;
+            flex-direction: row;
+        }
+        .prod-card.destacada .prod-visual {
+            width: 240px;
+            height: auto;
+            flex-shrink: 0;
+        }
+        .prod-card.destacada .prod-visual-emoji { font-size: 90px; }
+
+        /* ── BANNER MARCAS ── */
+        .marcas-wrap {
+            background: var(--gris-oscuro);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding: 2.5rem 2rem;
+            overflow: hidden;
+        }
+        .marcas-titulo {
+            text-align: center;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.25);
+            margin-bottom: 1.5rem;
+        }
+        .marcas-row {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .marca-item {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 20px;
+            letter-spacing: 3px;
+            color: rgba(255,255,255,0.15);
+            transition: color 0.3s;
+        }
+        .marca-item:hover { color: rgba(250,204,21,0.6); }
+
+        /* ── CTA ── */
+        .cta-wrap {
+            background: var(--amarillo);
+            padding: 5rem 2rem;
+            text-align: center;
+        }
+        .cta-titulo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(36px, 5vw, 64px);
+            color: #000;
+            letter-spacing: 2px;
+            margin-bottom: 0.75rem;
+        }
+        .cta-subtitulo {
+            font-size: 17px;
+            color: rgba(0,0,0,0.65);
+            margin-bottom: 2rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .btn-cta-negro {
+            background: #000;
+            color: var(--amarillo);
+            font-weight: 700;
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 14px 36px;
+            border-radius: 8px;
+            text-decoration: none;
+            display: inline-block;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-cta-negro:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            background: var(--gris-oscuro);
+            border-top: 1px solid rgba(255,255,255,0.06);
+        }
+        .footer-top {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        .footer-nombre {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 22px;
+            letter-spacing: 2px;
+            color: #fff;
+        }
+        .footer-nombre span { color: var(--amarillo); }
+        .footer-links {
+            display: flex;
+            gap: 4px;
+        }
+        .footer-link {
+            padding: 7px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: rgba(255,255,255,0.4);
+            transition: color 0.2s, background 0.2s;
+        }
+        .footer-link:hover { color: #fff; background: rgba(255,255,255,0.05); }
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.05);
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13px;
+            color: rgba(255,255,255,0.2);
+        }
+
+        /* Animaciones */
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: none;
+        }
+
+        /* Estados oculto/visible para filtrado */
+        .grupo-categoria {
+            transition: opacity 0.3s;
+        }
+        .grupo-categoria.oculto {
+            display: none;
+        }
+
+        /* Toast de cotización */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--gris-oscuro);
+            border: 1px solid rgba(250,204,21,0.3);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            color: #fff;
+            z-index: 200;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: transform 0.4s ease, opacity 0.4s ease;
+            pointer-events: none;
+            max-width: 320px;
+        }
+        .toast.visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .toast-icono { font-size: 22px; }
+    </style>
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav>
+        <div class="nav-inner">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">RL</div>
+                <div class="logo-text">Refaccionaria <span>Leo</span></div>
+            </a>
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="Productos.html" class="activo">Productos</a></li>
+                <li><a href="Contacto.html">Contacto</a></li>
+                <li><a href="Login.html">Iniciar sesión</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero-productos">
+        <div class="hero-grid"></div>
+        <div class="hero-inner">
+            <div>
+                <div class="hero-badge">Catálogo completo</div>
+                <h1 class="hero-titulo">Nuestros<br><span>productos</span></h1>
+                <p class="hero-desc">Todo lo que tu vehículo necesita en un solo lugar. Refacciones de calidad para las marcas más populares del mercado mexicano.</p>
+            </div>
+            <div class="hero-conteo">
+                <div class="conteo-item">
+                    <div class="conteo-numero">+500</div>
+                    <div class="conteo-label">Productos</div>
+                </div>
+                <div class="conteo-sep"></div>
+                <div class="conteo-item">
+                    <div class="conteo-numero">5</div>
+                    <div class="conteo-label">Categorías</div>
+                </div>
+                <div class="conteo-sep"></div>
+                <div class="conteo-item">
+                    <div class="conteo-numero">15+</div>
+                    <div class="conteo-label">Marcas</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FILTROS -->
+    <div class="filtros-wrap">
+        <div class="filtros-inner">
+            <button class="filtro-btn activo" data-cat="todos" onclick="filtrar(this)">
+                <span class="filtro-icono">🔍</span> Todos
+            </button>
+            <button class="filtro-btn" data-cat="aceites" onclick="filtrar(this)">
+                <span class="filtro-icono">🛢️</span> Aceites y lubricantes
+            </button>
+            <button class="filtro-btn" data-cat="filtros" onclick="filtrar(this)">
+                <span class="filtro-icono">🔩</span> Filtros
+            </button>
+            <button class="filtro-btn" data-cat="accesorios" onclick="filtrar(this)">
+                <span class="filtro-icono">🔋</span> Accesorios
+            </button>
+            <button class="filtro-btn" data-cat="bandas" onclick="filtrar(this)">
+                <span class="filtro-icono">⚙️</span> Bandas y transmisión
+            </button>
+            <button class="filtro-btn" data-cat="electrico" onclick="filtrar(this)">
+                <span class="filtro-icono">⚡</span> Sistema eléctrico
+            </button>
+        </div>
+    </div>
+
+    <!-- PRODUCTOS -->
+    <main class="productos-section">
+
+        <!-- ACEITES Y LUBRICANTES -->
+        <div class="grupo-categoria reveal" id="grupo-aceites" data-grupo="aceites">
+            <div class="cat-header">
+                <div class="cat-header-icono">🛢️</div>
+                <div class="cat-header-titulo">Aceites y lubricantes</div>
+                <div class="cat-header-linea"></div>
+                <div class="cat-header-count">6 productos</div>
+            </div>
+            <div class="productos-grid">
+                <div class="prod-card cat-aceites destacada">
+                    <div class="prod-visual">
+                        <div class="prod-visual-bg"></div>
+                        <div class="prod-visual-circle"></div>
+                        <div class="prod-visual-emoji">🛢️</div>
+                    </div>
+                    <div class="prod-info">
+                        <div class="prod-top">
+                            <div class="prod-nombre">Aceite de motor sintético 5W-30</div>
+                            <span class="prod-tag">Más vendido</span>
+                        </div>
+                        <div class="prod-desc">Aceite sintético de alto rendimiento para motores modernos. Protección superior en frío y calor extremo. Compatible con gasolina y diésel. Marcas disponibles: Bardahl, Pennzoil, Mobil 1.</div>
+                        <div class="prod-footer">
+                            <div class="prod-disponible">En existencia</div>
+                            <button class="prod-btn" onclick="cotizar('Aceite de motor sintético 5W-30')">Cotizar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="prod-card cat-aceites">
+                    <div class="prod-visual">
+                        <div class="prod-visual-bg"></div>
+                        <div class="prod-visual-circle"></div>
+                        <div class="prod-visual-emoji">🔧</div>
+                    </div>
+                    <div class="prod-info">
+                        <div class="prod-top">
+                            <div class="prod-nombre">Líquido de transmisión automática</div>
+                            <span class="prod-tag">Popular</span>
+                        </div>
+                        <div class="prod-desc">ATF para transmisiones automáticas. Reduce el desgaste y mejora el cambio de velocidades.</div>
+                        <div class="prod-footer">
+                            <div class="prod-disponible">En existencia</div>
+                            <button class="prod-btn" onclick="cotizar('Líquido de transmisión automática')">Cotizar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="prod-card cat-aceites">
+                    <div class="prod-visual">
+                        <div class="prod-visual-bg"></div>
+                        <div class="prod-visual-circle"></div>
+                        <div class="prod-visual-emoji">💧</div>
+                    </div>
+                    <div class="prod-info">
+                        <div class="prod-top">
+                            <div class="prod-nombre">Refrigerante anticongelante</div>
+                            <span class="prod-tag">Esencial</span>
+                        </div>
+                        <div class="prod-desc">Protege el motor del sobrecalentamiento y la corrosión. Concentrado y listo para usar.</div>
+                        <div class="prod-footer">
+                            <div class="prod-disponible">En existencia</div>
+                            <button class="prod-btn" onclick="cotizar('Refrigerante anticongelante')">Cotizar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="prod-card cat-aceites">
+                    <div class="prod-visual">
+                        <div class="prod-visual-bg"></div>
+                        <div class="prod-visual-circle"></div>
+                        <div class="prod-visual-emoji">🩺</div>
+                    </div>
+                    <div class="prod-info">
+                        <div class="prod-top">
+                            <div class="prod-nombre">Líquido de frenos DOT 4</div>
+                            <span class="prod-tag">Seguridad</span>
+                        </div>
+                        <div class="prod-desc">Alto punto de ebullición para sistemas de frenos hidráulicos. Indispensable para seguridad vial.</div>
+                        <div class="prod-footer">
+                            <div class="prod-disponible">En existencia</div>
+                            <button class="prod-btn" onclick="cotizar('Líquido de frenos DOT 4')">Cotizar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FILTROS -->
+        <div class="grupo-categoria reveal" id="grupo-filtros" data-grupo="filtros">
+            <div class="cat-header">
+                <div class="cat-header-icono">🔩</div>
+                <div class="cat-header-titulo">Filtros</div>
+                <div class="cat-header-linea"></div>
+                <div class="cat-header-count">4 productos</div>
+            </div>
+            <div class="productos-grid">
+                <div class="prod-card cat-filtros destacada">
+                    <div class="prod-visual">
+                        <div class="prod-visual-bg"></div>
+                        <div class="prod-visual-circle"></div>
+                        <div class="prod-visual-emoji">🌬️</div>
+                    </div>
+                    <div class="prod-info">
+                        <div class="prod-top">
+                            <div class="prod-nombre">Filtro de aire de alto flujo</div>
+                            <span class="prod-tag">Rendimiento</span>
+                        </div>
+                        <div class="prod-desc">Maximiza el flujo de aire al motor para mejor combustión y eficiencia. Disponible para las marcas más comunes del mercado mexicano: Nissan, Chevrolet, Volkswagen, Toyota y más.</div>
+                        <div class="prod-footer">
+                            <div class="prod-disponible">En existencia</div>
+                            <button class="prod-btn" onclick="cotizar('Filtro de aire de alto flujo')">Cotizar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="prod-card cat-filtros">
+                    <div class="prod-visual">
+                        <div class="prod-visual-bg"></div>
+                        <div class="prod-visual-circle"></div>
+                        <div class="prod-visual-emoji">🔩</div>
+                    </div>
+                    <div class="prod-info">
+                        <div class="prod-top">
+                            <div class="prod-nombre">Filtro de aceite</div>
+                            <span class="prod-tag">Esencial</span>
+                        </div>
+                        <div class="prod-desc">Retiene impurezas y prolonga la vida del motor. Compatible con la mayoría de vehículos.</div>
+                        <div class="prod-footer">
+                            <div class="prod-disponible">En existencia</div>
+                            <button class="prod-btn" onclick="cotizar('Filtro de aceite')">Cotizar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="prod-card cat-filtros">
+                    <div class="prod-visual">
+                        <div class="prod-visual-bg"></div>
+                        <div class="prod-visual-circle"></div>
+                        <div class="prod-visual-emoji">⛽</div>
+                    </div>
+                    <div class="prod-info">
+                        <div class="prod-top">
+                            <div class="prod-nombre">Filtro de combustible</div>
+                            <span class="prod-tag">Protección</span>
+                        </div>
+                        <div class="prod-desc">Protege los inyectores y el carburador de partículas y sedimentos del combustible.</div>
+                        <div class="prod-footer">
+                            <div class="prod-disponible">En existencia</div>
+                            <button class="prod-btn" onclick="cotizar('Filtro de combustible')">Cotizar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ACCESORIOS -->
+        <div class="grupo-categoria reveal" id="grupo-accesorios" data-grupo="accesorios">
+            <div class="cat-header">
+                <div class="cat-header-icono">🔋</div>
+                <div class="cat-header-titulo">Accesorios</div>
+                <div class="cat-header-linea"></div>
+                <div class="cat-header-count">5 productos</div>
+            </div>
+            <div class="productos-grid">
+                <div class="prod-card cat-accesorios destacada">
+                    <div class="prod-visual">
+                        <div class="prod-visual-bg"></div>
+                        <div class="prod-visual-circle"></div>
+                        <div class="prod-visual-emoji">🔋</div>
+                    </div>
+                    <div class="prod-info">
+                        <div class="prod-top">
+                            <div class="prod-nombre">Baterías automotrices</div>
+                            <span class="prod-tag">Más vendido</span>
+                        </div>
+                        <div class="prod-desc">Baterías de 40 a 80 Ah para vehículos de pasajeros, camionetas y pickups. Marcas: Bosch, Varta, AC Delco. Incluye instalación sin costo adicional en tienda.</div>
+                        <div class="prod-footer">
+                            <div class="prod-disponible">En existencia</div>
+                            <button class="prod-btn" onclick="cotizar('Batería automotriz')">Cotizar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="prod-card cat-accesorios">
+                    <div class="prod-visual">
+                        <div class="prod-visual-bg"></div>
+                        <div class="prod-visual-circle"></div>
+                        <div class="prod-visual-emoji">💡</div>
+                    </div>
+                    <div class="prod-info">
+                        <div class="prod-top">
+                            <div class="prod-nombre">Focos y luces LED</div>
+                            <span class="prod-tag">Actualización</span>
+                        </div>
+                        <div class="prod-desc">Focos H4, H7, H11 y LED de conversión para faros delanteros y traseros.</div>
+                        <div class="prod-footer">
+                            <div class="prod-disponible">En existencia</div>
+                            <button class="prod-btn" onclick="cotizar('Focos y luces LED')">Cotizar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="prod-card cat-accesorios">
+                    <div class="prod-visual">
+                        <div class="prod-visual-bg"></div>
+                        <div class="prod-visual-circle"></div>
+                        <div class="prod-visual-emoji">🌧️</div>
+                    </div>
+                    <div class="prod-info">
+                        <div class="prod-top">
+                            <div class="prod-nombre">Limpiaparabrisas</div>
+                            <span class="prod-tag">Seguridad</span>
+                        </div>
+                        <div class="prod-desc">Plumas convencionales y de silicona. Limpieza perfecta sin rayaduras en el cristal.</div>
+                        <div class="prod-footer">
+                            <div class="prod-disponible">En existencia</div>
+                            <button class="prod-btn" onclick="cotizar('Limpiaparabrisas')">Cotizar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BANDAS Y TRANSMISIÓN -->
+        <div class="grupo-categoria reveal" id="grupo-bandas" data-grupo="bandas">
+            <div class="cat-header">
+                <div class="cat-header-icono">⚙️</div>
+                <div class="cat-header-titulo">Bandas y transmisión</div>
+                <div class="cat-header-linea"></div>
+                <div class="cat-header-count">3 productos</div>
+            </div>
+            <div class="productos-grid">
+                <div class="prod-card cat-bandas destacada">
+                    <div class="prod-visual">
+                        <div class="prod-visual-bg"></div>
+                        <div class="prod-visual-circle"></div>
+                        <div class="prod-visual-emoji">⚙️</div>
+                    </div>
+                    <div class="prod-info">
+                        <div class="prod-top">
+                            <div class="prod-nombre">Kit de distribución completo</div>
+                            <span class="prod-tag">Crítico</span>
+                        </div>
+                        <div class="prod-desc">Banda de distribución + tensor + polea guía. Kit completo para un reemplazo correcto y sin sorpresas. Disponible para los modelos más comunes del mercado.</div>
+                        <div class="prod-footer">
+                            <div class="prod-disponible">En existencia</div>
+                            <button class="prod-btn" onclick="cotizar('Kit de distribución completo')">Cotizar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="prod-card cat-bandas">
+                    <div class="prod-visual">
+                        <div class="prod-visual-bg"></div>
+                        <div class="prod-visual-circle"></div>
+                        <div class="prod-visual-emoji">🔄</div>
+                    </div>
+                    <div class="prod-info">
+                        <div class="prod-top">
+                            <div class="prod-nombre">Banda serpentina</div>
+                            <span class="prod-tag">Mantenimiento</span>
+                        </div>
+                        <div class="prod-desc">Acciona el alternador, la dirección hidráulica y el compresor del aire. Repuesto esencial.</div>
+                        <div class="prod-footer">
+                            <div class="prod-disponible">En existencia</div>
+                            <button class="prod-btn" onclick="cotizar('Banda serpentina')">Cotizar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="prod-card cat-bandas">
+                    <div class="prod-visual">
+                        <div class="prod-visual-bg"></div>
+                        <div class="prod-visual-circle"></div>
+                        <div class="prod-visual-emoji">🎯</div>
+                    </div>
+                    <div class="prod-info">
+                        <div class="prod-top">
+                            <div class="prod-nombre">Tensor de banda</div>
+                            <span class="prod-tag">Precisión</span>
+                        </div>
+                        <div class="prod-desc">Mantiene la tensión correcta de la banda de distribución. Siempre cámbialo junto con la banda.</div>
+                        <div class="prod-footer">
+                            <div class="prod-disponible">En existencia</div>
+                            <button class="prod-btn" onclick="cotizar('Tensor de banda')">Cotizar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SISTEMA ELÉCTRICO -->
+        <div class="grupo-categoria reveal" id="grupo-electrico" data-grupo="electrico">
+            <div class="cat-header">
+                <div class="cat-header-icono">⚡</div>
+                <div class="cat-header-titulo">Sistema eléctrico</div>
+                <div class="cat-header-linea"></div>
+                <div class="cat-header-count">3 productos</div>
+            </div>
+            <div class="productos-grid">
+                <div class="prod-card cat-electrico destacada">
+                    <div class="prod-visual">
+                        <div class="prod-visual-bg"></div>
+                        <div class="prod-visual-circle"></div>
+                        <div class="prod-visual-emoji">⚡</div>
+                    </div>
+                    <div class="prod-info">
+                        <div class="prod-top">
+                            <div class="prod-nombre">Bujías de encendido</div>
+                            <span class="prod-tag">Esencial</span>
+                        </div>
+                        <div class="prod-desc">Bujías estándar, de iridio y de platino. Un juego de bujías en buen estado mejora el arranque, el consumo de gasolina y la potencia del motor. Marcas: NGK, Bosch, Champion, Denso.</div>
+                        <div class="prod-footer">
+                            <div class="prod-disponible">En existencia</div>
+                            <button class="prod-btn" onclick="cotizar('Bujías de encendido')">Cotizar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="prod-card cat-electrico">
+                    <div class="prod-visual">
+                        <div class="prod-visual-bg"></div>
+                        <div class="prod-visual-circle"></div>
+                        <div class="prod-visual-emoji">🔌</div>
+                    </div>
+                    <div class="prod-info">
+                        <div class="prod-top">
+                            <div class="prod-nombre">Cables de bujía</div>
+                            <span class="prod-tag">Ignición</span>
+                        </div>
+                        <div class="prod-desc">Juego de cables de alta tensión para encendido. Mejoran la chispa y el arranque en frío.</div>
+                        <div class="prod-footer">
+                            <div class="prod-disponible">En existencia</div>
+                            <button class="prod-btn" onclick="cotizar('Cables de bujía')">Cotizar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="prod-card cat-electrico">
+                    <div class="prod-visual">
+                        <div class="prod-visual-bg"></div>
+                        <div class="prod-visual-circle"></div>
+                        <div class="prod-visual-emoji">🔆</div>
+                    </div>
+                    <div class="prod-info">
+                        <div class="prod-top">
+                            <div class="prod-nombre">Alternador remanufacturado</div>
+                            <span class="prod-tag">Reconstruido</span>
+                        </div>
+                        <div class="prod-desc">Alternadores reconstruidos con garantía. Carga correctamente la batería y alimenta el sistema eléctrico.</div>
+                        <div class="prod-footer">
+                            <div class="prod-disponible">En existencia</div>
+                            <button class="prod-btn" onclick="cotizar('Alternador remanufacturado')">Cotizar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- MARCAS -->
+    <div class="marcas-wrap">
+        <div class="marcas-titulo">Marcas que manejamos</div>
+        <div class="marcas-row">
+            <div class="marca-item">BARDAHL</div>
+            <div class="marca-item">BOSCH</div>
+            <div class="marca-item">NGK</div>
+            <div class="marca-item">CHAMPION</div>
+            <div class="marca-item">DENSO</div>
+            <div class="marca-item">AC DELCO</div>
+            <div class="marca-item">VARTA</div>
+            <div class="marca-item">PENNZOIL</div>
+            <div class="marca-item">MOBIL 1</div>
+            <div class="marca-item">GATES</div>
+            <div class="marca-item">DAYCO</div>
+        </div>
+    </div>
+
+    <!-- CTA -->
+    <section class="cta-wrap">
+        <h2 class="cta-titulo">¿No encuentras lo que buscas?</h2>
+        <p class="cta-subtitulo">Dinos qué necesitas y lo conseguimos. Pregunta sin compromiso, cotizamos sin costo.</p>
+        <a href="Contacto.html" class="btn-cta-negro">Preguntar por una pieza</a>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-top">
+            <div class="footer-nombre">Refaccionaria <span>Leo</span></div>
+            <div class="footer-links">
+                <a href="index.html" class="footer-link">Inicio</a>
+                <a href="Productos.html" class="footer-link">Productos</a>
+                <a href="Contacto.html" class="footer-link">Contacto</a>
+                <a href="Login.html" class="footer-link">Iniciar sesión</a>
+            </div>
+            <div style="font-size:13px;color:rgba(255,255,255,0.25);">Chimalhuacán, Estado de México</div>
+        </div>
+        <div class="footer-bottom">
+            <span>© 2025 Refaccionaria Leo — Todos los derechos reservados</span>
+            <span>+52 123 456 7890</span>
+        </div>
+    </footer>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast">
+        <div class="toast-icono">✅</div>
+        <div>
+            <div style="font-weight:700;margin-bottom:2px;" id="toast-titulo">¡Listo!</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.5);" id="toast-msg">Llámanos al +52 123 456 7890 para cotizar.</div>
+        </div>
+    </div>
+
+    <script>
+        // Filtros
+        function filtrar(btn) {
+            document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('activo'));
+            btn.classList.add('activo');
+
+            const cat = btn.dataset.cat;
+            document.querySelectorAll('.grupo-categoria').forEach(g => {
+                if (cat === 'todos' || g.dataset.grupo === cat) {
+                    g.classList.remove('oculto');
+                } else {
+                    g.classList.add('oculto');
+                }
+            });
+        }
+
+        // Toast de cotización
+        function cotizar(producto) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-titulo').textContent = producto;
+            document.getElementById('toast-msg').textContent = 'Llámanos al +52 123 456 7890 o visítanos en tienda para cotizar.';
+            toast.classList.add('visible');
+            setTimeout(() => toast.classList.remove('visible'), 3500);
+        }
+
+        // Scroll reveal
+        const reveals = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, i) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => entry.target.classList.add('visible'), i * 100);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.08 });
+        reveals.forEach(el => observer.observe(el));
+    </script>
+
+</body>
+</html>
