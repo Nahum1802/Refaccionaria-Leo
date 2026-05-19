@@ -400,11 +400,52 @@
 
             if (!valido) return;
 
-            const btn = document.getElementById('btn-registro');
-            btn.classList.add('bg-amarillo/35', 'pointer-events-none');
-            btn.classList.remove('hover:-translate-y-0.5', 'hover:bg-[#fde047]', 'shadow-[0_4px_20px_rgba(250,204,21,0.25)]');
-            document.getElementById('btn-texto').textContent = 'Creando cuenta...';
-            document.getElementById('btn-icono').innerHTML = '<div class="w-[18px] h-[18px] border-2 border-black/20 border-t-black rounded-full animate-[spin_0.7s_linear_infinite]"></div>';
+            // ... (Tu validación de campos queda igual)
+        if (!valido) return;
+
+        // Cambiar estado visual del botón (Cargando...)
+        const btn = document.getElementById('btn-registro');
+        btn.classList.add('bg-amarillo/35', 'pointer-events-none');
+        document.getElementById('btn-texto').textContent = 'Comprobando conexión...';
+
+        // Estructura limpia para tu prueba
+        const datosUsuario = {
+            nombre: document.getElementById('nombre').value.trim(),
+            apellidos: document.getElementById('apellidos').value.trim(),
+            telefono: document.getElementById('telefono').value.trim(),
+            password: document.getElementById('password').value
+        };
+
+        // CAMBIA ESTA URL por la que te dé ngrok cada vez que lo ejecutes en tu cmd
+        const URL_NGROK = 'https://renter-marrow-engraver.ngrok-free.dev'; 
+
+        // Enviar la petición a tu Windows a través del túnel
+        fetch(`${URL_NGROK}/refaccionaria/guardar_usuario.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(datosUsuario)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                // Si todo sale bien, dispara la animación del Toast que ya programaste
+                document.getElementById('btn-texto').textContent = '¡Éxito!';
+                const toast = document.getElementById('toast');
+                toast.classList.replace('translate-y-[100px]', 'translate-y-0');
+                toast.classList.replace('opacity-0', 'opacity-100');
+                
+                // Limpiar inputs
+                campos.forEach(id => document.getElementById(id).value = '');
+            } else {
+                alert('El servidor respondió con error: ' + data.message);
+                restablecerBoton(btn);
+            }
+        })
+        .catch(error => {
+            console.error('Error de red:', error);
+            alert('No se pudo conectar con Windows. Verifica que ngrok y Apache estén corriendo.');
+            restablecerBoton(btn);
+        });
 
             setTimeout(() => {
                 btn.classList.remove('bg-amarillo/35', 'pointer-events-none');
