@@ -113,9 +113,9 @@
                         </div>
                     </div>
                     <div>
-                        <label for="apellidos" class="block text-[11px] font-bold tracking-[1.5px] uppercase text-white/35 mb-2">Codigo Postal</label>
+                        <label for="codigo-postal" class="block text-[11px] font-bold tracking-[1.5px] uppercase text-white/35 mb-2">Codigo Postal</label>
                         <div class="relative group">
-                            <input type="text" id="apellidos" class="w-full bg-white/5 border border-white/10 rounded-[10px] py-3 px-3.5 pl-10 text-[14px] text-white font-barlow outline-none transition-all duration-250 focus:border-amarillo/50 focus:bg-amarillo/5 focus:shadow-[0_0_0_3px_rgba(250,204,21,0.07)] placeholder:text-white/20" placeholder="Tus apellidos" oninput="validarCampo('apellidos')">
+                            <input type="text" id="codigo-postal" class="w-full bg-white/5 border border-white/10 rounded-[10px] py-3 px-3.5 pl-10 text-[14px] text-white font-barlow outline-none transition-all duration-250 focus:border-amarillo/50 focus:bg-amarillo/5 focus:shadow-[0_0_0_3px_rgba(250,204,21,0.07)] placeholder:text-white/20" placeholder="Código postal" oninput="validarCampo('codigo-postal')">
                         </div>
                         <div class="text-[11px] text-red-400 mt-1.5 items-center gap-1 hidden" id="error-codigo-postal">⚠ Ingresa tu código postal</div>
                     </div>
@@ -236,19 +236,22 @@
         </div>
     </div>
 
-<script>
+    <script>
         let terminosAceptados = true; 
         const menuBtn = document.getElementById('menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
 
+        // Control del menú móvil
         menuBtn.addEventListener('click', () => {
             mobileMenu.classList.toggle('hidden');
         });
 
+        // Forzar solo números en campos como teléfono y CP
         function soloNumeros(el) {
             el.value = el.value.replace(/\D/g, '');
         }
 
+        // Mostrar / Ocultar contraseñas
         function togglePass(idCampo, idBtn) {
             const inp = document.getElementById(idCampo);
             const btn = document.getElementById(idBtn);
@@ -257,6 +260,7 @@
             btn.textContent = visible ? '👁' : '🙈';
         }
 
+        // Evaluar la fuerza de la contraseña con las barras de colores
         function evaluarPass() {
             const val = document.getElementById('password').value;
             const wrap = document.getElementById('fortaleza-wrap');
@@ -293,6 +297,7 @@
             texto.style.color = nivel.color;
         }
 
+        // Validación en tiempo real (oninput) de cada input
         function validarCampo(id) {
             const campo = document.getElementById(id);
             const error = document.getElementById('error-' + id);
@@ -304,8 +309,8 @@
             if (id === 'nombre' || id === 'apellidos') valido = val.length >= 2;
             if (id === 'email') valido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
             if (id === 'telefono') valido = /^\d{10}$/.test(campo.value.replace(/\s/g,''));
-            if (id === 'codigo-postal') valido = val.length === 5;
-            if (id === 'alcaldias' || id === 'calle' || id === 'num-exterior'|| id === 'colonia') valido = val.length > 0;
+            if (id === 'codigo-postal') valido = /^\d{5}$/.test(val);
+            if (id === 'entidad-federativa' || id === 'alcaldias' || id === 'colonia' || id === 'calle' || id === 'num-exterior') valido = val.length > 0;
             if (id === 'password') valido = campo.value.length >= 8;
             if (id === 'confirmar') {
                 const pass = document.getElementById('password').value;
@@ -330,15 +335,19 @@
             }
         }
 
+        // Restablecer el botón de registro si ocurre un fallo
         function restablecerBoton(btn) {
             btn.classList.remove('bg-amarillo/35', 'pointer-events-none');
             document.getElementById('btn-texto').textContent = 'Crear mi cuenta';
+            document.getElementById('btn-icono').textContent = '→';
         }
 
+        // Función Principal: Se ejecuta al dar clic en el botón de registrar
         function registrar() {
-            const campos = ['nombre','apellidos','telefono', 'codigo-postal', 'alcaldias','colonia', 'calle', 'num-exterior', 'email','password','confirmar'];
+            const campos = ['nombre','apellidos','telefono', 'entidad-federativa', 'codigo-postal', 'alcaldias','colonia', 'calle', 'num-exterior', 'email','password','confirmar'];
             let valido = true;
 
+            // Validar todos los campos del formulario antes de enviar
             campos.forEach(id => {
                 const campo = document.getElementById(id);
                 const error = document.getElementById('error-' + id);
@@ -350,8 +359,8 @@
                 if (id === 'nombre' || id === 'apellidos') ok = val.length >= 2;
                 if (id === 'email') ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
                 if (id === 'telefono') ok = /^\d{10}$/.test(campo.value.replace(/\s/g,''));
-                if (id === 'codigo-postal') ok = val.length === 5;
-                if (id === 'alcaldias' || id === 'calle' || id === 'num-exterior' || id === 'colonia') ok = val.length > 0;
+                if (id === 'codigo-postal') ok = /^\d{5}$/.test(val);
+                if (id === 'entidad-federativa' || id === 'alcaldias' || id === 'colonia' || id === 'calle' || id === 'num-exterior') ok = val.length > 0;
                 if (id === 'password') ok = campo.value.length >= 8;
                 if (id === 'confirmar') ok = campo.value === document.getElementById('password').value && campo.value.length > 0;
 
@@ -363,22 +372,21 @@
                 }
             });
 
-            if (!terminosAceptados) {
-                valido = false;
-            }
+            if (!terminosAceptados || !valido) return;
 
-            if (!valido) return;
-
+            // Bloquear interfaz visual del botón (Estado de carga)
             const btn = document.getElementById('btn-registro');
             btn.classList.add('bg-amarillo/35', 'pointer-events-none');
             document.getElementById('btn-texto').textContent = 'Comprobando conexión...';
+            document.getElementById('btn-icono').innerHTML = '<div class="w-[18px] h-[18px] border-2 border-black/20 border-t-black rounded-full animate-[spin_0.7s_linear_infinite]"></div>';
 
+            // Paquete estructurado con todos los datos capturados
             const datosUsuario = {
                 nombre: document.getElementById('nombre').value.trim(),
                 apellidos: document.getElementById('apellidos').value.trim(),
                 telefono: document.getElementById('telefono').value.trim(),
                 email: document.getElementById('email').value.trim(),
-                entidadFederativa: document.getElementById('entidad-federativa').value.trim(),
+                entidadFederativa: document.getElementById('entidad-federativa').value,
                 codigoPostal: document.getElementById('codigo-postal').value.trim(),
                 alcaldia: document.getElementById('alcaldias').value.trim(),
                 colonia: document.getElementById('colonia').value.trim(),
@@ -388,57 +396,65 @@
                 password: document.getElementById('password').value
             };
 
+            // URL del túnel de ngrok hacia tu XAMPP local
             const URL_NGROK = 'https://renter-marrow-engraver.ngrok-free.dev'; 
 
+            // Comunicación HTTP POST asíncrona hacia tu archivo PHP
             fetch(`${URL_NGROK}/refaccionaria/guardar_usuario.php`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(datosUsuario)
             })
-            .then(response => response.json())
+            .then(response => {
+                if(!response.ok) throw new Error('Error de respuesta HTTP en el servidor local XAMPP.');
+                return response.json();
+            })
             .then(data => {
                 if (data.status === 'success') {
-                    document.getElementById('btn-texto').textContent = '¡Éxito!';
+                    // ---- COMPORTAMIENTO DE ÉXITO REAL ----
+                    document.getElementById('btn-texto').textContent = '¡Cuenta creada!';
+                    document.getElementById('btn-icono').textContent = '✓';
+                    btn.style.background = 'rgba(74,222,128,0.18)';
+                    btn.style.color = '#4ade80';
+                    btn.style.boxShadow = '0 4px 20px rgba(74,222,128,0.12)';
+
+                    // Disparar animación del Toast
                     const toast = document.getElementById('toast');
                     toast.classList.replace('translate-y-[100px]', 'translate-y-0');
                     toast.classList.replace('opacity-0', 'opacity-100');
                     
-                    campos.forEach(id => document.getElementById(id).value = '');
-                    document.getElementById('num-interior').value = ''; 
+                    // Limpieza total de los campos del formulario
+                    campos.forEach(id => {
+                        const c = document.getElementById(id);
+                        if(c) c.value = '';
+                    });
+                    document.getElementById('num-interior').value = '';
+                    document.getElementById('entidad-federativa').value = '';
+                    document.getElementById('fortaleza-wrap').classList.replace('block', 'hidden');
+
+                    // Ocultar Toast y restablecer el botón tras 4 segundos
+                    setTimeout(() => {
+                        toast.classList.replace('translate-y-0', 'translate-y-[100px]');
+                        toast.classList.replace('opacity-100', 'opacity-0');
+                        
+                        btn.style.background = '';
+                        btn.style.color = '';
+                        btn.style.boxShadow = '';
+                        btn.classList.remove('bg-amarillo/35', 'pointer-events-none');
+                        btn.classList.add('hover:-translate-y-0.5', 'hover:bg-[#fde047]', 'shadow-[0_4px_20px_rgba(250,204,21,0.25)]');
+                        btn.innerHTML = '<span id="btn-texto">Crear mi cuenta</span><span id="btn-icono">→</span>';
+                    }, 4000);
+
                 } else {
-                    alert('El servidor respondió con error: ' + data.message);
+                    alert('El servidor rechazó el registro: ' + data.message);
                     restablecerBoton(btn);
                 }
             })
             .catch(error => {
-                console.error('Error de red:', error);
-                alert('No se pudo conectar con el servidor.');
+                console.error('Error de red en fetch:', error);
+                alert('No se pudo conectar con el servidor de la refaccionaria. Revisa que ngrok y Apache en XAMPP estén activos.');
                 restablecerBoton(btn);
             });
-
-            setTimeout(() => {
-                btn.classList.remove('bg-amarillo/35', 'pointer-events-none');
-                document.getElementById('btn-texto').textContent = '¡Cuenta creada!';
-                document.getElementById('btn-icono').textContent = '✓';
-                btn.style.background = 'rgba(74,222,128,0.18)';
-                btn.style.color = '#4ade80';
-                btn.style.boxShadow = '0 4px 20px rgba(74,222,128,0.12)';
-
-                const toast = document.getElementById('toast');
-                toast.classList.replace('translate-y-[100px]', 'translate-y-0');
-                toast.classList.replace('opacity-0', 'opacity-100');
-
-                setTimeout(() => {
-                    toast.classList.replace('translate-y-0', 'translate-y-[100px]');
-                    toast.classList.replace('opacity-100', 'opacity-0');
-                    
-                    btn.style.background = '';
-                    btn.style.color = '';
-                    btn.style.boxShadow = '';
-                    btn.classList.add('hover:-translate-y-0.5', 'hover:bg-[#fde047]', 'shadow-[0_4px_20px_rgba(250,204,21,0.25)]');
-                    btn.innerHTML = '<span id="btn-texto">Crear mi cuenta</span><span id="btn-icono">→</span>';
-                }, 4000);
-            }, 1800);
         }
     </script>
 </body>
