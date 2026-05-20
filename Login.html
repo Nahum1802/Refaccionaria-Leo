@@ -16,12 +16,6 @@
             --font-barlow: 'Barlow', sans-serif;
             --font-bebas: 'Bebas Neue', sans-serif;
         }
-        @keyframes girar { to { transform: rotate(360deg); } }
-        @keyframes girar-reverse { to { transform: rotate(-360deg); } }
-        @keyframes flotar { 
-            0%, 100% { transform: translateY(0px); } 
-            50% { transform: translateY(-8px); } 
-        }
         @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
@@ -30,7 +24,9 @@
     <nav class="fixed top-0 left-0 right-0 z-[100] bg-negro/92 backdrop-blur-[12px] border-b border-amarillo/15 py-[14px]">
         <div class="max-w-[1200px] mx-auto px-8 flex items-center justify-between relative">
             <a href="index.html" class="flex items-center gap-[10px] no-underline">
-                <div class="w-[36px] h-[36px] bg-amarillo rounded-[6px] flex items-center justify-center font-bebas text-[18px] text-black"><img src="IMG/bardahl-top-logo-mobile.webp" alt="Logo Refaccionaria Leo"></div>
+                <div class="w-[36px] h-[36px] bg-amarillo rounded-[6px] flex items-center justify-center font-bebas text-[18px] text-black">
+                    <img src="IMG/bardahl-top-logo-mobile.webp" alt="Logo Refaccionaria Leo">
+                </div>
                 <div class="font-bebas text-[22px] tracking-[2px] text-white">Refaccionaria <span class="text-amarillo">Leo</span></div>
             </a>
             
@@ -58,128 +54,79 @@
         </div>
     </nav>
 
-    <div class="flex-1 flex flex-col lg:grid lg:grid-cols-2 min-h-screen pt-[72px]">
+    <div class="flex-1 flex items-center justify-center min-h-screen pt-[80px] pb-12 px-4 bg-[#0a0a0a] relative overflow-hidden">
+        
+        <div class="absolute inset-0 bg-[linear-gradient(160deg,#111_0%,#0a0a0a_60%)]"></div>
+        <div class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-[radial-gradient(circle,rgba(250,204,21,0.1)_0%,transparent_65%)] rounded-full pointer-events-none"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[400px] h-[400px] bg-[radial-gradient(circle,rgba(250,204,21,0.06)_0%,transparent_65%)] rounded-full pointer-events-none"></div>
+        <div class="absolute inset-0 bg-[linear-gradient(rgba(250,204,21,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(250,204,21,0.04)_1px,transparent_1px)] bg-[size:55px_55px] pointer-events-none"></div>
 
-        <div class="relative hidden lg:flex flex-col justify-end p-12 bg-[#0d0d0d] overflow-hidden">
-            <div class="absolute inset-0 bg-[linear-gradient(160deg,#111_0%,#0a0a0a_60%)]"></div>
-            <div class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-[radial-gradient(circle,rgba(250,204,21,0.1)_0%,transparent_65%)] rounded-full"></div>
-            <div class="absolute bottom-[10%] right-[-10%] w-[350px] h-[350px] bg-[radial-gradient(circle,rgba(250,204,21,0.06)_0%,transparent_65%)] rounded-full"></div>
-            <div class="absolute inset-0 bg-[linear-gradient(rgba(250,204,21,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(250,204,21,0.04)_1px,transparent_1px)] bg-[size:55px_55px]"></div>
+        <div class="w-full max-w-[420px] relative z-10 bg-[#0f0f0f]/95 backdrop-blur-sm border border-white/5 p-8 sm:p-10 rounded-2xl shadow-2xl">
 
-            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[65%] flex items-center justify-center">
-                <div class="w-[200px] h-[200px] rounded-full border border-amarillo/12 flex items-center justify-center relative animate-[girar_20s_linear_infinite] before:content-[''] before:absolute before:top-[-4px] before:left-1/2 before:-translate-x-1/2 before:w-2 before:h-2 before:bg-amarillo before:rounded-full before:shadow-[0_0_12px_rgba(250,204,21,0.8)]">
-                    <div class="w-[140px] h-[140px] bg-amarillo/5 border border-amarillo/20 rounded-full flex items-center justify-center text-[54px] animate-[girar-reverse_20s_linear_infinite]">🔧</div>
+            <div class="text-center mb-10">
+                <div class="w-14 h-14 bg-amarillo rounded-2xl flex items-center justify-center font-bebas text-[26px] text-black mx-auto mb-5 shadow-[0_8px_24px_rgba(250,204,21,0.3)]">RL</div>
+                <h1 class="font-bebas text-[36px] tracking-[2px] mb-1.5">Bienvenido de vuelta</h1>
+                <p class="text-[14px] text-white/40">Ingresa tus datos para continuar</p>
+            </div>
+
+            <div class="mb-4">
+                <div class="flex items-center justify-between mb-2">
+                    <label for="email" class="text-[12px] font-bold tracking-[1.5px] uppercase text-white/40">Correo electrónico</label>
                 </div>
-            </div>
-
-            <div class="absolute bg-white/5 border border-white/10 rounded-xl py-3 px-4 flex items-center gap-2.5 text-[13px] font-semibold text-white/60 backdrop-blur-[8px] animate-[flotar_4s_ease-in-out_infinite] top-[18%] left-[8%]">
-                <div class="w-8 h-8 bg-amarillo/12 rounded-lg flex items-center justify-center text-[16px] shrink-0">⚡</div>
-                <div>Acceso rápido</div>
-            </div>
-            <div class="absolute bg-white/5 border border-white/10 rounded-xl py-3 px-4 flex items-center gap-2.5 text-[13px] font-semibold text-white/60 backdrop-blur-[8px] animate-[flotar_4s_ease-in-out_infinite] delay-[-1.3s] top-[22%] right-[6%]">
-                <div class="w-8 h-8 bg-amarillo/12 rounded-lg flex items-center justify-center text-[16px] shrink-0">📦</div>
-                <div>Historial de pedidos</div>
-            </div>
-            <div class="absolute bg-white/5 border border-white/10 rounded-xl py-3 px-4 flex items-center gap-2.5 text-[13px] font-semibold text-white/60 backdrop-blur-[8px] animate-[flotar_4s_ease-in-out_infinite] delay-[-2.6s] top-[60%] right-[5%]">
-                <div class="w-8 h-8 bg-amarillo/12 rounded-lg flex items-center justify-center text-[16px] shrink-0">💰</div>
-                <div>Precios exclusivos</div>
-            </div>
-
-            <div class="relative z-10">
-                <h2 class="font-bebas text-[42px] tracking-[2px] leading-none mb-3">Tu cuenta,<br><span class="text-amarillo">tu ventaja</span></h2>
-                <p class="text-[15px] text-white/45 leading-[1.7] mb-8 max-w-[340px]">Accede a tu cuenta para ver tu historial, guardar refacciones favoritas y recibir cotizaciones personalizadas.</p>
-                <div class="flex flex-col gap-2.5">
-                    <div class="flex items-center gap-3 text-[14px] text-white/55 font-medium">
-                        <div class="w-[22px] h-[22px] bg-amarillo/12 border border-amarillo/30 rounded-md flex items-center justify-center text-[12px] shrink-0 text-amarillo">✓</div>
-                        Historial de compras y cotizaciones
-                    </div>
-                    <div class="flex items-center gap-3 text-[14px] text-white/55 font-medium">
-                        <div class="w-[22px] h-[22px] bg-amarillo/12 border border-amarillo/30 rounded-md flex items-center justify-center text-[12px] shrink-0 text-amarillo">✓</div>
-                        Guarda las refacciones que más usas
-                    </div>
-                    <div class="flex items-center gap-3 text-[14px] text-white/55 font-medium">
-                        <div class="w-[22px] h-[22px] bg-amarillo/12 border border-amarillo/30 rounded-md flex items-center justify-center text-[12px] shrink-0 text-amarillo">✓</div>
-                        Notificaciones de disponibilidad
-                    </div>
-                    <div class="flex items-center gap-3 text-[14px] text-white/55 font-medium">
-                        <div class="w-[22px] h-[22px] bg-amarillo/12 border border-amarillo/30 rounded-md flex items-center justify-center text-[12px] shrink-0 text-amarillo">✓</div>
-                        Atención prioritaria como cliente registrado
-                    </div>
+                <div class="relative group">
+                    <input type="email" id="email" class="w-full bg-white/5 border border-white/10 rounded-[10px] py-[13px] px-4 pl-[44px] text-[15px] text-white font-barlow outline-none transition-all duration-200 focus:border-amarillo/50 focus:bg-amarillo/5 focus:shadow-[0_0_0_3px_rgba(250,204,21,0.08)] placeholder:text-white/20" placeholder="tu@correo.com" oninput="limpiarError('email')">
+                    <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-[16px] pointer-events-none opacity-40 transition-opacity duration-200 group-focus-within:opacity-80">✉️</span>
                 </div>
+                <div class="text-[12px] text-red-400 mt-1.5 items-center gap-1.5 hidden" id="error-email">⚠ Ingresa un correo electrónico válido</div>
             </div>
+
+            <div class="mb-4">
+                <div class="flex items-center justify-between mb-2">
+                    <label for="password" class="text-[12px] font-bold tracking-[1.5px] uppercase text-white/40">Contraseña</label>
+                    <a href="#" class="text-[12px] text-amarillo/70 font-semibold no-underline transition-colors hover:text-amarillo">¿Olvidaste tu contraseña?</a>
+                </div>
+                <div class="relative group">
+                    <input type="password" id="password" class="w-full bg-white/5 border border-white/10 rounded-[10px] py-[13px] px-4 pl-[44px] pr-[48px] text-[15px] text-white font-barlow outline-none transition-all duration-200 focus:border-amarillo/50 focus:bg-amarillo/5 focus:shadow-[0_0_0_3px_rgba(250,204,21,0.08)] placeholder:text-white/20" placeholder="Tu contraseña" oninput="limpiarError('password')">
+                    <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-[16px] pointer-events-none opacity-40 transition-opacity duration-200 group-focus-within:opacity-80">🔒</span>
+                    <button class="absolute right-3.5 top-1/2 -translate-y-1/2 bg-none border-none cursor-pointer text-[16px] text-white/30 transition-colors p-1 leading-none hover:text-white/70 focus:outline-none" type="button" onclick="togglePass()" id="toggle-btn" title="Mostrar/ocultar contraseña">👁</button>
+                </div>
+                <div class="text-[12px] text-red-400 mt-1.5 items-center gap-1.5 hidden" id="error-password">⚠ La contraseña debe tener al menos 6 caracteres</div>
+            </div>
+
+            <div class="flex items-center gap-2.5 mb-6">
+                <div class="w-[18px] h-[18px] border-[1.5px] border-white/15 rounded-[5px] bg-white/5 cursor-pointer flex items-center justify-center text-[11px] text-transparent transition-all duration-200 shrink-0" id="check-recordar" onclick="toggleCheck()"></div>
+                <span class="text-[14px] text-white/50 cursor-pointer select-none" onclick="toggleCheck()">Recordar mi sesión por 30 días</span>
+            </div>
+
+            <button class="w-full bg-amarillo text-black font-barlow font-bold text-[15px] tracking-[2px] uppercase py-[15px] px-6 rounded-[10px] border-none cursor-pointer transition-all duration-200 shadow-[0_4px_20px_rgba(250,204,21,0.25)] flex items-center justify-center gap-[10px] mb-5 hover:bg-[#fde047] hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(250,204,21,0.4)] active:translate-y-0 group" id="btn-login" onclick="iniciarSesion()">
+                <span id="btn-texto">Iniciar sesión</span>
+                <span class="text-[16px] transition-transform duration-200 group-hover:translate-x-1" id="btn-flecha">→</span>
+            </button>
+
+            <div class="text-center text-[14px] text-white/35">
+                ¿Aún no tienes cuenta? <a href="Register.html" class="text-amarillo font-bold no-underline transition-opacity hover:opacity-80">Regístrate gratis</a>
+            </div>
+
+            <div class="flex items-center gap-3 my-7">
+                <div class="flex-1 h-px bg-white/5"></div>
+                <div class="text-[12px] text-white/25 font-semibold tracking-[1px] whitespace-nowrap">O continúa como invitado</div>
+                <div class="flex-1 h-px bg-white/5"></div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-2.5">
+                <a href="Productos.html" class="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-[10px] border border-white/10 bg-white/5 text-white/50 text-[13px] font-semibold no-underline transition-all duration-200 hover:border-amarillo/25 hover:text-white/80">
+                    <span>📦</span> Ver productos
+                </a>
+                <a href="Contacto.html" class="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-[10px] border border-white/10 bg-white/5 text-white/50 text-[13px] font-semibold no-underline transition-all duration-200 hover:border-amarillo/25 hover:text-white/80">
+                    <span>💬</span> Contactar
+                </a>
+            </div>
+
+            <div class="flex items-center justify-center gap-1.5 mt-7 text-[12px] text-white/20 before:content-['🔒'] before:text-[13px]">
+                Conexión segura — tus datos están protegidos
+            </div>
+
         </div>
-
-        <div class="flex items-center justify-center p-8 lg:p-12 py-16 lg:py-24 bg-[#0f0f0f] relative overflow-hidden">
-            <div class="absolute bottom-[-20%] right-[-20%] w-[400px] h-[400px] bg-[radial-gradient(circle,rgba(250,204,21,0.04)_0%,transparent_65%)] rounded-full"></div>
-
-            <div class="w-full max-w-[420px] relative z-10">
-
-                <div class="text-center mb-10">
-                    <div class="w-14 h-14 bg-amarillo rounded-2xl flex items-center justify-center font-bebas text-[26px] text-black mx-auto mb-5 shadow-[0_8px_24px_rgba(250,204,21,0.3)]">RL</div>
-                    <h1 class="font-bebas text-[36px] tracking-[2px] mb-1.5">Bienvenido de vuelta</h1>
-                    <p class="text-[14px] text-white/40">Ingresa tus datos para continuar</p>
-                </div>
-
-                <div class="mb-4">
-                    <div class="flex items-center justify-between mb-2">
-                        <label for="email" class="text-[12px] font-bold tracking-[1.5px] uppercase text-white/40">Correo electrónico</label>
-                    </div>
-                    <div class="relative group">
-                        <input type="email" id="email" class="w-full bg-white/5 border border-white/10 rounded-[10px] py-[13px] px-4 pl-[44px] text-[15px] text-white font-barlow outline-none transition-all duration-200 focus:border-amarillo/50 focus:bg-amarillo/5 focus:shadow-[0_0_0_3px_rgba(250,204,21,0.08)] placeholder:text-white/20" placeholder="tu@correo.com" oninput="limpiarError('email')">
-                        <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-[16px] pointer-events-none opacity-40 transition-opacity duration-200 group-focus-within:opacity-80">✉️</span>
-                    </div>
-                    <div class="text-[12px] text-red-400 mt-1.5 items-center gap-1.5 hidden" id="error-email">⚠ Ingresa un correo electrónico válido</div>
-                </div>
-
-                <div class="mb-4">
-                    <div class="flex items-center justify-between mb-2">
-                        <label for="password" class="text-[12px] font-bold tracking-[1.5px] uppercase text-white/40">Contraseña</label>
-                        <a href="#" class="text-[12px] text-amarillo/70 font-semibold no-underline transition-colors hover:text-amarillo">¿Olvidaste tu contraseña?</a>
-                    </div>
-                    <div class="relative group">
-                        <input type="password" id="password" class="w-full bg-white/5 border border-white/10 rounded-[10px] py-[13px] px-4 pl-[44px] pr-[48px] text-[15px] text-white font-barlow outline-none transition-all duration-200 focus:border-amarillo/50 focus:bg-amarillo/5 focus:shadow-[0_0_0_3px_rgba(250,204,21,0.08)] placeholder:text-white/20" placeholder="Tu contraseña" oninput="limpiarError('password')">
-                        <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-[16px] pointer-events-none opacity-40 transition-opacity duration-200 group-focus-within:opacity-80">🔒</span>
-                        <button class="absolute right-3.5 top-1/2 -translate-y-1/2 bg-none border-none cursor-pointer text-[16px] text-white/30 transition-colors p-1 leading-none hover:text-white/70 focus:outline-none" type="button" onclick="togglePass()" id="toggle-btn" title="Mostrar/ocultar contraseña">👁</button>
-                    </div>
-                    <div class="text-[12px] text-red-400 mt-1.5 items-center gap-1.5 hidden" id="error-password">⚠ La contraseña debe tener al menos 6 caracteres</div>
-                </div>
-
-                <div class="flex items-center gap-2.5 mb-6">
-                    <div class="w-[18px] h-[18px] border-[1.5px] border-white/15 rounded-[5px] bg-white/5 cursor-pointer flex items-center justify-center text-[11px] text-transparent transition-all duration-200 shrink-0" id="check-recordar" onclick="toggleCheck()"></div>
-                    <span class="text-[14px] text-white/50 cursor-pointer select-none" onclick="toggleCheck()">Recordar mi sesión por 30 días</span>
-                </div>
-
-                <button class="w-full bg-amarillo text-black font-barlow font-bold text-[15px] tracking-[2px] uppercase py-[15px] px-6 rounded-[10px] border-none cursor-pointer transition-all duration-200 shadow-[0_4px_20px_rgba(250,204,21,0.25)] flex items-center justify-center gap-[10px] mb-5 hover:bg-[#fde047] hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(250,204,21,0.4)] active:translate-y-0 group" id="btn-login" onclick="iniciarSesion()">
-                    <span id="btn-texto">Iniciar sesión</span>
-                    <span class="text-[16px] transition-transform duration-200 group-hover:translate-x-1" id="btn-flecha">→</span>
-                </button>
-
-                <div class="text-center text-[14px] text-white/35">
-                    ¿Aún no tienes cuenta? <a href="Register.html" class="text-amarillo font-bold no-underline transition-opacity hover:opacity-80">Regístrate gratis</a>
-                </div>
-
-                <div class="flex items-center gap-3 my-7">
-                    <div class="flex-1 h-px bg-white/5"></div>
-                    <div class="text-[12px] text-white/25 font-semibold tracking-[1px] whitespace-nowrap">O continúa como invitado</div>
-                    <div class="flex-1 h-px bg-white/5"></div>
-                </div>
-
-                <div class="flex flex-col sm:flex-row gap-2.5">
-                    <a href="Productos.html" class="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-[10px] border border-white/10 bg-white/5 text-white/50 text-[13px] font-semibold no-underline transition-all duration-200 hover:border-amarillo/25 hover:text-white/80">
-                        <span>📦</span> Ver productos
-                    </a>
-                    <a href="Contacto.html" class="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-[10px] border border-white/10 bg-white/5 text-white/50 text-[13px] font-semibold no-underline transition-all duration-200 hover:border-amarillo/25 hover:text-white/80">
-                        <span>💬</span> Contactar
-                    </a>
-                </div>
-
-                <div class="flex items-center justify-center gap-1.5 mt-7 text-[12px] text-white/20 before:content-['🔒'] before:text-[13px]">
-                    Conexión segura — tus datos están protegidos
-                </div>
-
-            </div>
-        </div>
-
     </div>
 
     <div class="bg-negro border-t border-white/5 py-5 px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-[12px] text-white/20">
@@ -208,6 +155,31 @@
         const mobileMenu = document.getElementById('mobile-menu');
         menuBtn.addEventListener('click', () => {
             mobileMenu.classList.toggle('hidden');
+        });
+
+        // REVISAR SESIÓN GUARDADA AL CARGAR LA PÁGINA
+        document.addEventListener('DOMContentLoaded', () => {
+            const expira = localStorage.getItem('sesion_expira');
+            const activa = localStorage.getItem('sesion_activa');
+            
+            // Si hay sesión marcada como activa y el tiempo actual es menor al límite de 30 días
+            if (activa === 'true' && expira && Date.now() < parseInt(expira)) {
+                const emailGuardado = localStorage.getItem('usuario_email');
+                if (emailGuardado) {
+                    document.getElementById('email').value = emailGuardado;
+                    
+                    // Activar visualmente la casilla de verificación
+                    recordar = true;
+                    const el = document.getElementById('check-recordar');
+                    el.classList.replace('bg-white/5', 'bg-amarillo/15');
+                    el.classList.replace('border-white/15', 'border-amarillo/50');
+                    el.classList.replace('text-transparent', 'text-amarillo');
+                    el.textContent = '✓';
+                    
+                    // Iniciar sesión de forma automatizada (enviamos 'true' para saltar validación de pass vacía)
+                    iniciarSesion(true);
+                }
+            }
         });
 
         function toggleCheck() {
@@ -247,17 +219,33 @@
             inp.classList.add('border-red-400/50', 'shadow-[0_0_0_3px_rgba(248,113,113,0.08)]');
         }
 
-        function iniciarSesion() {
+        function iniciarSesion(esAutoLogin = false) {
             const email = document.getElementById('email').value.trim();
             const pass  = document.getElementById('password').value;
             const btn   = document.getElementById('btn-login');
 
             let hayError = false;
 
-            const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-            if (!emailValido) { mostrarError('email'); hayError = true; }
-            if (pass.length < 6) { mostrarError('password'); hayError = true; }
-            if (hayError) return;
+            // Solo validar entradas de texto si NO es un inicio automático
+            if (!esAutoLogin) {
+                const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+                if (!emailValido) { mostrarError('email'); hayError = true; }
+                if (pass.length < 6) { mostrarError('password'); hayError = true; }
+                if (hayError) return;
+            }
+
+            // GUARDAR O BORRAR CONFIGURACIÓN EN EL NAVEGADOR
+            if (recordar) {
+                const tiempoExpiracion = Date.now() + (30 * 24 * 60 * 60 * 1000); // 30 días en milisegundos
+                localStorage.setItem('sesion_activa', 'true');
+                localStorage.setItem('usuario_email', email);
+                localStorage.setItem('sesion_expira', tiempoExpiracion);
+            } else {
+                // Si el usuario desmarca la casilla e inicia sesión, borramos el registro
+                localStorage.removeItem('sesion_activa');
+                localStorage.removeItem('usuario_email');
+                localStorage.removeItem('sesion_expira');
+            }
 
             btn.classList.add('bg-amarillo/35', 'pointer-events-none');
             btn.classList.remove('hover:-translate-y-0.5', 'hover:bg-[#fde047]', 'shadow-[0_4px_20px_rgba(250,204,21,0.25)]');
@@ -285,8 +273,11 @@
                     btn.style.boxShadow = '';
                     btn.classList.add('hover:-translate-y-0.5', 'hover:bg-[#fde047]', 'shadow-[0_4px_20px_rgba(250,204,21,0.25)]');
                     btn.innerHTML = '<span id="btn-texto">Iniciar sesión</span><span class="text-[16px] transition-transform duration-200 group-hover:translate-x-1" id="btn-flecha">→</span>';
+                    
+                    // Aquí es donde harías el salto real de página:
+                    // window.location.href = "index.html";
                 }, 3500);
-            }, 1600);
+            }, esAutoLogin ? 600 : 1600); // Si es automático, el efecto de carga dura menos tiempo
         }
 
         document.addEventListener('keydown', e => {
