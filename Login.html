@@ -64,7 +64,7 @@
         <div class="w-full max-w-[420px] relative z-10 bg-[#0f0f0f]/95 backdrop-blur-sm border border-white/5 p-8 sm:p-10 rounded-2xl shadow-2xl">
 
             <div class="text-center mb-10">
-                <div class="w-14 h-14 bg-amarillo rounded-2xl flex items-center justify-center font-bebas text-[26px] text-black mx-auto mb-5 shadow-[0_8px_24px_rgba(250,204,21,0.3)]">RL</div>
+                <img src="IMG/bardahl-top-logo-mobile.webp" alt="Logotipo Refaccionaria Leo" class="w-[48px] h-[48px] mx-auto mb-4">
                 <h1 class="font-bebas text-[36px] tracking-[2px] mb-1.5">Bienvenido de vuelta</h1>
                 <p class="text-[14px] text-white/40">Ingresa tus datos para continuar</p>
             </div>
@@ -75,7 +75,6 @@
                 </div>
                 <div class="relative group">
                     <input type="email" id="email" class="w-full bg-white/5 border border-white/10 rounded-[10px] py-[13px] px-4 pl-[44px] text-[15px] text-white font-barlow outline-none transition-all duration-200 focus:border-amarillo/50 focus:bg-amarillo/5 focus:shadow-[0_0_0_3px_rgba(250,204,21,0.08)] placeholder:text-white/20" placeholder="tu@correo.com" oninput="limpiarError('email')">
-                    <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-[16px] pointer-events-none opacity-40 transition-opacity duration-200 group-focus-within:opacity-80">✉️</span>
                 </div>
                 <div class="text-[12px] text-red-400 mt-1.5 items-center gap-1.5 hidden" id="error-email">⚠ Ingresa un correo electrónico válido</div>
             </div>
@@ -87,7 +86,6 @@
                 </div>
                 <div class="relative group">
                     <input type="password" id="password" class="w-full bg-white/5 border border-white/10 rounded-[10px] py-[13px] px-4 pl-[44px] pr-[48px] text-[15px] text-white font-barlow outline-none transition-all duration-200 focus:border-amarillo/50 focus:bg-amarillo/5 focus:shadow-[0_0_0_3px_rgba(250,204,21,0.08)] placeholder:text-white/20" placeholder="Tu contraseña" oninput="limpiarError('password')">
-                    <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-[16px] pointer-events-none opacity-40 transition-opacity duration-200 group-focus-within:opacity-80">🔒</span>
                     <button class="absolute right-3.5 top-1/2 -translate-y-1/2 bg-none border-none cursor-pointer text-[16px] text-white/30 transition-colors p-1 leading-none hover:text-white/70 focus:outline-none" type="button" onclick="togglePass()" id="toggle-btn" title="Mostrar/ocultar contraseña">👁</button>
                 </div>
                 <div class="text-[12px] text-red-400 mt-1.5 items-center gap-1.5 hidden" id="error-password">⚠ La contraseña debe tener al menos 6 caracteres</div>
