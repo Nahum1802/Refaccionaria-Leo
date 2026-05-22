@@ -160,13 +160,11 @@
             const expira = localStorage.getItem('sesion_expira');
             const activa = localStorage.getItem('sesion_activa');
             
-            // Si hay sesión marcada como activa y el tiempo actual es menor al límite de 30 días
             if (activa === 'true' && expira && Date.now() < parseInt(expira)) {
                 const emailGuardado = localStorage.getItem('usuario_email');
                 if (emailGuardado) {
                     document.getElementById('email').value = emailGuardado;
                     
-                    // Activar visualmente la casilla de verificación
                     recordar = true;
                     const el = document.getElementById('check-recordar');
                     el.classList.replace('bg-white/5', 'bg-amarillo/15');
@@ -174,7 +172,6 @@
                     el.classList.replace('text-transparent', 'text-amarillo');
                     el.textContent = '✓';
                     
-                    // Iniciar sesión de forma automatizada (enviamos 'true' para saltar validación de pass vacía)
                     iniciarSesion(true);
                 }
             }
@@ -224,7 +221,6 @@
 
             let hayError = false;
 
-            // Solo validar entradas de texto si NO es un inicio automático
             if (!esAutoLogin) {
                 const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
                 if (!emailValido) { mostrarError('email'); hayError = true; }
@@ -232,14 +228,12 @@
                 if (hayError) return;
             }
 
-            // GUARDAR O BORRAR CONFIGURACIÓN EN EL NAVEGADOR
             if (recordar) {
-                const tiempoExpiracion = Date.now() + (30 * 24 * 60 * 60 * 1000); // 30 días en milisegundos
+                const tiempoExpiracion = Date.now() + (30 * 24 * 60 * 60 * 1000); 
                 localStorage.setItem('sesion_activa', 'true');
                 localStorage.setItem('usuario_email', email);
                 localStorage.setItem('sesion_expira', tiempoExpiracion);
             } else {
-                // Si el usuario desmarca la casilla e inicia sesión, borramos el registro
                 localStorage.removeItem('sesion_activa');
                 localStorage.removeItem('usuario_email');
                 localStorage.removeItem('sesion_expira');
@@ -272,10 +266,8 @@
                     btn.classList.add('hover:-translate-y-0.5', 'hover:bg-[#fde047]', 'shadow-[0_4px_20px_rgba(250,204,21,0.25)]');
                     btn.innerHTML = '<span id="btn-texto">Iniciar sesión</span><span class="text-[16px] transition-transform duration-200 group-hover:translate-x-1" id="btn-flecha">→</span>';
                     
-                    // Aquí es donde harías el salto real de página:
-                    // window.location.href = "index.html";
                 }, 3500);
-            }, esAutoLogin ? 600 : 1600); // Si es automático, el efecto de carga dura menos tiempo
+            }, esAutoLogin ? 600 : 1600);
         }
 
         document.addEventListener('keydown', e => {
