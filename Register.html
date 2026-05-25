@@ -388,7 +388,7 @@
 
             const URL_NGROK = 'https://renter-marrow-engraver.ngrok-free.dev'; 
 
-            fetch(`${URL_NGROK}/refaccionaria/guardar_usuario.php`, {
+            fetch(`${URL_NGROK}/refaccionaria/auth/register.php`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(datosUsuario)
