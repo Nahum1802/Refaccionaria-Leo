@@ -203,9 +203,9 @@
             // 6. Redirección condicionada por el rol booleano de Postgres
             setTimeout(() => {
                 if (data.usuario.rol === true) {
-                    window.location.href = "Dashboard.html"; // Dueño / Admin
+                    window.location.href = "admin.html"; // Dueño / Admin
                 } else {
-                    window.location.href = "Perfil.html";    // Cliente común
+                    window.location.href = "profile.html";    // Cliente común
                 }
             }, 1500);
 
