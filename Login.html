@@ -145,7 +145,7 @@
         </div>
     </div>
 
-    <script>
+<script>
         let recordar = false;
         let passVisible = false;
 
@@ -155,7 +155,7 @@
             mobileMenu.classList.toggle('hidden');
         });
 
-    
+        // 1. AUTOCOMPLETAR CORREO (Sin saltarse la contraseña por seguridad)
         document.addEventListener('DOMContentLoaded', () => {
             const expira = localStorage.getItem('sesion_expira');
             const activa = localStorage.getItem('sesion_activa');
@@ -172,7 +172,8 @@
                     el.classList.replace('text-transparent', 'text-amarillo');
                     el.textContent = '✓';
                     
-                    iniciarSesion(true);
+                    // Enfocar directamente la contraseña para mayor comodidad
+                    document.getElementById('password').focus();
                 }
             }
         });
@@ -201,77 +202,129 @@
         }
 
         function limpiarError(campo) {
-            document.getElementById('error-' + campo).classList.replace('flex', 'hidden');
+            const err = document.getElementById('error-' + campo);
+            if(err) err.classList.replace('flex', 'hidden');
             const inp = document.getElementById(campo);
-            inp.classList.remove('border-red-400/50', 'shadow-[0_0_0_3px_rgba(248,113,113,0.08)]');
-            inp.classList.add('border-white/10');
+            if(inp) {
+                inp.classList.remove('border-red-400/50', 'shadow-[0_0_0_3px_rgba(248,113,113,0.08)]');
+                inp.classList.add('border-white/10');
+            }
         }
 
         function mostrarError(campo) {
-            document.getElementById('error-' + campo).classList.replace('hidden', 'flex');
+            const err = document.getElementById('error-' + campo);
+            if(err) err.classList.replace('hidden', 'flex');
             const inp = document.getElementById(campo);
-            inp.classList.remove('border-white/10');
-            inp.classList.add('border-red-400/50', 'shadow-[0_0_0_3px_rgba(248,113,113,0.08)]');
+            if(inp) {
+                inp.classList.remove('border-white/10');
+                inp.classList.add('border-red-400/50', 'shadow-[0_0_0_3px_rgba(248,113,113,0.08)]');
+            }
         }
 
-        function iniciarSesion(esAutoLogin = false) {
+        function restablecerBotonLog(btn) {
+            btn.classList.remove('bg-amarillo/35', 'pointer-events-none');
+            btn.classList.add('hover:-translate-y-0.5', 'hover:bg-[#fde047]', 'shadow-[0_4px_20px_rgba(250,204,21,0.25)]');
+            btn.innerHTML = '<span id="btn-texto">Iniciar sesión</span><span class="text-[16px] transition-transform duration-200 group-hover:translate-x-1" id="btn-flecha">→</span>';
+        }
+
+        // 2. FUNCIÓN DE INICIO DE SESIÓN REAL CON BASE DE DATOS
+        function iniciarSesion() {
             const email = document.getElementById('email').value.trim();
             const pass  = document.getElementById('password').value;
             const btn   = document.getElementById('btn-login');
 
             let hayError = false;
 
-            if (!esAutoLogin) {
-                const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-                if (!emailValido) { mostrarError('email'); hayError = true; }
-                if (pass.length < 6) { mostrarError('password'); hayError = true; }
-                if (hayError) return;
-            }
+            // Validar campos vacíos primero
+            const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            if (!emailValido) { mostrarError('email'); hayError = true; }
+            if (pass.length < 1) { mostrarError('password'); hayError = true; } 
+            if (hayError) return;
 
-            if (recordar) {
-                const tiempoExpiracion = Date.now() + (30 * 24 * 60 * 60 * 1000); 
-                localStorage.setItem('sesion_activa', 'true');
-                localStorage.setItem('usuario_email', email);
-                localStorage.setItem('sesion_expira', tiempoExpiracion);
-            } else {
-                localStorage.removeItem('sesion_activa');
-                localStorage.removeItem('usuario_email');
-                localStorage.removeItem('sesion_expira');
-            }
-
+            // Bloquear botón (Efecto de Carga)
             btn.classList.add('bg-amarillo/35', 'pointer-events-none');
             btn.classList.remove('hover:-translate-y-0.5', 'hover:bg-[#fde047]', 'shadow-[0_4px_20px_rgba(250,204,21,0.25)]');
-            document.getElementById('btn-texto').textContent = 'Iniciando sesión...';
+            document.getElementById('btn-texto').textContent = 'Comprobando datos...';
             document.getElementById('btn-flecha').innerHTML = '<div class="w-[18px] h-[18px] border-2 border-black/20 border-t-black rounded-full animate-[spin_0.7s_linear_infinite]"></div>';
 
-            setTimeout(() => {
-                btn.classList.remove('bg-amarillo/35', 'pointer-events-none');
-                document.getElementById('btn-texto').textContent = '¡Sesión iniciada!';
-                document.getElementById('btn-flecha').textContent = '✓';
-                btn.style.background = 'rgba(74,222,128,0.18)';
-                btn.style.color = '#4ade80';
-                btn.style.boxShadow = '0 4px 20px rgba(74,222,128,0.15)';
+            // --- TU RUTA REAL DE NGROK Y CARPETA ---
+            const URL_NGROK = 'https://renter-marrow-engraver.ngrok-free.dev'; 
 
-                const toast = document.getElementById('toast');
-                toast.classList.replace('translate-y-[100px]', 'translate-y-0');
-                toast.classList.replace('opacity-0', 'opacity-100');
+            // Petición al Backend en Windows
+            fetch(`${URL_NGROK}/refaccionaria/auth/login_usuario.php`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: email, password: pass })
+            })
+            .then(response => {
+                if(!response.ok) throw new Error('Error de conexión con el servidor.');
+                return response.json();
+            })
+            .then(data => {
+                if (data.status === 'success') {
+                    
+                    // Gestionar el "Recordarme"
+                    if (recordar) {
+                        const tiempoExpiracion = Date.now() + (30 * 24 * 60 * 60 * 1000);
+                        localStorage.setItem('sesion_activa', 'true');
+                        localStorage.setItem('usuario_email', email);
+                        localStorage.setItem('sesion_expira', tiempoExpiracion);
+                    } else {
+                        localStorage.removeItem('sesion_activa');
+                        localStorage.removeItem('usuario_email');
+                        localStorage.removeItem('sesion_expira');
+                    }
 
-                setTimeout(() => {
-                    toast.classList.replace('translate-y-0', 'translate-y-[100px]');
-                    toast.classList.replace('opacity-100', 'opacity-0');
-                    
-                    btn.style.background = '';
-                    btn.style.color = '';
-                    btn.style.boxShadow = '';
-                    btn.classList.add('hover:-translate-y-0.5', 'hover:bg-[#fde047]', 'shadow-[0_4px_20px_rgba(250,204,21,0.25)]');
-                    btn.innerHTML = '<span id="btn-texto">Iniciar sesión</span><span class="text-[16px] transition-transform duration-200 group-hover:translate-x-1" id="btn-flecha">→</span>';
-                    
-                }, 3500);
-            }, esAutoLogin ? 600 : 1600);
+                    // GUARDAR LA SESIÓN SEGURA DEL USUARIO EN EL NAVEGADOR
+                    localStorage.setItem('sesion_refaleo', JSON.stringify(data.usuario));
+
+                    // Interfaz visual de éxito
+                    document.getElementById('btn-texto').textContent = '¡Bienvenido!';
+                    document.getElementById('btn-flecha').textContent = '✓';
+                    btn.style.background = 'rgba(74,222,128,0.18)';
+                    btn.style.color = '#4ade80';
+                    btn.style.boxShadow = '0 4px 20px rgba(74,222,128,0.15)';
+
+                    const toast = document.getElementById('toast');
+                    if(toast) {
+                        toast.classList.replace('translate-y-[100px]', 'translate-y-0');
+                        toast.classList.replace('opacity-0', 'opacity-100');
+                    }
+
+                    // REDIRECCIÓN INTELIGENTE SEGÚN EL ROL DE POSTGRESQL
+                    setTimeout(() => {
+                        if (data.usuario.rol === true) {
+                            // Si es Administrador, va al panel de control
+                            window.location.href = "Dashboard.html"; 
+                        } else {
+                            // Si es Cliente, va a la página de productos
+                            window.location.href = "Productos.html"; 
+                        }
+                    }, 1800);
+
+                } else {
+                    // Si la contraseña o el correo están mal, mostramos la alerta y reiniciamos el botón
+                    alert(data.message);
+                    restablecerBotonLog(btn);
+                    mostrarError('email');
+                    mostrarError('password');
+                }
+            })
+            .catch(error => {
+                console.error('Fallo en la red:', error);
+                alert('No se pudo conectar al servidor de la tienda. Verifica que Apache esté encendido.');
+                restablecerBotonLog(btn);
+            });
         }
 
+        // Ejecutar al dar Enter
         document.addEventListener('keydown', e => {
-            if (e.key === 'Enter') iniciarSesion();
+            if (e.key === 'Enter') {
+                const activeEl = document.activeElement;
+                if(activeEl.id === 'email' || activeEl.id === 'password') {
+                    iniciarSesion();
+                }
+            }
         });
     </script>
 </body>
