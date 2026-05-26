@@ -213,16 +213,19 @@
     </div>
 
     <script>
-        // Recuerda mantener tu URL de Ngrok actualizada aquí
+        // Mantén tu URL de Ngrok actualizada aquí
         const API_BASE = 'https://renter-marrow-engraver.ngrok-free.dev/refaccionaria';
         let usuarioSesion = null;
 
         document.addEventListener("DOMContentLoaded", () => {
-            const sesionData = localStorage.getItem("usuario");
+            // 1. CORRECCIÓN: Usar la misma llave que guarda el Login
+            const sesionData = localStorage.getItem("sesion_refaleo");
             if (!sesionData) { window.location.href = "Login.html"; return; }
 
             usuarioSesion = JSON.parse(sesionData);
-            if (usuarioSesion.id_rol != 2) { window.location.href = "index.html"; return; }
+            
+            // 2. CORRECCIÓN: Validar el rol booleano (true = Admin) enviado por tu PHP v2.0
+            if (usuarioSesion.rol !== true) { window.location.href = "index.html"; return; }
 
             document.getElementById("fallback-msg").style.display = "none";
             document.getElementById("admin-content").classList.remove("hidden");
@@ -237,8 +240,12 @@
             try {
                 const response = await fetch(`${API_BASE}/admin/dashboard.php`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id_rol: usuarioSesion.id_rol })
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'ngrok-skip-browser-warning': 'true' // Evita la advertencia de ngrok
+                    },
+                    // Pasamos el ID del usuario real por si tu vista audita quién consulta
+                    body: JSON.stringify({ id_usuario: usuarioSesion.id })
                 });
                 
                 const data = await response.json();
@@ -300,9 +307,12 @@
             try {
                 const response = await fetch(`${API_BASE}/admin/ajustar_stock.php`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'ngrok-skip-browser-warning': 'true'
+                    },
                     body: JSON.stringify({
-                        id_rol: usuarioSesion.id_rol, id_usuario: usuarioSesion.id_usuario,
+                        id_usuario: usuarioSesion.id,
                         id_producto: parseInt(document.getElementById("ajuste-id").value),
                         cambio: parseInt(document.getElementById("ajuste-cambio").value),
                         motivo: document.getElementById("ajuste-motivo").value
@@ -318,9 +328,6 @@
             finally { btn.disabled = false; btn.innerHTML = btnTextOriginal; btn.classList.remove("opacity-50"); }
         }
 
-        // ==========================================
-        // NUEVA FUNCIÓN: AGREGAR PRODUCTO A LA BD
-        // ==========================================
         async function agregarProducto(event) {
             event.preventDefault();
             const btn = document.getElementById("btn-submit-producto");
@@ -331,14 +338,13 @@
             const form = event.target;
             const formData = new FormData(form);
             
-            // Adjuntamos tu rol para que el PHP de seguridad te deje pasar
-            formData.append('id_rol', usuarioSesion.id_rol);
+            // Adjuntamos el ID del administrador activo para auditoría en Postgres
+            formData.append('id_usuario', usuarioSesion.id);
 
             try {
-                // Fíjate que al usar FormData, NO le ponemos "Content-Type" manual. 
-                // El navegador le pone automáticamente el "multipart/form-data" correcto para subir la imagen.
                 const response = await fetch(`${API_BASE}/admin/agregar_producto.php`, {
                     method: 'POST',
+                    headers: { 'ngrok-skip-browser-warning': 'true' },
                     body: formData
                 });
                 
@@ -346,7 +352,8 @@
                 if (!response.ok) throw new Error(data.error || "Ocurrió un error al guardar el producto");
 
                 mostrarToast("¡Producto Guardado!", `El producto ${data.nombre} fue añadido al catálogo.`, true);
-                form.reset(); // Limpiamos el formulario para el siguiente
+                form.reset();
+                cargarDashboard(); // Recargar alertas de stock automáticamente
                 
             } catch (error) {
                 mostrarToast("Error", error.message, false);
@@ -362,7 +369,11 @@
             document.getElementById('ajuste-cambio').focus();
         }
 
-        function logout() { localStorage.removeItem("usuario"); window.location.href = "Login.html"; }
+        // 3. CORRECCIÓN: Destruir la llave de sesión correcta al salir
+        function logout() { 
+            localStorage.removeItem("sesion_refaleo"); 
+            window.location.href = "Login.html"; 
+        }
 
         function mostrarToast(titulo, mensaje, esExito = true) {
             const toast = document.getElementById('toast-notificacion');
