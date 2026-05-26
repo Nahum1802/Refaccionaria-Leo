@@ -146,83 +146,51 @@
     </div>
 
     <script>
-        // 2. FUNCIÓN DE INICIO DE SESIÓN REAL CON BASE DE DATOS (Sin Toast)
         function iniciarSesion() {
-            const email = document.getElementById('email').value.trim();
-            const pass  = document.getElementById('password').value;
-            const btn   = document.getElementById('btn-login');
+    const email = document.getElementById('email').value.trim();
+    const pass  = document.getElementById('password').value;
+    const btn   = document.getElementById('btn-login');
 
-            let hayError = false;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || pass.length < 1) {
+        mostrarError('email');
+        mostrarError('password');
+        return;
+    }
 
-            // Validar campos vacíos primero
-            const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-            if (!emailValido) { mostrarError('email'); hayError = true; }
-            if (pass.length < 1) { mostrarError('password'); hayError = true; } 
-            if (hayError) return;
+    // Estado cargando
+    btn.classList.add('bg-amarillo/35', 'pointer-events-none');
+    document.getElementById('btn-texto').textContent = 'Validando...';
 
-            // Bloquear botón (Efecto de Carga)
-            btn.classList.add('bg-amarillo/35', 'pointer-events-none');
-            btn.classList.remove('hover:-translate-y-0.5', 'hover:bg-[#fde047]', 'shadow-[0_4px_20px_rgba(250,204,21,0.25)]');
-            document.getElementById('btn-texto').textContent = 'Comprobando datos...';
-            document.getElementById('btn-flecha').innerHTML = '<div class="w-[18px] h-[18px] border-2 border-black/20 border-t-black rounded-full animate-[spin_0.7s_linear_infinite]"></div>';
+    fetch('https://TU_URL_NGROK/refaccionaria/auth/login_usuario.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password: pass })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.status === 'success') {
+            localStorage.setItem('sesion_refaleo', JSON.stringify(data.usuario));
+            document.getElementById('btn-texto').textContent = '¡Redirigiendo!';
+            
+            setTimeout(() => {
+                window.location.href = data.usuario.rol ? "Dashboard.html" : "Productos.html";
+            }, 1000);
+        } else {
+            // Aquí capturamos el mensaje específico del PHP
+            alert(data.message); 
+            restablecerBotonLog(btn);
+        }
+    })
+    .catch(() => {
+        alert('Error de conexión con el servidor.');
+        restablecerBotonLog(btn);
+    });
+}
 
-            const URL_NGROK = 'https://renter-marrow-engraver.ngrok-free.dev'; 
-
-            fetch(`${URL_NGROK}/refaccionaria/auth/login_usuario.php`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: email, password: pass })
-            })
-            .then(response => {
-                if(!response.ok) throw new Error('Error de conexión con el servidor.');
-                return response.json();
-            })
-            .then(data => {
-                if (data.status === 'success') {
-                    
-                    // Gestionar el "Recordarme"
-                    if (recordar) {
-                        const tiempoExpiracion = Date.now() + (30 * 24 * 60 * 60 * 1000);
-                        localStorage.setItem('sesion_activa', 'true');
-                        localStorage.setItem('usuario_email', email);
-                        localStorage.setItem('sesion_expira', tiempoExpiracion);
-                    } else {
-                        localStorage.removeItem('sesion_activa');
-                        localStorage.removeItem('usuario_email');
-                        localStorage.removeItem('sesion_expira');
-                    }
-
-                    localStorage.setItem('sesion_refaleo', JSON.stringify(data.usuario));
-
-                    // Interfaz visual de éxito (sin mostrar el toast)
-                    document.getElementById('btn-texto').textContent = '¡Bienvenido!';
-                    document.getElementById('btn-flecha').textContent = '✓';
-                    btn.style.background = 'rgba(74,222,128,0.18)';
-                    btn.style.color = '#4ade80';
-                    btn.style.boxShadow = '0 4px 20px rgba(74,222,128,0.15)';
-
-                    // Redirección inmediata
-                    setTimeout(() => {
-                        if (data.usuario.rol === true) {
-                            window.location.href = "Dashboard.html"; 
-                        } else {
-                            window.location.href = "Productos.html"; 
-                        }
-                    }, 1000);
-
-                } else {
-                    alert(data.message);
-                    restablecerBotonLog(btn);
-                    mostrarError('email');
-                    mostrarError('password');
-                }
-            })
-            .catch(error => {
-                console.error('Fallo en la red:', error);
-                alert('No se pudo conectar al servidor de la tienda.');
-                restablecerBotonLog(btn);
-            });
-        }    
+// Evento para Enter
+document.addEventListener('keydown', e => {
+    if (e.key === 'Enter') iniciarSesion();
+});
     </script>
 </body>
 </html>
