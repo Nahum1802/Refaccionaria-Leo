@@ -145,89 +145,8 @@
         </div>
     </div>
 
-<script>
-        let recordar = false;
-        let passVisible = false;
-
-        const menuBtn = document.getElementById('menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-        menuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-
-        // 1. AUTOCOMPLETAR CORREO (Sin saltarse la contraseña por seguridad)
-        document.addEventListener('DOMContentLoaded', () => {
-            const expira = localStorage.getItem('sesion_expira');
-            const activa = localStorage.getItem('sesion_activa');
-            
-            if (activa === 'true' && expira && Date.now() < parseInt(expira)) {
-                const emailGuardado = localStorage.getItem('usuario_email');
-                if (emailGuardado) {
-                    document.getElementById('email').value = emailGuardado;
-                    
-                    recordar = true;
-                    const el = document.getElementById('check-recordar');
-                    el.classList.replace('bg-white/5', 'bg-amarillo/15');
-                    el.classList.replace('border-white/15', 'border-amarillo/50');
-                    el.classList.replace('text-transparent', 'text-amarillo');
-                    el.textContent = '✓';
-                    
-                    // Enfocar directamente la contraseña para mayor comodidad
-                    document.getElementById('password').focus();
-                }
-            }
-        });
-
-        function toggleCheck() {
-            recordar = !recordar;
-            const el = document.getElementById('check-recordar');
-            if(recordar) {
-                el.classList.replace('bg-white/5', 'bg-amarillo/15');
-                el.classList.replace('border-white/15', 'border-amarillo/50');
-                el.classList.replace('text-transparent', 'text-amarillo');
-            } else {
-                el.classList.replace('bg-amarillo/15', 'bg-white/5');
-                el.classList.replace('border-amarillo/50', 'border-white/15');
-                el.classList.replace('text-amarillo', 'text-transparent');
-            }
-            el.textContent = recordar ? '✓' : '';
-        }
-
-        function togglePass() {
-            passVisible = !passVisible;
-            const inp = document.getElementById('password');
-            const btn = document.getElementById('toggle-btn');
-            inp.type = passVisible ? 'text' : 'password';
-            btn.textContent = passVisible ? '🙈' : '👁';
-        }
-
-        function limpiarError(campo) {
-            const err = document.getElementById('error-' + campo);
-            if(err) err.classList.replace('flex', 'hidden');
-            const inp = document.getElementById(campo);
-            if(inp) {
-                inp.classList.remove('border-red-400/50', 'shadow-[0_0_0_3px_rgba(248,113,113,0.08)]');
-                inp.classList.add('border-white/10');
-            }
-        }
-
-        function mostrarError(campo) {
-            const err = document.getElementById('error-' + campo);
-            if(err) err.classList.replace('hidden', 'flex');
-            const inp = document.getElementById(campo);
-            if(inp) {
-                inp.classList.remove('border-white/10');
-                inp.classList.add('border-red-400/50', 'shadow-[0_0_0_3px_rgba(248,113,113,0.08)]');
-            }
-        }
-
-        function restablecerBotonLog(btn) {
-            btn.classList.remove('bg-amarillo/35', 'pointer-events-none');
-            btn.classList.add('hover:-translate-y-0.5', 'hover:bg-[#fde047]', 'shadow-[0_4px_20px_rgba(250,204,21,0.25)]');
-            btn.innerHTML = '<span id="btn-texto">Iniciar sesión</span><span class="text-[16px] transition-transform duration-200 group-hover:translate-x-1" id="btn-flecha">→</span>';
-        }
-
-        // 2. FUNCIÓN DE INICIO DE SESIÓN REAL CON BASE DE DATOS
+    <script>
+        // 2. FUNCIÓN DE INICIO DE SESIÓN REAL CON BASE DE DATOS (Sin Toast)
         function iniciarSesion() {
             const email = document.getElementById('email').value.trim();
             const pass  = document.getElementById('password').value;
@@ -247,10 +166,8 @@
             document.getElementById('btn-texto').textContent = 'Comprobando datos...';
             document.getElementById('btn-flecha').innerHTML = '<div class="w-[18px] h-[18px] border-2 border-black/20 border-t-black rounded-full animate-[spin_0.7s_linear_infinite]"></div>';
 
-            // --- TU RUTA REAL DE NGROK Y CARPETA ---
             const URL_NGROK = 'https://renter-marrow-engraver.ngrok-free.dev'; 
 
-            // Petición al Backend en Windows
             fetch(`${URL_NGROK}/refaccionaria/auth/login_usuario.php`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -275,35 +192,25 @@
                         localStorage.removeItem('sesion_expira');
                     }
 
-                    // GUARDAR LA SESIÓN SEGURA DEL USUARIO EN EL NAVEGADOR
                     localStorage.setItem('sesion_refaleo', JSON.stringify(data.usuario));
 
-                    // Interfaz visual de éxito
+                    // Interfaz visual de éxito (sin mostrar el toast)
                     document.getElementById('btn-texto').textContent = '¡Bienvenido!';
                     document.getElementById('btn-flecha').textContent = '✓';
                     btn.style.background = 'rgba(74,222,128,0.18)';
                     btn.style.color = '#4ade80';
                     btn.style.boxShadow = '0 4px 20px rgba(74,222,128,0.15)';
 
-                    const toast = document.getElementById('toast');
-                    if(toast) {
-                        toast.classList.replace('translate-y-[100px]', 'translate-y-0');
-                        toast.classList.replace('opacity-0', 'opacity-100');
-                    }
-
-                    // REDIRECCIÓN INTELIGENTE SEGÚN EL ROL DE POSTGRESQL
+                    // Redirección inmediata
                     setTimeout(() => {
                         if (data.usuario.rol === true) {
-                            // Si es Administrador, va al panel de control
                             window.location.href = "Dashboard.html"; 
                         } else {
-                            // Si es Cliente, va a la página de productos
                             window.location.href = "Productos.html"; 
                         }
-                    }, 1800);
+                    }, 1000);
 
                 } else {
-                    // Si la contraseña o el correo están mal, mostramos la alerta y reiniciamos el botón
                     alert(data.message);
                     restablecerBotonLog(btn);
                     mostrarError('email');
@@ -312,20 +219,10 @@
             })
             .catch(error => {
                 console.error('Fallo en la red:', error);
-                alert('No se pudo conectar al servidor de la tienda. Verifica que Apache esté encendido.');
+                alert('No se pudo conectar al servidor de la tienda.');
                 restablecerBotonLog(btn);
             });
-        }
-
-        // Ejecutar al dar Enter
-        document.addEventListener('keydown', e => {
-            if (e.key === 'Enter') {
-                const activeEl = document.activeElement;
-                if(activeEl.id === 'email' || activeEl.id === 'password') {
-                    iniciarSesion();
-                }
-            }
-        });
+        }    
     </script>
 </body>
 </html>
