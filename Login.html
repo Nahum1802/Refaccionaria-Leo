@@ -168,13 +168,16 @@
     })
     .then(r => r.json())
     .then(data => {
-        if (data.status === 'success') {
+            if (data.status === 'success') {
+            // ALERTA TEMPORAL PARA DEPURAR
+            alert("Datos recibidos del servidor: " + JSON.stringify(data.usuario));
+            
             localStorage.setItem('usuario', JSON.stringify(data.usuario));
             document.getElementById('btn-texto').textContent = '¡Redirigiendo!';
-
+            
             setTimeout(() => {
                 window.location.href = (data.usuario.id_rol == 2) ? "admin.html" : "Productos.html";
-            }, 1000);
+            }, 2000); // Le di 2 segundos para que alcances a leer
         } else {
             // Aquí capturamos el mensaje específico del PHP
             alert(data.message); 
