@@ -173,7 +173,7 @@
             document.getElementById('btn-texto').textContent = '¡Redirigiendo!';
             
             setTimeout(() => {
-                window.location.href = data.usuario.rol ? "Dashboard.html" : "Productos.html";
+                window.location.href = data.usuario.rol ? "admin.html" : "Productos.html";
             }, 1000);
         } else {
             // Aquí capturamos el mensaje específico del PHP
