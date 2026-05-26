@@ -169,9 +169,7 @@
     .then(r => r.json())
     .then(data => {
             if (data.status === 'success') {
-            // ALERTA TEMPORAL PARA DEPURAR
-            alert("Datos recibidos del servidor: " + JSON.stringify(data.usuario));
-            
+            // ALERTA TEMPORAL PARA DEPURAR            
             localStorage.setItem('usuario', JSON.stringify(data.usuario));
             document.getElementById('btn-texto').textContent = '¡Redirigiendo!';
             
