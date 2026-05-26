@@ -20,13 +20,11 @@
         .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
         .reveal.visible { opacity: 1; transform: none; }
         
-        /* Tablas oscuras */
         table { width: 100%; border-collapse: collapse; }
         th { background: rgba(255,255,255,0.02); color: rgba(255,255,255,0.4); text-transform: uppercase; font-size: 11px; letter-spacing: 1.5px; padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.05); }
         td { padding: 16px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; color: rgba(255,255,255,0.8); }
         tr:hover td { background: rgba(255,255,255,0.02); }
         
-        /* Badges */
         .badge { padding: 4px 10px; border-radius: 100px; font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; border: 1px solid transparent; }
         .badge.pendiente { background: rgba(251,146,60,0.1); color: #fb923c; border-color: rgba(251,146,60,0.2); }
         .badge.pagado { background: rgba(74,222,128,0.1); color: #4ade80; border-color: rgba(74,222,128,0.2); }
@@ -34,8 +32,13 @@
         .badge.fisico { background: rgba(250,204,21,0.1); color: #FACC15; border-color: rgba(250,204,21,0.2); }
         
         select option { background-color: #0a0a0a; color: white; }
+        
+        /* Personalización para el input de archivo */
+        input[type="file"]::file-selector-button {
+            background: #FACC15; color: black; border: none; padding: 8px 16px; border-radius: 6px; font-family: 'Barlow', sans-serif; font-weight: bold; cursor: pointer; transition: background 0.2s; margin-right: 12px;
+        }
+        input[type="file"]::file-selector-button:hover { background: #fde047; }
 
-        /* Sistema Toast */
         .toast { transform: translateY(100px); opacity: 0; transition: transform 0.4s ease, opacity 0.4s ease; pointer-events: none; }
         .toast.visible { transform: translateY(0); opacity: 1; }
     </style>
@@ -48,7 +51,9 @@
         <nav class="fixed top-0 left-0 right-0 z-[100] bg-negro/92 backdrop-blur-[12px] border-b border-amarillo/15 py-[14px]">
             <div class="max-w-[1200px] mx-auto px-8 flex items-center justify-between relative">
                 <a href="index.html" class="flex items-center gap-[10px] no-underline">
-                    <img src="/IMG/bardahl-top-logo-mobile.webp" alt="Logotipo de Refaccionaria Leo">
+                    <div class="w-[36px] h-[36px] bg-amarillo rounded-[6px] flex items-center justify-center font-bebas text-[18px] text-black overflow-hidden">
+                        <img src="img/bardahl-top-logo-mobile.webp" alt="Logotipo de Refaccionaria Leo" class="w-full h-full object-cover">
+                    </div>
                     <div class="font-bebas text-[22px] tracking-[2px] text-white">Refaccionaria <span class="text-amarillo">Leo</span></div>
                 </a>
                 <ul class="list-none m-0 p-0 hidden md:flex items-center gap-1">
@@ -70,23 +75,16 @@
         <main class="flex-grow max-w-[1200px] w-full mx-auto px-8 pb-20 relative z-10">
             
             <div class="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-8 mb-8 reveal">
-                
                 <div class="bg-gris-oscuro border border-white/5 rounded-2xl p-8 relative overflow-hidden group transition-colors">
                     <div class="absolute top-0 left-0 w-full h-[3px] bg-red-500/50"></div>
                     <h3 class="font-bebas text-[28px] tracking-[2px] mb-6 flex items-center gap-2">⚠️ Alertas de <span class="text-white">Inventario</span></h3>
                     <div class="overflow-x-auto hide-scrollbar border border-white/5 rounded-xl">
                         <table class="text-left w-full whitespace-nowrap">
                             <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Producto</th>
-                                    <th>Stock Actual</th>
-                                    <th>Stock Mínimo</th>
-                                    <th>Acción</th>
-                                </tr>
+                                <tr><th>ID</th><th>Producto</th><th>Stock Actual</th><th>Stock Mínimo</th><th>Acción</th></tr>
                             </thead>
                             <tbody id="tabla-stock-body">
-                                <tr><td colspan="5" class="text-center py-8 text-white/30">Cargando inventario...</td></tr>
+                                <tr><td colspan=\"5\" class=\"text-center py-8 text-white/30\">Cargando inventario...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -121,19 +119,80 @@
                 </div>
             </div>
 
+            <div class="bg-gris-oscuro border border-white/5 rounded-2xl p-8 mb-8 reveal relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-[3px] bg-[#4ade80]"></div>
+                <h3 class="font-bebas text-[28px] tracking-[2px] mb-6 flex items-center gap-2">➕ Agregar <span class="text-[#4ade80]">Nuevo Producto</span></h3>
+                
+                <form id="form-nuevo-producto" onsubmit="agregarProducto(event)">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-5">
+                        
+                        <div class="lg:col-span-2">
+                            <label class="block text-[11px] font-bold tracking-[1.5px] uppercase text-white/40 mb-2">Nombre del Producto</label>
+                            <input type="text" name="nombre" required placeholder="Ej. Filtro de Aceite Sintético" class="w-full bg-white/5 border border-white/10 rounded-[10px] py-3 px-4 text-[14px] text-white font-barlow outline-none transition-all focus:border-[#4ade80]/50 focus:bg-[#4ade80]/5">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold tracking-[1.5px] uppercase text-white/40 mb-2">Marca</label>
+                            <input type="text" name="marca" required placeholder="Ej. Bosch" class="w-full bg-white/5 border border-white/10 rounded-[10px] py-3 px-4 text-[14px] text-white font-barlow outline-none transition-all focus:border-[#4ade80]/50 focus:bg-[#4ade80]/5">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold tracking-[1.5px] uppercase text-white/40 mb-2">SKU (Código Interno)</label>
+                            <input type="text" name="sku" placeholder="Ej. FIL-BOS-001" class="w-full bg-white/5 border border-white/10 rounded-[10px] py-3 px-4 text-[14px] text-white font-barlow outline-none transition-all focus:border-[#4ade80]/50 focus:bg-[#4ade80]/5">
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-bold tracking-[1.5px] uppercase text-white/40 mb-2">Categoría</label>
+                            <select name="id_categoria" required class="w-full bg-white/5 border border-white/10 rounded-[10px] py-3 px-4 text-[14px] text-white font-barlow outline-none transition-all focus:border-[#4ade80]/50 focus:bg-[#4ade80]/5 cursor-pointer">
+                                <option value="1">Motor</option>
+                                <option value="2">Frenos</option>
+                                <option value="3">Suspensión</option>
+                                <option value="4">Eléctrico</option>
+                                <option value="5">Filtros</option>
+                                <option value="6">Afinación</option>
+                                <option value="7">Transmisión</option>
+                                <option value="8">Carrocería</option>
+                                <option value="9">Lubricantes</option>
+                                <option value="10">Otros</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold tracking-[1.5px] uppercase text-white/40 mb-2">Precio de Venta ($)</label>
+                            <input type="number" name="precio" required min="1" step="0.01" placeholder="0.00" class="w-full bg-white/5 border border-white/10 rounded-[10px] py-3 px-4 text-[14px] text-white font-barlow outline-none transition-all focus:border-[#4ade80]/50 focus:bg-[#4ade80]/5">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold tracking-[1.5px] uppercase text-white/40 mb-2">Stock Inicial</label>
+                            <input type="number" name="stock" required min="0" value="0" class="w-full bg-white/5 border border-white/10 rounded-[10px] py-3 px-4 text-[14px] text-white font-barlow outline-none transition-all focus:border-[#4ade80]/50 focus:bg-[#4ade80]/5">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold tracking-[1.5px] uppercase text-white/40 mb-2">Alerta Stock Mínimo</label>
+                            <input type="number" name="stock_minimo" required min="1" value="2" class="w-full bg-white/5 border border-white/10 rounded-[10px] py-3 px-4 text-[14px] text-white font-barlow outline-none transition-all focus:border-[#4ade80]/50 focus:bg-[#4ade80]/5">
+                        </div>
+
+                        <div class="lg:col-span-2">
+                            <label class="block text-[11px] font-bold tracking-[1.5px] uppercase text-white/40 mb-2">Descripción del Producto</label>
+                            <textarea name="descripcion" required rows="3" placeholder="Detalles, compatibilidad, usos..." class="w-full bg-white/5 border border-white/10 rounded-[10px] py-3 px-4 text-[14px] text-white font-barlow outline-none transition-all focus:border-[#4ade80]/50 focus:bg-[#4ade80]/5 resize-none"></textarea>
+                        </div>
+                        <div class="lg:col-span-2 flex flex-col justify-end">
+                            <label class="block text-[11px] font-bold tracking-[1.5px] uppercase text-white/40 mb-2">Imagen del Producto (Opcional pero recomendada)</label>
+                            <div class="w-full bg-white/5 border border-dashed border-white/20 rounded-[10px] py-2 px-4 transition-all hover:border-[#4ade80]/50">
+                                <input type="file" name="imagen" accept="image/*" class="w-full text-[13px] text-white/50 file:cursor-pointer outline-none">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end pt-4 border-t border-white/5 mt-2">
+                        <button type="submit" id="btn-submit-producto" class="bg-[#4ade80] text-[#0a0a0a] font-barlow font-bold text-[14px] tracking-[2px] uppercase py-[13px] px-8 rounded-[10px] border-none cursor-pointer transition-all hover:bg-[#22c55e] hover:-translate-y-0.5 shadow-[0_4px_20px_rgba(74,222,128,0.25)]">
+                            <span>Guardar Producto</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
             <div class="bg-gris-oscuro border border-white/5 rounded-2xl p-8 reveal">
                 <h3 class="font-bebas text-[28px] tracking-[2px] mb-6 border-b border-white/10 pb-4">Últimas <span class="text-white">Ventas y Pedidos</span></h3>
                 <div class="overflow-x-auto border border-white/5 rounded-xl hide-scrollbar">
                     <table class="w-full whitespace-nowrap">
                         <thead>
-                            <tr>
-                                <th>Pedido #</th>
-                                <th>Tipo/Origen</th>
-                                <th>Fecha y Hora</th>
-                                <th>Cliente</th>
-                                <th>Total</th>
-                                <th>Estado Pago</th>
-                            </tr>
+                            <tr><th>Pedido #</th><th>Tipo/Origen</th><th>Fecha y Hora</th><th>Cliente</th><th>Total</th><th>Estado Pago</th></tr>
                         </thead>
                         <tbody id="tabla-pedidos-body">
                             <tr><td colspan="6" class="text-center py-8 text-white/30">Cargando ventas recientes...</td></tr>
@@ -154,42 +213,28 @@
     </div>
 
     <script>
-        const API_BASE = ' https://renter-marrow-engraver.ngrok-free.dev/refaccionaria';
+        // Recuerda mantener tu URL de Ngrok actualizada aquí
+        const API_BASE = 'https://renter-marrow-engraver.ngrok-free.dev/refaccionaria';
         let usuarioSesion = null;
 
         document.addEventListener("DOMContentLoaded", () => {
-            // 1. VALIDACIÓN DE SESIÓN (Capa Frontend)
             const sesionData = localStorage.getItem("usuario");
-            if (!sesionData) {
-                window.location.href = "Login.html";
-                return;
-            }
+            if (!sesionData) { window.location.href = "Login.html"; return; }
 
             usuarioSesion = JSON.parse(sesionData);
-            
-            // Si no es el Rol 2 (Administrador/Dueño), se le echa fuera.
-            if (usuarioSesion.id_rol != 2) {
-                window.location.href = "index.html";
-                return;
-            }
+            if (usuarioSesion.id_rol != 2) { window.location.href = "index.html"; return; }
 
-            // 2. INICIALIZACIÓN DE UI
             document.getElementById("fallback-msg").style.display = "none";
             document.getElementById("admin-content").classList.remove("hidden");
             document.getElementById("admin-content").classList.add("flex");
             document.getElementById("admin-name").innerText = `Logueado como: ${usuarioSesion.nombre} ${usuarioSesion.apellidos} (Administrador)`;
 
-            // 3. CARGAR DATOS
             cargarDashboard();
             setTimeout(() => document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible')), 150);
         });
 
-        // ==========================================
-        // FUNCIÓN: CARGAR DATOS DEL DASHBOARD
-        // ==========================================
         async function cargarDashboard() {
             try {
-                // Petición al backend (dashboard.php)
                 const response = await fetch(`${API_BASE}/admin/dashboard.php`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -199,10 +244,8 @@
                 const data = await response.json();
                 if (!response.ok) throw new Error(data.error || "Error del servidor");
 
-                // Renderizar Tabla de Stock
                 const tbStock = document.getElementById("tabla-stock-body");
                 tbStock.innerHTML = "";
-                
                 if (!data.alertas_inventario || data.alertas_inventario.length === 0) {
                     tbStock.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-[#4ade80]">✔ Inventario sano. No hay alertas de stock bajo.</td></tr>`;
                 } else {
@@ -214,31 +257,22 @@
                                 <td class="text-red-400 font-bold">${p.stock}</td>
                                 <td class="text-white/40">${p.stock_minimo}</td>
                                 <td>
-                                    <button onclick="prepararSurtido(${p.id_producto})" class="bg-white/10 text-white text-[10px] font-bold uppercase tracking-[1px] py-1.5 px-3 rounded cursor-pointer hover:bg-amarillo hover:text-black transition">
-                                        Surtir
-                                    </button>
+                                    <button onclick="prepararSurtido(${p.id_producto})" class="bg-white/10 text-white text-[10px] font-bold uppercase tracking-[1px] py-1.5 px-3 rounded cursor-pointer hover:bg-amarillo hover:text-black transition">Surtir</button>
                                 </td>
                             </tr>
                         `;
                     });
                 }
 
-                // Renderizar Tabla de Pedidos Recientes
                 const tbPedidos = document.getElementById("tabla-pedidos-body");
                 tbPedidos.innerHTML = "";
-
                 if (!data.pedidos_recientes || data.pedidos_recientes.length === 0) {
                     tbPedidos.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-white/40">Aún no hay ventas registradas.</td></tr>`;
                 } else {
                     data.pedidos_recientes.forEach(ped => {
-                        // Formateo profesional de Moneda
                         const fmtTotal = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(ped.total_pedido || 0);
-                        
-                        // Formateo profesional de Fecha
                         const dateObj = new Date(ped.fecha_pedido);
                         const fmtFecha = !isNaN(dateObj) ? new Intl.DateTimeFormat('es-MX', {day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit'}).format(dateObj) : 'Fecha no válida';
-                        
-                        // Clases dinámicas para badges
                         const tipoClase = (ped.tipo && ped.tipo.toLowerCase().includes('linea')) ? 'en_linea' : 'fisico';
                         const pagoClase = (ped.estado_pago && ped.estado_pago.toLowerCase() === 'pagado') ? 'pagado' : 'pendiente';
 
@@ -254,73 +288,82 @@
                         `;
                     });
                 }
-            } catch (error) {
-                mostrarToast("Error de conexión", error.message, false);
-            }
+            } catch (error) { mostrarToast("Error de conexión", error.message, false); }
         }
 
-        // ==========================================
-        // FUNCIÓN: ENVIAR FORMULARIO DE STOCK
-        // ==========================================
         async function procesarAjusteStock(event) {
             event.preventDefault();
-            
-            // UI: Desactivar botón mientras carga
             const btn = document.getElementById("btn-submit-ajuste");
             const btnTextOriginal = btn.innerHTML;
-            btn.disabled = true;
-            btn.innerHTML = `<span class="animate-pulse">Procesando...</span>`;
-            btn.classList.add("opacity-50", "cursor-not-allowed");
+            btn.disabled = true; btn.innerHTML = `<span class="animate-pulse">Procesando...</span>`; btn.classList.add("opacity-50");
 
             try {
-                // Petición al backend (ajustar_stock.php)
                 const response = await fetch(`${API_BASE}/admin/ajustar_stock.php`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        id_rol: usuarioSesion.id_rol,
-                        id_usuario: usuarioSesion.id_usuario, // Registramos quién hizo el movimiento
+                        id_rol: usuarioSesion.id_rol, id_usuario: usuarioSesion.id_usuario,
                         id_producto: parseInt(document.getElementById("ajuste-id").value),
                         cambio: parseInt(document.getElementById("ajuste-cambio").value),
                         motivo: document.getElementById("ajuste-motivo").value
                     })
                 });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || "Problema al ajustar");
+
+                document.getElementById("form-ajuste").reset();
+                mostrarToast("Inventario Actualizado", data.mensaje, true);
+                cargarDashboard();
+            } catch (error) { mostrarToast("Error", error.message, false); } 
+            finally { btn.disabled = false; btn.innerHTML = btnTextOriginal; btn.classList.remove("opacity-50"); }
+        }
+
+        // ==========================================
+        // NUEVA FUNCIÓN: AGREGAR PRODUCTO A LA BD
+        // ==========================================
+        async function agregarProducto(event) {
+            event.preventDefault();
+            const btn = document.getElementById("btn-submit-producto");
+            btn.disabled = true; 
+            btn.innerHTML = `<span class="animate-pulse">Guardando y Subiendo...</span>`; 
+            btn.classList.add("opacity-50", "cursor-not-allowed");
+
+            const form = event.target;
+            const formData = new FormData(form);
+            
+            // Adjuntamos tu rol para que el PHP de seguridad te deje pasar
+            formData.append('id_rol', usuarioSesion.id_rol);
+
+            try {
+                // Fíjate que al usar FormData, NO le ponemos "Content-Type" manual. 
+                // El navegador le pone automáticamente el "multipart/form-data" correcto para subir la imagen.
+                const response = await fetch(`${API_BASE}/admin/agregar_producto.php`, {
+                    method: 'POST',
+                    body: formData
+                });
                 
                 const data = await response.json();
-                if (!response.ok) throw new Error(data.error || "Hubo un problema al procesar el ajuste");
+                if (!response.ok) throw new Error(data.error || "Ocurrió un error al guardar el producto");
 
-                // Éxito: Limpiar form, mostrar notificación y recargar tablas
-                document.getElementById("form-ajuste").reset();
-                mostrarToast("Inventario Actualizado", data.mensaje || "El stock se modificó correctamente.", true);
-                cargarDashboard();
-
+                mostrarToast("¡Producto Guardado!", `El producto ${data.nombre} fue añadido al catálogo.`, true);
+                form.reset(); // Limpiamos el formulario para el siguiente
+                
             } catch (error) {
-                mostrarToast("Error de Ajuste", error.message, false);
+                mostrarToast("Error", error.message, false);
             } finally {
-                // UI: Restaurar botón
-                btn.disabled = false;
-                btn.innerHTML = btnTextOriginal;
+                btn.disabled = false; 
+                btn.innerHTML = `<span>Guardar Producto</span>`; 
                 btn.classList.remove("opacity-50", "cursor-not-allowed");
             }
         }
 
-        // ==========================================
-        // UTILIDADES Y UX
-        // ==========================================
-        
-        // Pasa el ID del producto de la tabla al formulario de lado derecho automáticamente
         function prepararSurtido(idProducto) {
             document.getElementById('ajuste-id').value = idProducto;
             document.getElementById('ajuste-cambio').focus();
         }
 
-        // Cierra sesión limpiando el almacenamiento local
-        function logout() {
-            localStorage.removeItem("usuario");
-            window.location.href = "login.html";
-        }
+        function logout() { localStorage.removeItem("usuario"); window.location.href = "Login.html"; }
 
-        // Sistema de Notificaciones Flotantes (Toasts)
         function mostrarToast(titulo, mensaje, esExito = true) {
             const toast = document.getElementById('toast-notificacion');
             const icon = document.getElementById('toast-icon');
@@ -328,13 +371,8 @@
             document.getElementById('toast-title').textContent = titulo;
             document.getElementById('toast-desc').textContent = mensaje;
             
-            if(esExito) {
-                icon.textContent = "✅";
-                toast.style.borderColor = "rgba(74,222,128,0.35)"; // Verde
-            } else {
-                icon.textContent = "⚠️";
-                toast.style.borderColor = "rgba(248,113,113,0.35)"; // Rojo
-            }
+            if(esExito) { icon.textContent = "✅"; toast.style.borderColor = "rgba(74,222,128,0.35)"; } 
+            else { icon.textContent = "⚠️"; toast.style.borderColor = "rgba(248,113,113,0.35)"; }
 
             toast.classList.add('visible');
             setTimeout(() => toast.classList.remove('visible'), 4000);
