@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -146,122 +147,53 @@
     </div>
 
     <script>
-        let recordar = false;
-        let passVisible = false;
-
-        // ==========================================
-        // 1. MENÚ MÓVIL
-        // ==========================================
-        const menuBtn = document.getElementById('menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-        menuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-
-        // ==========================================
-        // 2. FUNCIONES DE INTERFAZ (UI)
-        // ==========================================
-        function toggleCheck() {
-            recordar = !recordar;
-            const el = document.getElementById('check-recordar');
-            if(recordar) {
-                el.classList.replace('bg-white/5', 'bg-amarillo/15');
-                el.classList.replace('border-white/15', 'border-amarillo/50');
-                el.classList.replace('text-transparent', 'text-amarillo');
-            } else {
-                el.classList.replace('bg-amarillo/15', 'bg-white/5');
-                el.classList.replace('border-amarillo/50', 'border-white/15');
-                el.classList.replace('text-amarillo', 'text-transparent');
-            }
-            el.textContent = recordar ? '✓' : '';
-        }
-
-        function togglePass() {
-            passVisible = !passVisible;
-            const inp = document.getElementById('password');
-            const btn = document.getElementById('toggle-btn');
-            inp.type = passVisible ? 'text' : 'password';
-            btn.textContent = passVisible ? '🙈' : '👁';
-        }
-
-        function limpiarError(campo) {
-            document.getElementById('error-' + campo).classList.replace('flex', 'hidden');
-            const inp = document.getElementById(campo);
-            inp.classList.remove('border-red-400/50', 'shadow-[0_0_0_3px_rgba(248,113,113,0.08)]');
-            inp.classList.add('border-white/10');
-        }
-
-        function mostrarError(campo) {
-            document.getElementById('error-' + campo).classList.replace('hidden', 'flex');
-            const inp = document.getElementById(campo);
-            inp.classList.remove('border-white/10');
-            inp.classList.add('border-red-400/50', 'shadow-[0_0_0_3px_rgba(248,113,113,0.08)]');
-        }
-
-        function restablecerBotonLog(btn) {
-            btn.classList.remove('bg-amarillo/35', 'pointer-events-none');
-            document.getElementById('btn-texto').textContent = 'Iniciar sesión';
-        }
-
-        // ==========================================
-        // 3. LÓGICA DE INICIO DE SESIÓN
-        // ==========================================
         function iniciarSesion() {
-            const email = document.getElementById('email').value.trim();
-            const pass  = document.getElementById('password').value;
-            const btn   = document.getElementById('btn-login');
+    const email = document.getElementById('email').value.trim();
+    const pass  = document.getElementById('password').value;
+    const btn   = document.getElementById('btn-login');
 
-            // Validaciones básicas antes de enviar
-            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || pass.length < 1) {
-                if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) mostrarError('email');
-                if(pass.length < 1) mostrarError('password');
-                return;
-            }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || pass.length < 1) {
+        mostrarError('email');
+        mostrarError('password');
+        return;
+    }
 
-            // Estado cargando (desactiva el botón)
-            btn.classList.add('bg-amarillo/35', 'pointer-events-none');
-            document.getElementById('btn-texto').textContent = 'Validando...';
+    // Estado cargando
+    btn.classList.add('bg-amarillo/35', 'pointer-events-none');
+    document.getElementById('btn-texto').textContent = 'Validando...';
 
-            fetch('https://renter-marrow-engraver.ngrok-free.dev/refaccionaria/auth/login.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password: pass })
-            })
-            .then(r => r.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    // ¡ALERTA ELIMINADA! Ahora es completamente invisible.
-                    
-                    // Guardamos la sesión en el navegador
-                    localStorage.setItem('usuario', JSON.stringify(data.usuario));
-                    document.getElementById('btn-texto').textContent = '¡Redirigiendo!';
-                    
-                    // Mostrar notificación flotante (Toast)
-                    const toast = document.getElementById('toast');
-                    toast.classList.replace('translate-y-[100px]', 'translate-y-0');
-                    toast.classList.replace('opacity-0', 'opacity-100');
-
-                    // Redirección inteligente y silenciosa
-                    setTimeout(() => {
-                        window.location.href = (data.usuario.id_rol == 2) ? "admin.html" : "Productos.html";
-                    }, 1200);
-
-                } else {
-                    // Si la contraseña es incorrecta o el correo no existe
-                    alert(data.message); 
-                    restablecerBotonLog(btn);
-                }
-            })
-            .catch(() => {
-                alert('Error de conexión con el servidor. Revisa Ngrok o XAMPP.');
-                restablecerBotonLog(btn);
-            });
+    fetch('https://renter-marrow-engraver.ngrok-free.dev/refaccionaria/auth/login.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password: pass })
+    })
+    .then(r => r.json())
+    .then(data => {
+            if (data.status === 'success') {
+            // ALERTA TEMPORAL PARA DEPURAR
+            
+            localStorage.setItem('usuario', JSON.stringify(data.usuario));
+            document.getElementById('btn-texto').textContent = '¡Redirigiendo!';
+            
+            setTimeout(() => {
+                window.location.href = (data.usuario.id_rol == 2) ? "admin.html" : "Productos.html";
+            }, 2000); // Le di 2 segundos para que alcances a leer
+        } else {
+            // Aquí capturamos el mensaje específico del PHP
+            alert(data.message); 
+            restablecerBotonLog(btn);
         }
+    })
+    .catch(() => {
+        alert('Error de conexión con el servidor.');
+        restablecerBotonLog(btn);
+    });
+}
 
-        // Permitir enviar el formulario presionando "Enter"
-        document.addEventListener('keydown', e => {
-            if (e.key === 'Enter') iniciarSesion();
-        });
+// Evento para Enter
+document.addEventListener('keydown', e => {
+    if (e.key === 'Enter') iniciarSesion();
+});
     </script>
 </body>
 </html>
