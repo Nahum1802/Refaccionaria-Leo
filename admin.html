@@ -48,10 +48,7 @@
         <nav class="fixed top-0 left-0 right-0 z-[100] bg-negro/92 backdrop-blur-[12px] border-b border-amarillo/15 py-[14px]">
             <div class="max-w-[1200px] mx-auto px-8 flex items-center justify-between relative">
                 <a href="index.html" class="flex items-center gap-[10px] no-underline">
-                    <!-- Contenedor del logo restaurado para mantener el diseño -->
-                    <div class="w-[36px] h-[36px] bg-amarillo rounded-[6px] flex items-center justify-center font-bebas text-[18px] text-black overflow-hidden">
-                        <img src="IMG/bardahl-top-logo-mobile.webp" alt="Logotipo de Refaccionaria Leo" class="w-full h-full object-cover">
-                    </div>
+                    <img src="/IMG/bardahl-top-logo-mobile.webp" alt="Logotipo de Refaccionaria Leo">
                     <div class="font-bebas text-[22px] tracking-[2px] text-white">Refaccionaria <span class="text-amarillo">Leo</span></div>
                 </a>
                 <ul class="list-none m-0 p-0 hidden md:flex items-center gap-1">
@@ -157,8 +154,7 @@
     </div>
 
     <script>
-        // Espacio al inicio eliminado
-        const API_BASE = 'https://renter-marrow-engraver.ngrok-free.dev/refaccionaria';
+        const API_BASE = ' https://renter-marrow-engraver.ngrok-free.dev/refaccionaria';
         let usuarioSesion = null;
 
         document.addEventListener("DOMContentLoaded", () => {
@@ -321,7 +317,7 @@
         // Cierra sesión limpiando el almacenamiento local
         function logout() {
             localStorage.removeItem("usuario");
-            window.location.href = "Login.html"; // Corregido con L mayúscula
+            window.location.href = "login.html";
         }
 
         // Sistema de Notificaciones Flotantes (Toasts)
