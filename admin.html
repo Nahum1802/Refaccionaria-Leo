@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Dueño | Refaccionaria Leo</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style type="text/tailwindcss">
+        @theme {
+            --color-amarillo: #FACC15;
+            --color-negro: #0a0a0a;
+            --color-gris-oscuro: #1a1a1a;
+            --color-gris-medio: #2a2a2a;
+            --color-gris-claro: #f5f5f0;
+            --font-barlow: 'Barlow', sans-serif;
+            --font-bebas: 'Bebas Neue', sans-serif;
+        }
+        .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+        .reveal.visible { opacity: 1; transform: none; }
+        
+        /* Tablas oscuras */
+        table { width: 100%; border-collapse: collapse; }
+        th { background: rgba(255,255,255,0.02); color: rgba(255,255,255,0.4); text-transform: uppercase; font-size: 11px; letter-spacing: 1.5px; padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        td { padding: 16px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; color: rgba(255,255,255,0.8); }
+        tr:hover td { background: rgba(255,255,255,0.02); }
+        
+        /* Badges */
+        .badge { padding: 4px 10px; border-radius: 100px; font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; border: 1px solid transparent; }
+        .badge.pendiente { background: rgba(251,146,60,0.1); color: #fb923c; border-color: rgba(251,146,60,0.2); }
+        .badge.pagado { background: rgba(74,222,128,0.1); color: #4ade80; border-color: rgba(74,222,128,0.2); }
+        .badge.en_linea { background: rgba(96,165,250,0.1); color: #60a5fa; border-color: rgba(96,165,250,0.2); }
+        .badge.fisico { background: rgba(250,204,21,0.1); color: #FACC15; border-color: rgba(250,204,21,0.2); }
+        
+        select option { background-color: #0a0a0a; color: white; }
+
+        /* Sistema Toast */
+        .toast { transform: translateY(100px); opacity: 0; transition: transform 0.4s ease, opacity 0.4s ease; pointer-events: none; }
+        .toast.visible { transform: translateY(0); opacity: 1; }
+    </style>
+</head>
+<body class="font-barlow bg-negro text-gris-claro overflow-x-hidden m-0 p-0 box-border min-h-screen flex flex-col">
+
+    <div id="fallback-msg" class="min-h-screen flex items-center justify-center text-white/50 text-[18px] tracking-[2px] font-bebas uppercase">Verificando credenciales de administrador...</div>
+
+    <div id="admin-content" class="hidden flex-col min-h-screen">
+        <nav class="fixed top-0 left-0 right-0 z-[100] bg-negro/92 backdrop-blur-[12px] border-b border-amarillo/15 py-[14px]">
+            <div class="max-w-[1200px] mx-auto px-8 flex items-center justify-between relative">
+                <a href="index.html" class="flex items-center gap-[10px] no-underline">
+                    <div class="w-[36px] h-[36px] bg-amarillo rounded-[6px] flex items-center justify-center font-bebas text-[18px] text-black">🛡️</div>
+                    <div class="font-bebas text-[22px] tracking-[2px] text-white">Refaccionaria <span class="text-amarillo">Leo</span></div>
+                </a>
+                <ul class="list-none m-0 p-0 hidden md:flex items-center gap-1">
+                    <li><a href="index.html" class="block py-[7px] px-4 rounded-[6px] text-[13px] font-semibold tracking-[1.5px] uppercase no-underline text-white/75 transition-colors duration-200 hover:text-white hover:bg-white/10">Volver a Tienda</a></li>
+                    <li><button onclick="logout()" class="block py-[7px] px-4 rounded-[6px] text-[13px] font-semibold tracking-[1.5px] uppercase no-underline transition-colors duration-200 bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 cursor-pointer">Cerrar Sesión</button></li>
+                </ul>
+            </div>
+        </nav>
+
+        <section class="pt-[9rem] pb-[2rem] px-8 relative overflow-hidden flex-none">
+            <div class="absolute inset-0 bg-[linear-gradient(135deg,#0a0a0a_0%,#111_60%,#0a0a0a_100%)]"></div>
+            <div class="relative max-w-[1200px] mx-auto">
+                <div class="inline-flex items-center gap-2 bg-amarillo/12 border border-amarillo/30 py-1.5 px-3.5 rounded-full text-[12px] font-semibold tracking-[2px] uppercase text-amarillo mb-4">Panel de Control</div>
+                <h1 class="font-bebas text-[clamp(40px,6vw,60px)] tracking-[2px] leading-[0.95] mb-2">Panel de <span class="text-amarillo">Dueño</span></h1>
+                <p class="text-[16px] text-white/50" id="admin-name">Cargando perfil...</p>
+            </div>
+        </section>
+
+        <main class="flex-grow max-w-[1200px] w-full mx-auto px-8 pb-20 relative z-10">
+            
+            <div class="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-8 mb-8 reveal">
+                
+                <div class="bg-gris-oscuro border border-white/5 rounded-2xl p-8 relative overflow-hidden group transition-colors">
+                    <div class="absolute top-0 left-0 w-full h-[3px] bg-red-500/50"></div>
+                    <h3 class="font-bebas text-[28px] tracking-[2px] mb-6 flex items-center gap-2">⚠️ Alertas de <span class="text-white">Inventario</span></h3>
+                    <div class="overflow-x-auto hide-scrollbar border border-white/5 rounded-xl">
+                        <table class="text-left w-full whitespace-nowrap">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Producto</th>
+                                    <th>Stock Actual</th>
+                                    <th>Stock Mínimo</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabla-stock-body">
+                                <tr><td colspan="5" class="text-center py-8 text-white/30">Cargando inventario...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="bg-gris-oscuro border border-white/5 rounded-2xl p-8 relative overflow-hidden transition-colors">
+                    <div class="absolute top-0 left-0 w-full h-[3px] bg-amarillo"></div>
+                    <h3 class="font-bebas text-[28px] tracking-[2px] mb-6 flex items-center gap-2">📦 Ajustar <span class="text-amarillo">Stock</span></h3>
+                    
+                    <form id="form-ajuste" onsubmit="procesarAjusteStock(event)">
+                        <div class="mb-4">
+                            <label class="block text-[11px] font-bold tracking-[1.5px] uppercase text-white/40 mb-2">ID Producto</label>
+                            <input type="number" id="ajuste-id" required class="w-full bg-white/5 border border-white/10 rounded-[10px] py-3 px-4 text-[14px] text-white font-barlow outline-none transition-all focus:border-amarillo/50 focus:bg-amarillo/5">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-[11px] font-bold tracking-[1.5px] uppercase text-white/40 mb-2">Cantidad (Usar - para salidas)</label>
+                            <input type="number" id="ajuste-cambio" required placeholder="Ej. 10 o -2" class="w-full bg-white/5 border border-white/10 rounded-[10px] py-3 px-4 text-[14px] text-white font-barlow outline-none transition-all focus:border-amarillo/50 focus:bg-amarillo/5">
+                        </div>
+                        <div class="mb-6">
+                            <label class="block text-[11px] font-bold tracking-[1.5px] uppercase text-white/40 mb-2">Motivo del movimiento</label>
+                            <select id="ajuste-motivo" required class="w-full bg-white/5 border border-white/10 rounded-[10px] py-3 px-4 text-[14px] text-white font-barlow outline-none transition-all focus:border-amarillo/50 focus:bg-amarillo/5 cursor-pointer">
+                                <option value="compra_proveedor">Entrada - Compra a Proveedor</option>
+                                <option value="ajuste_admin">Ajuste - Inventario Físico</option>
+                                <option value="devolucion">Entrada - Devolución de Cliente</option>
+                                <option value="merma">Salida - Merma o Daño</option>
+                            </select>
+                        </div>
+                        <button type="submit" id="btn-submit-ajuste" class="w-full bg-amarillo text-black font-barlow font-bold text-[14px] tracking-[2px] uppercase py-[13px] rounded-[10px] border-none cursor-pointer transition-all hover:bg-[#fde047] hover:-translate-y-0.5 shadow-[0_4px_20px_rgba(250,204,21,0.25)] flex justify-center items-center gap-2">
+                            <span>Registrar Movimiento</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="bg-gris-oscuro border border-white/5 rounded-2xl p-8 reveal">
+                <h3 class="font-bebas text-[28px] tracking-[2px] mb-6 border-b border-white/10 pb-4">Últimas <span class="text-white">Ventas y Pedidos</span></h3>
+                <div class="overflow-x-auto border border-white/5 rounded-xl hide-scrollbar">
+                    <table class="w-full whitespace-nowrap">
+                        <thead>
+                            <tr>
+                                <th>Pedido #</th>
+                                <th>Tipo/Origen</th>
+                                <th>Fecha y Hora</th>
+                                <th>Cliente</th>
+                                <th>Total</th>
+                                <th>Estado Pago</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-pedidos-body">
+                            <tr><td colspan="6" class="text-center py-8 text-white/30">Cargando ventas recientes...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <div class="toast fixed bottom-8 right-8 bg-[#1a1a1a] border border-[#4ade80]/35 rounded-[14px] py-[1.1rem] px-6 flex items-center gap-3.5 text-[14px] text-white z-[300] max-w-[340px] shadow-[0_8px_32px_rgba(0,0,0,0.5)]" id="toast-notificacion">
+        <div class="text-[28px] shrink-0" id="toast-icon">✅</div>
+        <div>
+            <div class="font-bold mb-[3px]" id="toast-title">¡Operación exitosa!</div>
+            <div class="text-[13px] text-white/50" id="toast-desc">El inventario ha sido actualizado.</div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost/refaccionaria-api';
+        let usuarioSesion = null;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // 1. VALIDACIÓN DE SESIÓN (Capa Frontend)
+            const sesionData = localStorage.getItem("usuario");
+            if (!sesionData) {
+                window.location.href = "login.html";
+                return;
+            }
+
+            usuarioSesion = JSON.parse(sesionData);
+            
+            // Si no es el Rol 2 (Administrador/Dueño), se le echa fuera.
+            if (usuarioSesion.id_rol != 2) {
+                window.location.href = "index.html";
+                return;
+            }
+
+            // 2. INICIALIZACIÓN DE UI
+            document.getElementById("fallback-msg").style.display = "none";
+            document.getElementById("admin-content").classList.remove("hidden");
+            document.getElementById("admin-content").classList.add("flex");
+            document.getElementById("admin-name").innerText = `Logueado como: ${usuarioSesion.nombre} ${usuarioSesion.apellidos} (Administrador)`;
+
+            // 3. CARGAR DATOS
+            cargarDashboard();
+            setTimeout(() => document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible')), 150);
+        });
+
+        // ==========================================
+        // FUNCIÓN: CARGAR DATOS DEL DASHBOARD
+        // ==========================================
+        async function cargarDashboard() {
+            try {
+                // Petición al backend (dashboard.php)
+                const response = await fetch(`${API_BASE}/admin/dashboard.php`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id_rol: usuarioSesion.id_rol })
+                });
+                
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || "Error del servidor");
+
+                // Renderizar Tabla de Stock
+                const tbStock = document.getElementById("tabla-stock-body");
+                tbStock.innerHTML = "";
+                
+                if (!data.alertas_inventario || data.alertas_inventario.length === 0) {
+                    tbStock.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-[#4ade80]">✔ Inventario sano. No hay alertas de stock bajo.</td></tr>`;
+                } else {
+                    data.alertas_inventario.forEach(p => {
+                        tbStock.innerHTML += `
+                            <tr>
+                                <td class="font-bold text-white/50">#${p.id_producto}</td>
+                                <td class="font-medium text-white">${p.nombre}</td>
+                                <td class="text-red-400 font-bold">${p.stock}</td>
+                                <td class="text-white/40">${p.stock_minimo}</td>
+                                <td>
+                                    <button onclick="prepararSurtido(${p.id_producto})" class="bg-white/10 text-white text-[10px] font-bold uppercase tracking-[1px] py-1.5 px-3 rounded cursor-pointer hover:bg-amarillo hover:text-black transition">
+                                        Surtir
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                }
+
+                // Renderizar Tabla de Pedidos Recientes
+                const tbPedidos = document.getElementById("tabla-pedidos-body");
+                tbPedidos.innerHTML = "";
+
+                if (!data.pedidos_recientes || data.pedidos_recientes.length === 0) {
+                    tbPedidos.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-white/40">Aún no hay ventas registradas.</td></tr>`;
+                } else {
+                    data.pedidos_recientes.forEach(ped => {
+                        // Formateo profesional de Moneda
+                        const fmtTotal = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(ped.total_pedido || 0);
+                        
+                        // Formateo profesional de Fecha
+                        const dateObj = new Date(ped.fecha_pedido);
+                        const fmtFecha = !isNaN(dateObj) ? new Intl.DateTimeFormat('es-MX', {day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit'}).format(dateObj) : 'Fecha no válida';
+                        
+                        // Clases dinámicas para badges
+                        const tipoClase = (ped.tipo && ped.tipo.toLowerCase().includes('linea')) ? 'en_linea' : 'fisico';
+                        const pagoClase = (ped.estado_pago && ped.estado_pago.toLowerCase() === 'pagado') ? 'pagado' : 'pendiente';
+
+                        tbPedidos.innerHTML += `
+                            <tr>
+                                <td class="font-bold text-amarillo">#${ped.id_pedido}</td>
+                                <td><span class="badge ${tipoClase}">${ped.tipo ? ped.tipo.replace('_', ' ') : 'Desconocido'}</span></td>
+                                <td class="text-white/60 text-[13px]">${fmtFecha}</td>
+                                <td class="text-white">${ped.cliente}</td>
+                                <td class="font-bold text-white">${fmtTotal}</td>
+                                <td><span class="badge ${pagoClase}">${ped.estado_pago || 'Pendiente'}</span></td>
+                            </tr>
+                        `;
+                    });
+                }
+            } catch (error) {
+                mostrarToast("Error de conexión", error.message, false);
+            }
+        }
+
+        // ==========================================
+        // FUNCIÓN: ENVIAR FORMULARIO DE STOCK
+        // ==========================================
+        async function procesarAjusteStock(event) {
+            event.preventDefault();
+            
+            // UI: Desactivar botón mientras carga
+            const btn = document.getElementById("btn-submit-ajuste");
+            const btnTextOriginal = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `<span class="animate-pulse">Procesando...</span>`;
+            btn.classList.add("opacity-50", "cursor-not-allowed");
+
+            try {
+                // Petición al backend (ajustar_stock.php)
+                const response = await fetch(`${API_BASE}/admin/ajustar_stock.php`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        id_rol: usuarioSesion.id_rol,
+                        id_usuario: usuarioSesion.id_usuario, // Registramos quién hizo el movimiento
+                        id_producto: parseInt(document.getElementById("ajuste-id").value),
+                        cambio: parseInt(document.getElementById("ajuste-cambio").value),
+                        motivo: document.getElementById("ajuste-motivo").value
+                    })
+                });
+                
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || "Hubo un problema al procesar el ajuste");
+
+                // Éxito: Limpiar form, mostrar notificación y recargar tablas
+                document.getElementById("form-ajuste").reset();
+                mostrarToast("Inventario Actualizado", data.mensaje || "El stock se modificó correctamente.", true);
+                cargarDashboard();
+
+            } catch (error) {
+                mostrarToast("Error de Ajuste", error.message, false);
+            } finally {
+                // UI: Restaurar botón
+                btn.disabled = false;
+                btn.innerHTML = btnTextOriginal;
+                btn.classList.remove("opacity-50", "cursor-not-allowed");
+            }
+        }
+
+        // ==========================================
+        // UTILIDADES Y UX
+        // ==========================================
+        
+        // Pasa el ID del producto de la tabla al formulario de lado derecho automáticamente
+        function prepararSurtido(idProducto) {
+            document.getElementById('ajuste-id').value = idProducto;
+            document.getElementById('ajuste-cambio').focus();
+        }
+
+        // Cierra sesión limpiando el almacenamiento local
+        function logout() {
+            localStorage.removeItem("usuario");
+            window.location.href = "login.html";
+        }
+
+        // Sistema de Notificaciones Flotantes (Toasts)
+        function mostrarToast(titulo, mensaje, esExito = true) {
+            const toast = document.getElementById('toast-notificacion');
+            const icon = document.getElementById('toast-icon');
+            
+            document.getElementById('toast-title').textContent = titulo;
+            document.getElementById('toast-desc').textContent = mensaje;
+            
+            if(esExito) {
+                icon.textContent = "✅";
+                toast.style.borderColor = "rgba(74,222,128,0.35)"; // Verde
+            } else {
+                icon.textContent = "⚠️";
+                toast.style.borderColor = "rgba(248,113,113,0.35)"; // Rojo
+            }
+
+            toast.classList.add('visible');
+            setTimeout(() => toast.classList.remove('visible'), 4000);
+        }
+    </script>
+</body>
+</html>
