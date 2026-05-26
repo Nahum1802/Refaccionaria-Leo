@@ -169,9 +169,6 @@
     .then(r => r.json())
     .then(data => {
             if (data.status === 'success') {
-            // ALERTA TEMPORAL PARA DEPURAR            
-            localStorage.setItem('usuario', JSON.stringify(data.usuario));
-            document.getElementById('btn-texto').textContent = '¡Redirigiendo!';
             
             setTimeout(() => {
                 window.location.href = (data.usuario.id_rol == 2) ? "admin.html" : "Productos.html";
