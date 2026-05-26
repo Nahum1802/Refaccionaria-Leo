@@ -152,43 +152,84 @@
     const pass  = document.getElementById('password').value;
     const btn   = document.getElementById('btn-login');
 
+    // 1. Validaciones básicas antes de disparar la red
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || pass.length < 1) {
         mostrarError('email');
         mostrarError('password');
         return;
     }
 
+    // 2. Bloquear interfaz (Estado cargando)
     btn.classList.add('bg-amarillo/35', 'pointer-events-none');
     document.getElementById('btn-texto').textContent = 'Validando...';
 
-    fetch('https://renter-marrow-engraver.ngrok-free.dev/refaccionaria/auth/login.php', {
+    const URL_NGROK = 'https://renter-marrow-engraver.ngrok-free.dev';
+
+    // 3. Petición al Backend PHP
+    fetch(`${URL_NGROK}/refaccionaria/auth/login.php`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+            'Content-Type': 'application/json',
+            // Esta cabecera evita que ngrok muestre la pantalla de advertencia intermedia
+            'ngrok-skip-browser-warning': 'true' 
+        },
         body: JSON.stringify({ email, password: pass })
     })
-    .then(r => r.json())
+    .then(response => {
+        if (!response.ok) throw new Error('Error en la respuesta del servidor.');
+        return response.json();
+    })
     .then(data => {
-            if (data.status === 'success') {
+        if (data.status === 'success') {
             
-            localStorage.setItem('usuario', JSON.stringify(data.usuario));
+            // 4. Guardar las preferencias del "Recuérdame" si la casilla está marcada
+            if (recordar) {
+                const tiempoExpiracion = Date.now() + (30 * 24 * 60 * 60 * 1000); 
+                localStorage.setItem('sesion_activa', 'true');
+                localStorage.setItem('usuario_email', email);
+                localStorage.setItem('sesion_expira', tiempoExpiracion);
+            } else {
+                localStorage.removeItem('sesion_activa');
+                localStorage.removeItem('usuario_email');
+                localStorage.removeItem('sesion_expira');
+            }
+
+            // 5. GUARDAR LA SESIÓN OFICIAL (La que lee Perfil.html)
+            localStorage.setItem('sesion_refaleo', JSON.stringify(data.usuario));
+            
+            // Interfaz de éxito
             document.getElementById('btn-texto').textContent = '¡Redirigiendo!';
-            
+
+            // 6. Redirección condicionada por el rol booleano de Postgres
             setTimeout(() => {
-                window.location.href = (data.usuario.id_rol == 2) ? "admin.html" : "profile.html";
-            }, 2000);
+                if (data.usuario.rol === true) {
+                    window.location.href = "Dashboard.html"; // Dueño / Admin
+                } else {
+                    window.location.href = "Perfil.html";    // Cliente común
+                }
+            }, 1500);
+
         } else {
+            // Si el PHP responde con "error" (Credenciales incorrectas)
             alert(data.message); 
             restablecerBotonLog(btn);
         }
     })
-    .catch(() => {
-        alert('Error de conexión con el servidor.');
+    .catch(error => {
+        console.error('Error de red en Login:', error);
+        alert('Error de conexión con el servidor de la refaccionaria. Verifica Apache y tu túnel ngrok.');
         restablecerBotonLog(btn);
     });
 }
 
+// Escuchar la tecla Enter para procesar el formulario cómodamente
 document.addEventListener('keydown', e => {
-    if (e.key === 'Enter') iniciarSesion();
+    if (e.key === 'Enter') {
+        const activeEl = document.activeElement;
+        if (activeEl.id === 'email' || activeEl.id === 'password') {
+            iniciarSesion();
+        }
+    }
 });
     </script>
 </body>
