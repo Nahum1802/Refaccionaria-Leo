@@ -21,29 +21,16 @@
         .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
         .reveal.visible { opacity: 1; transform: none; }
         
-        .grupo-categoria { transition: opacity 0.3s; }
-        .grupo-categoria.oculto { display: none; }
-
-        .filtro-btn::after {
-            content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
-            background: var(--color-amarillo); transform: scaleX(0); transition: transform 0.2s;
-        }
-        .filtro-btn.activo { color: var(--color-amarillo); }
-        .filtro-btn.activo::after { transform: scaleX(1); }
-
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-        .toast { transform: translateY(100px); opacity: 0; transition: transform 0.4s ease, opacity 0.4s ease; pointer-events: none; }
-        .toast.visible { transform: translateY(0); opacity: 1; }
     </style>
 </head>
-<body class="font-barlow bg-negro text-gris-claro overflow-x-hidden m-0 p-0 box-border">
+<body class="font-barlow bg-negro text-gris-claro overflow-x-hidden m-0 p-0 box-border flex flex-col min-h-screen">
 
     <nav class="fixed top-0 left-0 right-0 z-[100] bg-negro/92 backdrop-blur-[12px] border-b border-amarillo/15 py-[14px]">
         <div class="max-w-[1200px] mx-auto px-8 flex items-center justify-between relative">
             <a href="index.html" class="flex items-center gap-[10px] no-underline">
-                <div class="w-[36px] h-[36px] bg-amarillo rounded-[6px] flex items-center justify-center font-bebas text-[18px] text-black"><img src="IMG/bardahl-top-logo-mobile.webp" alt="Logo Refaccionaria Leo"></div>
+                <div class="w-[36px] h-[36px] bg-amarillo rounded-[6px] flex items-center justify-center font-bebas text-[18px] text-black overflow-hidden"><img src="IMG/bardahl-top-logo-mobile.webp" alt="Logo Refaccionaria Leo" class="w-full h-full object-cover"></div>
                 <div class="font-bebas text-[22px] tracking-[2px] text-white">Refaccionaria <span class="text-amarillo">Leo</span></div>
             </a>
             
@@ -55,12 +42,9 @@
             </ul>
 
             <button id="menu-btn" class="md:hidden flex items-center justify-center p-2 text-white/80 hover:text-amarillo transition-colors focus:outline-none cursor-pointer">
-                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                </svg>
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
             </button>
         </div>
-
         <div id="mobile-menu" class="hidden absolute top-[100%] left-0 right-0 bg-negro/95 backdrop-blur-[12px] border-b border-amarillo/15 md:hidden shadow-2xl">
             <ul class="list-none m-0 p-6 flex flex-col gap-3">
                 <li><a href="index.html" class="block py-3 px-4 rounded-lg text-[14px] font-semibold tracking-[1.5px] uppercase text-center text-white/80 hover:bg-white/10 hover:text-white transition-colors">Inicio</a></li>
@@ -71,11 +55,9 @@
         </div>
     </nav>
 
-    <section class="pt-[9rem] pb-[4rem] px-8 relative overflow-hidden">
+    <section class="pt-[9rem] pb-[4rem] px-8 relative overflow-hidden flex-none">
         <div class="absolute inset-0 bg-[linear-gradient(135deg,#0a0a0a_0%,#111_60%,#0a0a0a_100%)]"></div>
         <div class="absolute top-[-30%] right-[-5%] w-[600px] h-[600px] bg-[radial-gradient(circle,rgba(250,204,21,0.1)_0%,transparent_65%)] rounded-full pointer-events-none"></div>
-        <div class="absolute inset-0 bg-[linear-gradient(rgba(250,204,21,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(250,204,21,0.03)_1px,transparent_1px)] bg-[size:60px_60px]"></div>
-        
         <div class="relative max-w-[1200px] mx-auto flex flex-col md:flex-row items-start md:items-end justify-between gap-8">
             <div>
                 <div class="inline-flex items-center gap-2 bg-amarillo/12 border border-amarillo/30 py-1.5 px-3.5 rounded-full text-[12px] font-semibold tracking-[2px] uppercase text-amarillo mb-4">Catálogo completo</div>
@@ -85,142 +67,91 @@
         </div>
     </section>
 
-    <div class="bg-gris-oscuro border-y border-white/5 sticky top-[64px] md:top-[68px] z-50">
-        <div class="max-w-[1200px] mx-auto px-8 flex items-center gap-2 overflow-x-auto hide-scrollbar">
-            <button class="flex items-center gap-2 py-3.5 px-5 text-[13px] font-semibold tracking-[1px] uppercase whitespace-nowrap bg-transparent border-none text-white/45 cursor-pointer relative transition-colors duration-200 hover:text-white/80 font-barlow filtro-btn activo" data-cat="todos" onclick="filtrar(this)">
-                <span class="text-[16px]"></span> Todos
-            </button>
-            <button class="flex items-center gap-2 py-3.5 px-5 text-[13px] font-semibold tracking-[1px] uppercase whitespace-nowrap bg-transparent border-none text-white/45 cursor-pointer relative transition-colors duration-200 hover:text-white/80 font-barlow filtro-btn" data-cat="aceites" onclick="filtrar(this)">
-                <span class="text-[16px]"></span> Aceites y lubricantes
-            </button>
-            <button class="flex items-center gap-2 py-3.5 px-5 text-[13px] font-semibold tracking-[1px] uppercase whitespace-nowrap bg-transparent border-none text-white/45 cursor-pointer relative transition-colors duration-200 hover:text-white/80 font-barlow filtro-btn" data-cat="filtros" onclick="filtrar(this)">
-                <span class="text-[16px]"></span> Filtros
-            </button>
-            <button class="flex items-center gap-2 py-3.5 px-5 text-[13px] font-semibold tracking-[1px] uppercase whitespace-nowrap bg-transparent border-none text-white/45 cursor-pointer relative transition-colors duration-200 hover:text-white/80 font-barlow filtro-btn" data-cat="accesorios" onclick="filtrar(this)">
-                <span class="text-[16px]"></span> Accesorios
-            </button>
-            <button class="flex items-center gap-2 py-3.5 px-5 text-[13px] font-semibold tracking-[1px] uppercase whitespace-nowrap bg-transparent border-none text-white/45 cursor-pointer relative transition-colors duration-200 hover:text-white/80 font-barlow filtro-btn" data-cat="bandas" onclick="filtrar(this)">
-                <span class="text-[16px]"></span> Bandas y transmisión
-            </button>
-            <button class="flex items-center gap-2 py-3.5 px-5 text-[13px] font-semibold tracking-[1px] uppercase whitespace-nowrap bg-transparent border-none text-white/45 cursor-pointer relative transition-colors duration-200 hover:text-white/80 font-barlow filtro-btn" data-cat="electrico" onclick="filtrar(this)">
-                <span class="text-[16px]"></span> Sistema eléctrico
-            </button>
+    <main class="flex-grow max-w-[1200px] w-full mx-auto py-12 px-8 pb-20 relative z-10">
+        <div class="flex items-center gap-4 mb-8">
+            <div class="w-11 h-11 bg-amarillo/12 border border-amarillo/25 rounded-lg flex items-center justify-center text-[20px]">📦</div>
+            <div class="font-bebas text-[28px] tracking-[2px] text-white">Inventario <span class="text-amarillo">Disponible</span></div>
+            <div class="flex-1 h-px bg-white/5"></div>
         </div>
-    </div>
 
-
-    <div class="bg-gris-oscuro border-y border-white/5 py-10 px-8 overflow-hidden">
-        <div class="text-center text-[12px] font-bold tracking-[3px] uppercase text-white/25 mb-6">Marcas que manejamos</div>
-        <div class="flex gap-8 justify-center flex-wrap items-center">
-            <div class="font-bebas text-[20px] tracking-[3px] text-white/15 transition-colors duration-300 hover:text-amarillo/60 cursor-default">BARDAHL</div>
-            <div class="font-bebas text-[20px] tracking-[3px] text-white/15 transition-colors duration-300 hover:text-amarillo/60 cursor-default">BOSCH</div>
-            <div class="font-bebas text-[20px] tracking-[3px] text-white/15 transition-colors duration-300 hover:text-amarillo/60 cursor-default">NGK</div>
-            <div class="font-bebas text-[20px] tracking-[3px] text-white/15 transition-colors duration-300 hover:text-amarillo/60 cursor-default">CHAMPION</div>
-            <div class="font-bebas text-[20px] tracking-[3px] text-white/15 transition-colors duration-300 hover:text-amarillo/60 cursor-default">DENSO</div>
-            <div class="font-bebas text-[20px] tracking-[3px] text-white/15 transition-colors duration-300 hover:text-amarillo/60 cursor-default">AC DELCO</div>
-            <div class="font-bebas text-[20px] tracking-[3px] text-white/15 transition-colors duration-300 hover:text-amarillo/60 cursor-default">VARTA</div>
-            <div class="font-bebas text-[20px] tracking-[3px] text-white/15 transition-colors duration-300 hover:text-amarillo/60 cursor-default">PENNZOIL</div>
-            <div class="font-bebas text-[20px] tracking-[3px] text-white/15 transition-colors duration-300 hover:text-amarillo/60 cursor-default">MOBIL 1</div>
-            <div class="font-bebas text-[20px] tracking-[3px] text-white/15 transition-colors duration-300 hover:text-amarillo/60 cursor-default">QUAKER</div>
-            <div class="font-bebas text-[20px] tracking-[3px] text-white/15 transition-colors duration-300 hover:text-amarillo/60 cursor-default">ROSHFRAN</div>
-            <div class="font-bebas text-[20px] tracking-[3px] text-white/15 transition-colors duration-300 hover:text-amarillo/60 cursor-default">CASTROL</div>
+        <div id="contenedor-productos" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 reveal">
+            <div class="text-center col-span-full py-20 text-white/50 animate-pulse font-bebas text-[24px] tracking-[2px]">Cargando catálogo desde el servidor...</div>
         </div>
-    </div>
+    </main>
 
-    <section class="bg-amarillo py-20 px-8 text-center">
-        <h2 class="font-bebas text-[clamp(36px,5vw,64px)] text-black tracking-[2px] mb-3">¿No encuentras lo que buscas?</h2>
-        <p class="text-[17px] text-black/65 mb-8 max-w-[500px] mx-auto">Dinos qué necesitas y lo conseguimos. Pregunta sin compromiso, cotizamos sin costo.</p>
-        <a href="Contacto.html" class="bg-black text-amarillo font-bold text-[14px] tracking-[2px] uppercase py-[14px] px-9 rounded-lg inline-block transition-all duration-200 no-underline hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.4)]">Preguntar por una pieza</a>
-    </section>
-
-    <footer class="bg-gris-oscuro border-t border-white/5">
-        <div class="max-w-[1200px] mx-auto pt-12 pb-6 px-8 flex items-center justify-between gap-8 flex-wrap">
-            <div class="font-bebas text-[22px] tracking-[2px] text-white">Refaccionaria <span class="text-amarillo">Leo</span></div>
-            <div class="flex gap-1 flex-wrap justify-center">
-                <a href="index.html" class="py-[7px] px-3.5 rounded-[6px] text-[13px] font-semibold tracking-[1px] uppercase no-underline text-white/40 transition-colors duration-200 hover:text-white hover:bg-white/5">Inicio</a>
-                <a href="Productos.html" class="py-[7px] px-3.5 rounded-[6px] text-[13px] font-semibold tracking-[1px] uppercase no-underline text-white/40 transition-colors duration-200 hover:text-white hover:bg-white/5">Productos</a>
-                <a href="Contacto.html" class="py-[7px] px-3.5 rounded-[6px] text-[13px] font-semibold tracking-[1px] uppercase no-underline text-white/40 transition-colors duration-200 hover:text-white hover:bg-white/5">Contacto</a>
-                <a href="Login.html" class="py-[7px] px-3.5 rounded-[6px] text-[13px] font-semibold tracking-[1px] uppercase no-underline text-white/40 transition-colors duration-200 hover:text-white hover:bg-white/5">Iniciar sesión</a>
-            </div>
-            <div class="text-[13px] text-white/25 w-full text-center md:w-auto">Chimalhuacán, Estado de México</div>
-        </div>
+    <footer class="bg-gris-oscuro border-t border-white/5 mt-auto">
         <div class="border-t border-white/5 max-w-[1200px] mx-auto py-6 px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-[13px] text-white/20">
             <span>© 2026 Refaccionaria Leo — Todos los derechos reservados</span>
             <span>+52 123 456 7890</span>
         </div>
     </footer>
 
-    <div class="toast fixed bottom-8 right-8 bg-gris-oscuro border border-amarillo/30 rounded-xl py-4 px-6 flex items-center gap-3 text-[14px] text-white z-[200] max-w-[320px] shadow-[0_8px_32px_rgba(0,0,0,0.5)]" id="toast">
-        <div class="text-[22px] shrink-0">✅</div>
-        <div>
-            <div class="font-bold mb-0.5" id="toast-titulo">¡Listo!</div>
-            <div class="text-[12px] text-white/50" id="toast-msg">Llámanos al +52 123 456 7890 para cotizar.</div>
-        </div>
-    </div>
-
     <script>
-        // ¡OJO! Usa tu URL activa de Ngrok
-        const API_BASE = 'https://renter-marrow-engraver.ngrok-free.dev/refaccionaria'; 
+        // 1. URL DE TU TÚNEL NGROK ACTUAL (Verifica que sea el correcto)
+        const API_BASE = 'https://renter-marrow-engraver.ngrok-free.dev/refaccionaria';
 
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        menuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+
+        // 2. FUNCIÓN PARA CARGAR PRODUCTOS AUTOMÁTICAMENTE
         document.addEventListener("DOMContentLoaded", async () => {
-            await cargarCatalogo();
-        });
-
-        async function cargarCatalogo() {
             const contenedor = document.getElementById("contenedor-productos");
 
             try {
+                // Hacemos la petición a la base de datos usando el túnel
                 const response = await fetch(`${API_BASE}/productos/lista.php`);
                 const data = await response.json();
 
                 if (data.status === 'success') {
-                    contenedor.innerHTML = ""; // Limpiamos el mensaje de "Cargando..."
+                    contenedor.innerHTML = ""; // Limpiamos el letrero de carga
                     
                     if (data.productos.length === 0) {
-                        contenedor.innerHTML = `<div class="text-center col-span-full text-white/40 py-10">Aún no hay productos registrados.</div>`;
+                        contenedor.innerHTML = `<div class="text-center col-span-full text-white/40 py-10">Aún no hay productos registrados en la base de datos.</div>`;
                         return;
                     }
 
-                    // Por cada producto, dibujamos una tarjeta de Tailwind
+                    // Por cada producto encontrado en Postgres, creamos una tarjeta
                     data.productos.forEach(prod => {
-                        // Formateamos a pesos mexicanos
                         const precioMXN = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(prod.precio);
                         
-                        // Lógica visual: ¿Hay stock o está agotado?
                         const tieneStock = prod.stock > 0;
                         const badgeColor = tieneStock ? 'bg-[#4ade80]' : 'bg-red-500';
                         const textoStock = tieneStock ? `En existencia (${prod.stock})` : 'Agotado';
                         
-                        // Si no hay stock, desactivamos el botón
                         const btnClase = tieneStock 
                             ? 'bg-amarillo text-black hover:bg-[#fde047] hover:-translate-y-0.5 cursor-pointer' 
                             : 'bg-white/5 border border-white/10 text-white/30 cursor-not-allowed';
+                        
                         const btnAttr = tieneStock ? `onclick="agregarAlCarrito(${prod.id_producto})"` : 'disabled';
 
-                        // ¡Clave! Construimos la URL completa de la imagen apuntando a Ngrok
+                        // Evitamos errores construyendo la URL de la imagen correctamente
                         const urlImagen = prod.imagen_principal.startsWith('http') 
                             ? prod.imagen_principal 
                             : `${API_BASE}/${prod.imagen_principal}`;
 
                         contenedor.innerHTML += `
-                            <div class="flex flex-col bg-gris-oscuro border border-white/5 rounded-2xl overflow-hidden transition-all duration-300 hover:border-amarillo/30 hover:-translate-y-1 group">
-                                <div class="h-[200px] flex items-center justify-center relative overflow-hidden bg-[linear-gradient(135deg,#1a1208_0%,#1a1a1a_100%)] p-4">
+                            <div class="flex flex-col bg-gris-oscuro border border-white/5 rounded-2xl overflow-hidden transition-all duration-300 hover:border-amarillo/30 hover:-translate-y-1 group shadow-lg">
+                                <div class="h-[220px] flex items-center justify-center relative overflow-hidden bg-[linear-gradient(135deg,#1a1208_0%,#1a1a1a_100%)] p-4">
                                     <img src="${urlImagen}" alt="${prod.nombre}" class="max-h-full object-contain relative z-10 transition-transform duration-300 group-hover:scale-110" onerror="this.src='IMG/bardahl-top-logo-mobile.webp'">
                                 </div>
                                 <div class="p-5 flex-1 flex flex-col">
                                     <div class="flex items-start justify-between gap-2 mb-1.5">
                                         <div class="text-[16px] font-bold text-white leading-tight">${prod.nombre}</div>
-                                        <span class="text-[11px] font-bold tracking-[1px] uppercase py-0.5 px-2 rounded-full border bg-white/5 text-white/50 border-white/10 whitespace-nowrap">${prod.marca}</span>
+                                        <span class="text-[10px] font-bold tracking-[1px] uppercase py-1 px-2 rounded-md border bg-white/5 text-white/50 border-white/10 whitespace-nowrap">${prod.marca}</span>
                                     </div>
+                                    
+                                    <div class="text-[11px] font-bold tracking-[1px] text-amarillo/70 uppercase mb-2">${prod.categoria || 'General'}</div>
+                                    
                                     <div class="text-[13px] text-white/45 leading-[1.6] mb-4 flex-1 line-clamp-3">${prod.descripcion}</div>
                                     
-                                    <div class="text-[22px] font-bebas tracking-[1px] text-amarillo mb-3">${precioMXN}</div>
+                                    <div class="text-[24px] font-bebas tracking-[1px] text-white mb-3">${precioMXN}</div>
 
                                     <div class="flex items-center justify-between pt-3 border-t border-white/5">
-                                        <div class="flex items-center gap-1.5 text-[12px] text-white/35 font-semibold before:content-[''] before:w-1.5 before:h-1.5 before:${badgeColor} before:rounded-full">${textoStock}</div>
+                                        <div class="flex items-center gap-1.5 text-[12px] text-white/35 font-semibold before:content-[''] before:w-2 before:h-2 before:${badgeColor} before:rounded-full">${textoStock}</div>
                                         
-                                        <button class="text-[12px] font-bold tracking-[1px] uppercase py-2 px-4 rounded-md transition-all ${btnClase}" ${btnAttr}>
-                                            ${tieneStock ? 'Agregar 🛒' : 'Sin Stock'}
+                                        <button class="text-[11px] font-bold tracking-[1px] uppercase py-2 px-3.5 rounded-md transition-all ${btnClase}" ${btnAttr}>
+                                            ${tieneStock ? '🛒 Agregar' : 'Sin Stock'}
                                         </button>
                                     </div>
                                 </div>
@@ -229,19 +160,45 @@
                     });
                 }
             } catch (error) {
-                contenedor.innerHTML = `<div class="text-center col-span-full text-red-400 py-10">No se pudo conectar con la base de datos. Verifica tu conexión a Ngrok.</div>`;
+                contenedor.innerHTML = `<div class="text-center col-span-full text-red-400 py-10">No se pudo conectar con la base de datos local. Verifica que XAMPP y Ngrok estén activos.</div>`;
+            }
+        });
+
+        // 3. FUNCIÓN PARA EL BOTÓN DE AGREGAR AL CARRITO
+        async function agregarAlCarrito(idProducto) {
+            const sesion = localStorage.getItem("usuario");
+            if (!sesion) {
+                alert("Debes iniciar sesión para añadir productos al carrito.");
+                window.location.href = "Login.html";
+                return;
+            }
+
+            const usuario = JSON.parse(sesion);
+
+            try {
+                const response = await fetch(`${API_BASE}/carrito/agregar.php`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        id_usuario: usuario.id_usuario,
+                        id_producto: idProducto,
+                        cantidad: 1
+                    })
+                });
+
+                const res = await response.json();
+                if (response.ok) {
+                    alert("¡Refacción añadida al carrito exitosamente!");
+                } else {
+                    alert(res.error || "No se pudo agregar al carrito");
+                }
+            } catch (error) {
+                alert("Error al conectar con el servidor para el carrito.");
             }
         }
-
-        // Función simulada para el carrito (la conectaremos a la BD más adelante)
-        function agregarAlCarrito(idProducto) {
-            alert("Producto " + idProducto + " listo para agregar al carrito.");
-        }
-
-        // Menú móvil
-        const menuBtn = document.getElementById('menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-        menuBtn.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); });
+        
+        // Animaciones iniciales
+        setTimeout(() => document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible')), 150);
     </script>
 </body>
 </html>
