@@ -85,6 +85,8 @@
                 <li><a href="Productos.html" class="block py-[7px] px-4 rounded-[6px] text-[13px] font-semibold tracking-[1.5px] uppercase no-underline text-white/75 transition-all duration-200 hover:text-white hover:bg-white/10">Productos</a></li>
                 <li><a href="Contacto.html" class="block py-[7px] px-4 rounded-[6px] text-[13px] font-semibold tracking-[1.5px] uppercase no-underline transition-all duration-200 bg-amarillo text-black hover:bg-yellow-500">Contacto</a></li>
                 <li><a href="Login.html" class="block py-[7px] px-4 rounded-[6px] text-[13px] font-semibold tracking-[1.5px] uppercase no-underline text-white/75 transition-all duration-200 hover:text-white hover:bg-white/10">Iniciar sesión</a></li>
+                <li id="nav-login"><a href="Login.html" class="block py-[7px] px-4 rounded-[6px] text-[13px] font-semibold tracking-[1.5px] uppercase no-underline transition-colors duration-200 bg-amarillo text-black hover:bg-yellow-500">Iniciar sesión</a></li>
+                <li id="nav-perfil" class="hidden"><a href="Perfil.html" class="block py-[7px] px-4 rounded-[6px] text-[13px] font-semibold tracking-[1.5px] uppercase no-underline transition-colors duration-200 bg-[#4ade80]/10 text-[#4ade80] border border-[#4ade80]/30 hover:bg-[#4ade80]/20">Mi Perfil</a></li>
             </ul>
 
             <button id="menu-btn" class="md:hidden flex items-center justify-center p-2 text-white/80 hover:text-amarillo transition-colors focus:outline-none cursor-pointer">
@@ -389,6 +391,24 @@
         const mobileMenu = document.getElementById('mobile-menu');
         menuBtn.addEventListener('click', () => {
             mobileMenu.classList.toggle('hidden');
+        });
+        document.addEventListener("DOMContentLoaded", () => {
+        const sesionData = localStorage.getItem("usuario");
+        if (sesionData) {
+            const usuario = JSON.parse(sesionData);
+            // Ocultamos el botón de login y mostramos el de perfil
+            const btnLogin = document.getElementById('nav-login');
+            const btnPerfil = document.getElementById('nav-perfil');
+            
+            if(btnLogin) btnLogin.classList.add('hidden');
+            if(btnPerfil) {
+                btnPerfil.classList.remove('hidden');
+                // Si es administrador, que el botón lo lleve al panel de admin
+                if(usuario.id_rol == 2) {
+                    btnPerfil.innerHTML = `<a href="admin.html" class="block py-[7px] px-4 rounded-[6px] text-[13px] font-semibold tracking-[1.5px] uppercase no-underline transition-colors duration-200 bg-amarillo text-black hover:bg-yellow-500">⚙️ Panel Admin</a>`;
+                    }
+                }
+            }
         });
     </script>
 </body>
