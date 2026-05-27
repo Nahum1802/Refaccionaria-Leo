@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Carrito | Refaccionaria Leo</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="config.js"></script>
+    <style type="text/tailwindcss">
+        @theme {
+            --color-amarillo: #FACC15;
+            --color-negro: #0a0a0a;
+            --color-gris-oscuro: #1a1a1a;
+            --font-barlow: 'Barlow', sans-serif;
+            --font-bebas: 'Bebas Neue', sans-serif;
+        }
+    </style>
+</head>
+<body class="font-barlow bg-negro text-[#f5f5f0] min-h-screen flex flex-col">
+
+    <nav class="fixed top-0 left-0 right-0 z-[100] bg-negro/92 backdrop-blur-[12px] border-b border-amarillo/15 py-[14px]">
+        <div class="max-w-[1200px] mx-auto px-8 flex items-center justify-between relative">
+            <a href="index.html" class="flex items-center gap-[10px] no-underline">
+                <div class="w-[36px] h-[36px] bg-amarillo rounded-[6px] flex items-center justify-center font-bebas text-[18px] text-black overflow-hidden"><img src="IMG/bardahl-top-logo-mobile.webp" alt="Logo"></div>
+                <div class="font-bebas text-[22px] tracking-[2px] text-white">Refaccionaria <span class="text-amarillo">Leo</span></div>
+            </a>
+            <ul class="list-none m-0 p-0 hidden md:flex items-center gap-1">
+                <li><a href="Productos.html" class="block py-[7px] px-4 rounded-[6px] text-[13px] font-semibold tracking-[1.5px] uppercase no-underline text-white/75 hover:text-white hover:bg-white/10">Seguir comprando</a></li>
+                <li id="nav-login"><a href="Login.html" class="block py-[7px] px-4 rounded-[6px] text-[13px] font-semibold tracking-[1.5px] uppercase no-underline bg-amarillo text-black hover:bg-yellow-500">Iniciar sesión</a></li>
+                <li id="nav-perfil" class="hidden"><a href="Perfil.html" class="block py-[7px] px-4 rounded-[6px] text-[13px] font-semibold tracking-[1.5px] uppercase no-underline text-[#4ade80] border border-[#4ade80]/30 hover:bg-[#4ade80]/20">👤 Mi Perfil</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="flex-1 max-w-[1200px] mx-auto w-full pt-[120px] pb-12 px-8">
+        <h1 class="font-bebas text-[48px] tracking-[2px] mb-8 border-b border-white/10 pb-4">Tu <span class="text-amarillo">Carrito</span></h1>
+
+        <div class="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-8">
+            
+            <div class="bg-gris-oscuro border border-white/5 rounded-2xl p-8 h-fit">
+                <div id="lista-carrito" class="flex flex-col gap-4">
+                    <div class="text-center py-10 animate-pulse text-white/40 font-bold">Cargando tus productos...</div>
+                </div>
+            </div>
+
+            <div class="bg-gris-oscuro border border-white/5 rounded-2xl p-8 h-fit sticky top-[100px]">
+                <h3 class="font-bebas text-[28px] tracking-[1.5px] mb-6">Resumen de <span class="text-amarillo">Compra</span></h3>
+                
+                <div class="flex justify-between text-white/50 mb-3 text-[15px]">
+                    <span>Subtotal</span>
+                    <span id="resumen-subtotal">$0.00</span>
+                </div>
+                <div class="flex justify-between text-white/50 mb-6 text-[15px] border-b border-white/10 pb-6">
+                    <span>Envío a domicilio</span>
+                    <span class="text-[#4ade80]">+$150.00</span>
+                </div>
+                
+                <div class="flex justify-between items-end mb-8">
+                    <span class="text-white/70 font-bold uppercase tracking-[1px] text-[14px]">Total a pagar</span>
+                    <span id="resumen-total" class="font-bebas text-[36px] text-amarillo tracking-[1px] leading-none">$0.00</span>
+                </div>
+
+                <button id="btn-pagar" onclick="iniciarCheckout()" class="w-full bg-[#009ee3] text-white font-barlow font-bold text-[15px] tracking-[1.5px] uppercase py-[15px] rounded-[10px] border-none cursor-pointer transition-all duration-200 shadow-[0_4px_20px_rgba(0,158,227,0.3)] flex items-center justify-center gap-2 hover:bg-[#008cc9] hover:-translate-y-0.5">
+                    <span>🤝 Pagar con Mercado Pago</span>
+                </button>
+                <div class="text-center mt-4 text-[12px] text-white/30 flex items-center justify-center gap-1.5">
+                    🔒 Pago 100% seguro y encriptado
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        let usuarioSesion = null;
+        let totalGlobal = 0;
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            const sesionData = localStorage.getItem("usuario");
+            if (!sesionData) {
+                alert("Debes iniciar sesión para ver tu carrito.");
+                window.location.href = "Login.html";
+                return;
+            }
+            usuarioSesion = JSON.parse(sesionData);
+            await cargarCarrito();
+        });
+
+        async function cargarCarrito() {
+            const contenedor = document.getElementById("lista-carrito");
+            try {
+                // Hacemos un GET a tu archivo ver.php con el pase VIP de Ngrok
+                const response = await fetch(`${API_BASE}/carrito/ver.php?id_usuario=${usuarioSesion.id_usuario}`, {
+                    method: 'GET',
+                    headers: { 'ngrok-skip-browser-warning': 'true' }
+                });
+                const data = await response.json();
+
+                contenedor.innerHTML = "";
+
+                if (!data.items || data.items.length === 0) {
+                    contenedor.innerHTML = `
+                        <div class="text-center py-10">
+                            <div class="text-[40px] mb-4">🛒</div>
+                            <p class="text-white/50 mb-4">Tu carrito está vacío.</p>
+                            <a href="Productos.html" class="bg-amarillo text-black py-2 px-6 rounded font-bold uppercase text-[13px] no-underline">Ver catálogo</a>
+                        </div>`;
+                    document.getElementById("btn-pagar").disabled = true;
+                    document.getElementById("btn-pagar").classList.add("opacity-50", "cursor-not-allowed");
+                    return;
+                }
+
+                // Dibujar productos
+                data.items.forEach(item => {
+                    const fmtPrecio = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(item.precio);
+                    const fmtSub = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(item.subtotal);
+                    const imgUrl = item.imagen ? (item.imagen.startsWith('http') ? item.imagen : `${API_BASE}/${item.imagen}`) : 'IMG/bardahl-top-logo-mobile.webp';
+
+                    contenedor.innerHTML += `
+                        <div class="flex items-center gap-4 bg-black/40 border border-white/5 p-4 rounded-xl">
+                            <div class="w-20 h-20 bg-white/5 rounded-lg flex items-center justify-center overflow-hidden shrink-0">
+                                <img src="${imgUrl}" alt="${item.nombre}" class="max-h-full object-contain" onerror="this.src='IMG/bardahl-top-logo-mobile.webp'">
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-bold text-[16px] text-white">${item.nombre}</h4>
+                                <div class="text-white/40 text-[13px]">Precio unitario: ${fmtPrecio}</div>
+                                <div class="text-amarillo font-bold text-[14px] mt-1">Cantidad: ${item.cantidad}</div>
+                            </div>
+                            <div class="font-bebas text-[20px] tracking-[1px]">${fmtSub}</div>
+                        </div>
+                    `;
+                });
+
+                // Actualizar resumen
+                const subtotal = parseFloat(data.total);
+                const envio = 150.00;
+                totalGlobal = subtotal + envio;
+
+                document.getElementById("resumen-subtotal").textContent = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(subtotal);
+                document.getElementById("resumen-total").textContent = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(totalGlobal);
+
+            } catch (error) {
+                contenedor.innerHTML = `<div class="text-red-400 text-center py-10">Error al cargar el carrito. Verifica la conexión.</div>`;
+            }
+        }
+
+        async function iniciarCheckout() {
+            const btn = document.getElementById("btn-pagar");
+            btn.innerHTML = `<span class="animate-pulse">Generando pago...</span>`;
+            btn.classList.add("pointer-events-none", "opacity-75");
+
+            try {
+                // 1. Crear el pedido en la BD (procesar.php)
+                // Nota: Usamos id_direccion: 1 como placeholder. En un e-commerce real, aquí el usuario elige su dirección.
+                const resProcesar = await fetch(`${API_BASE}/checkout/procesar.php`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        id_usuario: usuarioSesion.id_usuario,
+                        id_direccion: 1, 
+                        metodo_pago: 'mercado_pago'
+                    })
+                });
+                const dataPedido = await resProcesar.json();
+
+                if (!resProcesar.ok) throw new Error(dataPedido.error || "Error al procesar el pedido.");
+
+                // 2. Pedirle el link de cobro a Mercado Pago (preferencia_mp.php)
+                const resMP = await fetch(`${API_BASE}/checkout/preferencia_mp.php`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        id_pedido: dataPedido.id_pedido,
+                        total: dataPedido.total_pagar
+                    })
+                });
+                const dataMP = await resMP.json();
+
+                if (!resMP.ok || !dataMP.init_point) throw new Error("Error al contactar a Mercado Pago.");
+
+                // 3. Redirigir al cliente a la página segura de Mercado Pago
+                window.location.href = dataMP.init_point;
+
+            } catch (error) {
+                alert(error.message);
+                btn.innerHTML = `<span>🤝 Pagar con Mercado Pago</span>`;
+                btn.classList.remove("pointer-events-none", "opacity-75");
+            }
+        }
+    </script>
+</body>
+</html>
