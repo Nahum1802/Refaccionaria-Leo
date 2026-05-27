@@ -282,7 +282,7 @@
             <span>Chimalhuacán, Estado de México</span>
         </div>
     </footer>
-
+    <script src="config.js"></script>
     <script>
         const reveals = document.querySelectorAll('.reveal');
         const observer = new IntersectionObserver((entries) => {
@@ -310,25 +310,7 @@
 
         menuBtn.addEventListener('click', () => {
             mobileMenu.classList.toggle('hidden');
-        });
-        document.addEventListener("DOMContentLoaded", () => {
-        const sesionData = localStorage.getItem("usuario");
-        if (sesionData) {
-            const usuario = JSON.parse(sesionData);
-            // Ocultamos el botón de login y mostramos el de perfil
-            const btnLogin = document.getElementById('nav-login');
-            const btnPerfil = document.getElementById('nav-perfil');
-            
-            if(btnLogin) btnLogin.classList.add('hidden');
-            if(btnPerfil) {
-                btnPerfil.classList.remove('hidden');
-                // Si es administrador, que el botón lo lleve al panel de admin
-                if(usuario.id_rol == 2) {
-                    btnPerfil.innerHTML = `<a href="admin.html" class="block py-[7px] px-4 rounded-[6px] text-[13px] font-semibold tracking-[1.5px] uppercase no-underline transition-colors duration-200 bg-amarillo text-black hover:bg-yellow-500">⚙️ Panel Admin</a>`;
-                    }
-                }
-            }
-        });
+        });              
     </script>
 </body>
 </html>
