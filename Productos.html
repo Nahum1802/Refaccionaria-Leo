@@ -100,7 +100,12 @@
 
             try {
                 // Hacemos la petición a la base de datos usando el túnel
-                const response = await fetch(`${API_BASE}/productos/lista.php`);
+                const response = await fetch(`${API_BASE}/productos/lista.php`, {
+                    method: 'GET',
+                    headers: {
+                        'ngrok-skip-browser-warning': 'true'
+                    }
+                });
                 const data = await response.json();
 
                 if (data.status === 'success') {
