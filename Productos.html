@@ -171,6 +171,7 @@
         });
 
         // 3. FUNCIÓN PARA EL BOTÓN DE AGREGAR AL CARRITO
+        // 3. FUNCIÓN PARA EL BOTÓN DE AGREGAR AL CARRITO (MEJORADA)
         async function agregarAlCarrito(idProducto) {
             const sesion = localStorage.getItem("usuario");
             if (!sesion) {
@@ -180,6 +181,11 @@
             }
 
             const usuario = JSON.parse(sesion);
+            const btn = event.target; // Capturamos el botón que fue presionado
+            const textoOriginal = btn.innerHTML;
+            
+            btn.innerHTML = 'Agregando...';
+            btn.classList.add('opacity-50', 'cursor-not-allowed');
 
             try {
                 const response = await fetch(`${API_BASE}/carrito/agregar.php`, {
@@ -194,15 +200,20 @@
 
                 const res = await response.json();
                 if (response.ok) {
-                    alert("¡Refacción añadida al carrito exitosamente!");
+                    // Aquí está la magia de la redirección
+                    if(confirm("¡Refacción añadida exitosamente! ¿Deseas ir al carrito para proceder al pago?")) {
+                        window.location.href = "carrito.html";
+                    }
                 } else {
                     alert(res.error || "No se pudo agregar al carrito");
                 }
             } catch (error) {
                 alert("Error al conectar con el servidor para el carrito.");
+            } finally {
+                btn.innerHTML = textoOriginal;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
             }
         }
-        
         // Animaciones iniciales
         setTimeout(() => document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible')), 150);
     </script>
