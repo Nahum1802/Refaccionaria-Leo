@@ -86,7 +86,7 @@
         let usuarioSesion = null;
 
         document.addEventListener("DOMContentLoaded", () => {
-            // Protección de ruta: Si no hay sesión, al login
+        
             const sesionData = localStorage.getItem("usuario");
             if (!sesionData) {
                 window.location.href = "Login.html";
@@ -95,7 +95,6 @@
 
             usuarioSesion = JSON.parse(sesionData);
             
-            // Llenar datos personales
             document.getElementById("perfil-nombre").textContent = usuarioSesion.nombre;
             document.getElementById("info-nombre").textContent = `${usuarioSesion.nombre} ${usuarioSesion.apellidos}`;
             document.getElementById("info-correo").textContent = usuarioSesion.email;
