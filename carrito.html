@@ -90,7 +90,6 @@
         async function cargarCarrito() {
             const contenedor = document.getElementById("lista-carrito");
             try {
-                // Hacemos un GET a tu archivo ver.php con el pase VIP de Ngrok
                 const response = await fetch(`${API_BASE}/carrito/ver.php?id_usuario=${usuarioSesion.id_usuario}`, {
                     method: 'GET',
                     headers: { 'ngrok-skip-browser-warning': 'true' }
@@ -111,7 +110,6 @@
                     return;
                 }
 
-                // Dibujar productos
                 data.items.forEach(item => {
                     const fmtPrecio = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(item.precio);
                     const fmtSub = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(item.subtotal);
@@ -132,7 +130,6 @@
                     `;
                 });
 
-                // Actualizar resumen
                 const subtotal = parseFloat(data.total);
                 const envio = 150.00;
                 totalGlobal = subtotal + envio;
@@ -151,8 +148,6 @@
             btn.classList.add("pointer-events-none", "opacity-75");
 
             try {
-                // 1. Crear el pedido en la BD (procesar.php)
-                // Nota: Usamos id_direccion: 1 como placeholder. En un e-commerce real, aquí el usuario elige su dirección.
                 const resProcesar = await fetch(`${API_BASE}/checkout/procesar.php`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -166,7 +161,6 @@
 
                 if (!resProcesar.ok) throw new Error(dataPedido.error || "Error al procesar el pedido.");
 
-                // 2. Pedirle el link de cobro a Mercado Pago (preferencia_mp.php)
                 const resMP = await fetch(`${API_BASE}/checkout/preferencia_mp.php`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -179,7 +173,6 @@
 
                 if (!resMP.ok || !dataMP.init_point) throw new Error("Error al contactar a Mercado Pago.");
 
-                // 3. Redirigir al cliente a la página segura de Mercado Pago
                 window.location.href = dataMP.init_point;
 
             } catch (error) {
