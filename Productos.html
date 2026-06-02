@@ -89,18 +89,15 @@
     </footer>
     <script src="config.js"></script>
     <script>
-        // 1. URL DE TU TÚNEL NGROK ACTUAL (Verifica que sea el correcto)
 
         const menuBtn = document.getElementById('menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
         menuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
 
-        // 2. FUNCIÓN PARA CARGAR PRODUCTOS AUTOMÁTICAMENTE
         document.addEventListener("DOMContentLoaded", async () => {
             const contenedor = document.getElementById("contenedor-productos");
 
             try {
-                // Hacemos la petición a la base de datos usando el túnel
                 const response = await fetch(`${API_BASE}/productos/lista.php`, {
                     method: 'GET',
                     headers: {
@@ -110,14 +107,13 @@
                 const data = await response.json();
 
                 if (data.status === 'success') {
-                    contenedor.innerHTML = ""; // Limpiamos el letrero de carga
+                    contenedor.innerHTML = "";
                     
                     if (data.productos.length === 0) {
                         contenedor.innerHTML = `<div class="text-center col-span-full text-white/40 py-10">Aún no hay productos registrados en la base de datos.</div>`;
                         return;
                     }
 
-                    // Por cada producto encontrado en Postgres, creamos una tarjeta
                     data.productos.forEach(prod => {
                         const precioMXN = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(prod.precio);
                         
@@ -131,7 +127,6 @@
                         
                         const btnAttr = tieneStock ? `onclick="agregarAlCarrito(${prod.id_producto})"` : 'disabled';
 
-                        // Evitamos errores construyendo la URL de la imagen correctamente
                         const urlImagen = prod.imagen_principal.startsWith('http') 
                             ? prod.imagen_principal 
                             : `${API_BASE}/${prod.imagen_principal}`;
@@ -170,8 +165,6 @@
             }
         });
 
-        // 3. FUNCIÓN PARA EL BOTÓN DE AGREGAR AL CARRITO
-        // 3. FUNCIÓN PARA EL BOTÓN DE AGREGAR AL CARRITO (MEJORADA)
         async function agregarAlCarrito(idProducto) {
             const sesion = localStorage.getItem("usuario");
             if (!sesion) {
@@ -181,7 +174,7 @@
             }
 
             const usuario = JSON.parse(sesion);
-            const btn = event.target; // Capturamos el botón que fue presionado
+            const btn = event.target;
             const textoOriginal = btn.innerHTML;
             
             btn.innerHTML = 'Agregando...';
@@ -200,7 +193,6 @@
 
                 const res = await response.json();
                 if (response.ok) {
-                    // Aquí está la magia de la redirección
                     if(confirm("¡Refacción añadida exitosamente! ¿Deseas ir al carrito para proceder al pago?")) {
                         window.location.href = "carrito.html";
                     }
@@ -214,7 +206,6 @@
                 btn.classList.remove('opacity-50', 'cursor-not-allowed');
             }
         }
-        // Animaciones iniciales
         setTimeout(() => document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible')), 150);
     </script>
 </body>
