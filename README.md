@@ -41,3 +41,6 @@ Ingresará a una ventana en la cual podrá ver el inventario de los productos di
 Cliente:
 Ingresará a la página principal para dirigirse al apartado de tienda. En la tienda podrá ver el catálogo de los productos disponibles y tendrá la opción de comprarlos. Al momento de seleccionar un producto, el sistema detectará si el usuario tiene una sesión activa; en caso de no ser así, será redirigido a la ventana de registro. Ahí se le pedirá una dirección de correo y una contraseña y, posteriormente, una dirección de envío para poder mandar sus artículos.
 
+## Usuario de Prueba
+    - * Correo * : tester1@test.com
+    - * Contraseña * : tester1234 
