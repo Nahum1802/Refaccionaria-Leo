@@ -30,7 +30,7 @@
                 </div>
                 <div class="font-bebas text-[22px] tracking-[2px] text-white">Refaccionaria <span class="text-amarillo">Leo</span></div>
             </a>
-            
+
             <ul class="list-none m-0 p-0 hidden md:flex items-center gap-1">
                 <li><a href="index.html" class="block py-[7px] px-4 rounded-[6px] text-[13px] font-semibold tracking-[1.5px] uppercase no-underline text-white/75 transition-colors duration-200 hover:text-white hover:bg-white/10">Inicio</a></li>
                 <li><a href="Productos.html" class="block py-[7px] px-4 rounded-[6px] text-[13px] font-semibold tracking-[1.5px] uppercase no-underline text-white/75 transition-colors duration-200 hover:text-white hover:bg-white/10">Productos</a></li>
@@ -39,9 +39,7 @@
             </ul>
 
             <button id="menu-btn" class="md:hidden flex items-center justify-center p-2 text-white/80 hover:text-amarillo transition-colors focus:outline-none cursor-pointer">
-                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                </svg>
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
             </button>
         </div>
 
@@ -56,14 +54,13 @@
     </nav>
 
     <div class="flex-1 flex items-center justify-center min-h-screen pt-[80px] pb-12 px-4 bg-[#0a0a0a] relative overflow-hidden">
-        
+
         <div class="absolute inset-0 bg-[linear-gradient(160deg,#111_0%,#0a0a0a_60%)]"></div>
         <div class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-[radial-gradient(circle,rgba(250,204,21,0.1)_0%,transparent_65%)] rounded-full pointer-events-none"></div>
         <div class="absolute bottom-[-10%] right-[-10%] w-[400px] h-[400px] bg-[radial-gradient(circle,rgba(250,204,21,0.06)_0%,transparent_65%)] rounded-full pointer-events-none"></div>
         <div class="absolute inset-0 bg-[linear-gradient(rgba(250,204,21,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(250,204,21,0.04)_1px,transparent_1px)] bg-[size:55px_55px] pointer-events-none"></div>
 
         <div class="w-full max-w-[420px] relative z-10 bg-[#0f0f0f]/95 backdrop-blur-sm border border-white/5 p-8 sm:p-10 rounded-2xl shadow-2xl">
-
             <div class="text-center mb-10">
                 <img src="IMG/bardahl-top-logo-mobile.webp" alt="Logotipo Refaccionaria Leo" class="w-[48px] h-[48px] mx-auto mb-4">
                 <h1 class="font-bebas text-[36px] tracking-[2px] mb-1.5">Bienvenido de vuelta</h1>
@@ -71,79 +68,27 @@
             </div>
 
             <div class="mb-4">
-                <div class="flex items-center justify-between mb-2">
-                    <label for="email" class="text-[12px] font-bold tracking-[1.5px] uppercase text-white/40">Correo electrónico</label>
-                </div>
-                <div class="relative group">
-                    <input type="email" id="email" class="w-full bg-white/5 border border-white/10 rounded-[10px] py-[13px] px-4 pl-[44px] text-[15px] text-white font-barlow outline-none transition-all duration-200 focus:border-amarillo/50 focus:bg-amarillo/5 focus:shadow-[0_0_0_3px_rgba(250,204,21,0.08)] placeholder:text-white/20" placeholder="tu@correo.com" oninput="limpiarError('email')">
-                </div>
-                <div class="text-[12px] text-red-400 mt-1.5 items-center gap-1.5 hidden" id="error-email">⚠ Ingresa un correo electrónico válido</div>
+                <label for="email" class="block text-[12px] font-bold tracking-[1.5px] uppercase text-white/40 mb-2">Correo electrónico</label>
+                <input type="email" id="email" class="w-full bg-white/5 border border-white/10 rounded-[10px] py-[13px] px-4 text-[15px] text-white font-barlow outline-none transition-all duration-200 focus:border-amarillo/50 focus:bg-amarillo/5 placeholder:text-white/20" placeholder="tu@correo.com">
             </div>
 
             <div class="mb-4">
-                <div class="flex items-center justify-between mb-2">
-                    <label for="password" class="text-[12px] font-bold tracking-[1.5px] uppercase text-white/40">Contraseña</label>
-                    <a href="#" class="text-[12px] text-amarillo/70 font-semibold no-underline transition-colors hover:text-amarillo">¿Olvidaste tu contraseña?</a>
-                </div>
-                <div class="relative group">
-                    <input type="password" id="password" class="w-full bg-white/5 border border-white/10 rounded-[10px] py-[13px] px-4 pl-[44px] pr-[48px] text-[15px] text-white font-barlow outline-none transition-all duration-200 focus:border-amarillo/50 focus:bg-amarillo/5 focus:shadow-[0_0_0_3px_rgba(250,204,21,0.08)] placeholder:text-white/20" placeholder="Tu contraseña" oninput="limpiarError('password')">
-                    <button class="absolute right-3.5 top-1/2 -translate-y-1/2 bg-none border-none cursor-pointer text-[16px] text-white/30 transition-colors p-1 leading-none hover:text-white/70 focus:outline-none" type="button" onclick="togglePass()" id="toggle-btn" title="Mostrar/ocultar contraseña">👁</button>
-                </div>
-                <div class="text-[12px] text-red-400 mt-1.5 items-center gap-1.5 hidden" id="error-password">⚠ La contraseña debe tener al menos 6 caracteres</div>
+                <label for="password" class="block text-[12px] font-bold tracking-[1.5px] uppercase text-white/40 mb-2">Contraseña</label>
+                <input type="password" id="password" class="w-full bg-white/5 border border-white/10 rounded-[10px] py-[13px] px-4 text-[15px] text-white font-barlow outline-none transition-all duration-200 focus:border-amarillo/50 focus:bg-amarillo/5 placeholder:text-white/20" placeholder="Tu contraseña">
             </div>
 
-            <div class="flex items-center gap-2.5 mb-6">
-                <div class="w-[18px] h-[18px] border-[1.5px] border-white/15 rounded-[5px] bg-white/5 cursor-pointer flex items-center justify-center text-[11px] text-transparent transition-all duration-200 shrink-0" id="check-recordar" onclick="toggleCheck()"></div>
-                <span class="text-[14px] text-white/50 cursor-pointer select-none" onclick="toggleCheck()">Recordar mi sesión por 30 días</span>
-            </div>
-
-            <button class="w-full bg-amarillo text-black font-barlow font-bold text-[15px] tracking-[2px] uppercase py-[15px] px-6 rounded-[10px] border-none cursor-pointer transition-all duration-200 shadow-[0_4px_20px_rgba(250,204,21,0.25)] flex items-center justify-center gap-[10px] mb-5 hover:bg-[#fde047] hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(250,204,21,0.4)] active:translate-y-0 group" id="btn-login" onclick="iniciarSesion()">
+            <button class="w-full bg-amarillo text-black font-barlow font-bold text-[15px] tracking-[2px] uppercase py-[15px] px-6 rounded-[10px] border-none cursor-pointer transition-all duration-200 shadow-[0_4px_20px_rgba(250,204,21,0.25)] hover:bg-[#fde047] hover:-translate-y-0.5" id="btn-login" onclick="iniciarSesion()">
                 <span id="btn-texto">Iniciar sesión</span>
-                <span class="text-[16px] transition-transform duration-200 group-hover:translate-x-1" id="btn-flecha">→</span>
             </button>
 
-            <div class="text-center text-[14px] text-white/35">
-                ¿Aún no tienes cuenta? <a href="Register.html" class="text-amarillo font-bold no-underline transition-opacity hover:opacity-80">Regístrate gratis</a>
+            <div class="text-center mt-6 text-[14px] text-white/35">
+                ¿Aún no tienes cuenta? <a href="Register.html" class="text-amarillo font-bold no-underline hover:opacity-80">Regístrate gratis</a>
             </div>
-
-            <div class="flex items-center gap-3 my-7">
-                <div class="flex-1 h-px bg-white/5"></div>
-                <div class="text-[12px] text-white/25 font-semibold tracking-[1px] whitespace-nowrap">O continúa como invitado</div>
-                <div class="flex-1 h-px bg-white/5"></div>
-            </div>
-
-            <div class="flex flex-col sm:flex-row gap-2.5">
-                <a href="Productos.html" class="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-[10px] border border-white/10 bg-white/5 text-white/50 text-[13px] font-semibold no-underline transition-all duration-200 hover:border-amarillo/25 hover:text-white/80">
-                    <span>📦</span> Ver productos
-                </a>
-                <a href="Contacto.html" class="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-[10px] border border-white/10 bg-white/5 text-white/50 text-[13px] font-semibold no-underline transition-all duration-200 hover:border-amarillo/25 hover:text-white/80">
-                    <span>💬</span> Contactar
-                </a>
-            </div>
-
-            <div class="flex items-center justify-center gap-1.5 mt-7 text-[12px] text-white/20 before:content-['🔒'] before:text-[13px]">
-                Conexión segura — tus datos están protegidos
-            </div>
-
         </div>
     </div>
 
-    <div class="bg-negro border-t border-white/5 py-5 px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-[12px] text-white/20">
-        <span>© 2025 Refaccionaria Leo</span>
-        <div class="flex gap-6">
-            <a href="index.html" class="text-white/30 no-underline transition-colors hover:text-white/60">Inicio</a>
-            <a href="Productos.html" class="text-white/30 no-underline transition-colors hover:text-white/60">Productos</a>
-            <a href="Contacto.html" class="text-white/30 no-underline transition-colors hover:text-white/60">Contacto</a>
-        </div>
-        <span>Chimalhuacán, Estado de México</span>
-    </div>
-
-    <div class="fixed bottom-8 right-8 bg-[#1a1a1a] border border-[#4ade80]/35 rounded-[14px] py-4 px-6 flex items-center gap-3.5 text-[14px] text-white z-[300] translate-y-[100px] opacity-0 transition-all duration-400 ease-out pointer-events-none max-w-[320px] shadow-[0_8px_32px_rgba(0,0,0,0.5)]" id="toast">
-        <div class="text-[26px] shrink-0">👋</div>
-        <div>
-            <div class="font-bold mb-[3px]">¡Bienvenido!</div>
-            <div class="text-[12px] text-white/50">Sesión iniciada correctamente. Redirigiendo...</div>
-        </div>
+    <div class="bg-negro border-t border-white/5 py-5 px-8 text-center text-[12px] text-white/20">
+        <span>© 2025 Refaccionaria Leo — Chimalhuacán, Estado de México</span>
     </div>
 
     <script>
@@ -151,6 +96,55 @@
             const email = document.getElementById('email').value.trim();
             const pass  = document.getElementById('password').value;
             const btn   = document.getElementById('btn-login');
+<<<<<<< HEAD
+
+            if (!email || !pass) {
+                alert('Completa todos los campos.');
+                return;
+            }
+
+            btn.classList.add('opacity-50', 'pointer-events-none');
+            document.getElementById('btn-texto').textContent = 'Validando...';
+
+            fetch(`${window.location.origin}/refaccionaria/auth/login.php`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password: pass })
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.status === 'success' && data.usuario) {
+                    localStorage.setItem('usuario', JSON.stringify(data.usuario));
+                    document.getElementById('btn-texto').textContent = '¡Redirigiendo!';
+                    setTimeout(() => {
+                        window.location.href = (data.usuario.id_rol == 2) ? "admin.html" : "Perfil.html";
+                    }, 1500);
+                } else {
+                    alert(data.error || 'Credenciales incorrectas');
+                    restablecerBoton(btn);
+                }
+            })
+            .catch(() => {
+                alert('Error de conexión con el servidor.');
+                restablecerBoton(btn);
+            });
+        }
+
+        function restablecerBoton(btn) {
+            btn.classList.remove('opacity-50', 'pointer-events-none');
+            document.getElementById('btn-texto').textContent = 'Iniciar sesión';
+        }
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Enter') iniciarSesion();
+        });
+
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (menuBtn) {
+            menuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+        }
+=======
             if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || pass.length < 1) {
                 mostrarError('email');
                 mostrarError('password');
@@ -185,6 +179,7 @@
 document.addEventListener('keydown', e => {
     if (e.key === 'Enter') iniciarSesion();
 }); 
+>>>>>>> 6cde1bbf1e9babab32f2d8deddbf210e5c156967
     </script>
 </body>
 </html>

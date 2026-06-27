@@ -330,40 +330,56 @@
         </div>
     </div>
 
+    <script src="config.js"></script>
     <script>
         function selChip(el) {
             document.querySelectorAll('.chip').forEach(c => c.classList.remove('activo'));
             el.classList.add('activo');
         }
 
-        function enviarForm() {
+        async function enviarForm() {
             const nombre = document.getElementById('nombre').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const tel = document.getElementById('tel').value.trim();
+            const mensaje = document.getElementById('mensaje').value.trim();
             const btn = document.getElementById('btn-enviar');
-            if (!nombre) {
-                const inp = document.getElementById('nombre');
-                inp.style.borderColor = 'rgba(248,113,113,0.6)';
-                inp.focus();
-                setTimeout(() => inp.style.borderColor = '', 2200);
+
+            if (!nombre || !email || !mensaje) {
+                alert('Completa nombre, correo y mensaje.');
                 return;
             }
+
             btn.classList.add('enviando');
             btn.innerHTML = '<span>Enviando...</span>';
-            setTimeout(() => {
-                btn.classList.remove('enviando');
-                btn.innerHTML = '<span>¡Mensaje enviado!</span><span>✓</span>';
-                btn.style.background = 'rgba(74,222,128,0.18)';
-                btn.style.color = '#4ade80';
-                btn.style.boxShadow = '0 4px 20px rgba(74,222,128,0.15)';
+
+            try {
+                const response = await fetch(`${API_BASE}/contacto/enviar.php`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nombre, email, telefono: tel, mensaje })
+                });
+                const data = await response.json();
+                if (data.status !== 'success') throw new Error(data.error);
+
+                btn.innerHTML = '<span>✅ ¡Mensaje enviado!</span>';
                 const toast = document.getElementById('toast');
                 toast.classList.add('visible');
                 setTimeout(() => toast.classList.remove('visible'), 4000);
+
+                document.getElementById('nombre').value = '';
+                document.getElementById('email').value = '';
+                document.getElementById('tel').value = '';
+                document.getElementById('mensaje').value = '';
+
                 setTimeout(() => {
-                    btn.innerHTML = '<span>Enviar mensaje</span><span class="text-[18px] transition-transform duration-200 group-hover:translate-x-1">→</span>';
-                    btn.style.background = '';
-                    btn.style.color = '';
-                    btn.style.boxShadow = '';
-                }, 5000);
-            }, 1400);
+                    btn.innerHTML = 'Enviar mensaje';
+                    btn.classList.remove('enviando');
+                }, 3000);
+            } catch (error) {
+                alert('Error al enviar: ' + (error.message || 'Intenta de nuevo'));
+                btn.classList.remove('enviando');
+                btn.innerHTML = 'Enviar mensaje';
+            }
         }
 
         const mapaDias = { 0:'domingo', 1:'lunes', 2:'martes', 3:'miercoles', 4:'jueves', 5:'viernes', 6:'sabado' };
