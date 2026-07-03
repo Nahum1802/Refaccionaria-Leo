@@ -96,17 +96,16 @@
             const email = document.getElementById('email').value.trim();
             const pass  = document.getElementById('password').value;
             const btn   = document.getElementById('btn-login');
-<<<<<<< HEAD
 
             if (!email || !pass) {
-                alert('Completa todos los campos.');
+                mostrarToast('Completa todos los campos.', false);
                 return;
             }
 
             btn.classList.add('opacity-50', 'pointer-events-none');
             document.getElementById('btn-texto').textContent = 'Validando...';
 
-            fetch(`${window.location.origin}/refaccionaria/auth/login.php`, {
+            fetch(`${API_BASE}/auth/login.php`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password: pass })
@@ -120,12 +119,12 @@
                         window.location.href = (data.usuario.id_rol == 2) ? "admin.html" : "Perfil.html";
                     }, 1500);
                 } else {
-                    alert(data.error || 'Credenciales incorrectas');
+                    mostrarToast(data.error || 'Credenciales incorrectas', false);
                     restablecerBoton(btn);
                 }
             })
             .catch(() => {
-                alert('Error de conexión con el servidor.');
+                mostrarToast('Error de conexión con el servidor.', false);
                 restablecerBoton(btn);
             });
         }
@@ -133,6 +132,29 @@
         function restablecerBoton(btn) {
             btn.classList.remove('opacity-50', 'pointer-events-none');
             document.getElementById('btn-texto').textContent = 'Iniciar sesión';
+        }
+
+        function mostrarToast(mensaje, esExito = true) {
+            const contenedor = document.getElementById('toast-container') || (() => {
+                const div = document.createElement('div');
+                div.id = 'toast-container';
+                div.style.cssText = 'position:fixed;bottom:2rem;right:2rem;z-index:9999;display:flex;flex-direction:column;gap:0.5rem';
+                document.body.appendChild(div);
+                return div;
+            })();
+            const toast = document.createElement('div');
+            toast.style.cssText = `background:#1a1a1a;border:1px solid ${esExito ? 'rgba(74,222,128,0.35)' : 'rgba(248,113,113,0.35)'};border-radius:14px;padding:1rem 1.5rem;color:white;font-size:14px;box-shadow:0 8px 32px rgba(0,0,0,0.5);transform:translateY(100px);opacity:0;transition:transform 0.4s ease,opacity 0.4s ease;max-width:340px`;
+            toast.textContent = mensaje;
+            contenedor.appendChild(toast);
+            requestAnimationFrame(() => {
+                toast.style.transform = 'translateY(0)';
+                toast.style.opacity = '1';
+            });
+            setTimeout(() => {
+                toast.style.transform = 'translateY(100px)';
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 400);
+            }, 4000);
         }
 
         document.addEventListener('keydown', e => {
@@ -144,42 +166,6 @@
         if (menuBtn) {
             menuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
         }
-=======
-            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || pass.length < 1) {
-                mostrarError('email');
-                mostrarError('password');
-                return;
-            }
-            btn.classList.add('bg-amarillo/35', 'pointer-events-none');
-            document.getElementById('btn-texto').textContent = 'Validando...';
-            fetch('https://renter-marrow-engraver.ngrok-free.dev/refaccionaria/auth/login.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password: pass })
-            })
-            .then(r => r.json())
-            .then(data => {
-                 if (data.status === 'success') {
-                     localStorage.setItem('usuario', JSON.stringify(data.usuario));
-                     document.getElementById('btn-texto').textContent = '¡Redirigiendo!';
-                     setTimeout(() => {
-                        window.location.href = (data.usuario.id_rol == 2) ? "admin.html" : "profile.html";
-                      }, 2000);
-                 } else {
-            alert(data.message);
-            restablecerBotonLog(btn);
-                }
-            })
-             .catch(() => {
-            alert('Error de conexión con el servidor.');
-             restablecerBotonLog(btn);
-
-            });
-}
-document.addEventListener('keydown', e => {
-    if (e.key === 'Enter') iniciarSesion();
-}); 
->>>>>>> 6cde1bbf1e9babab32f2d8deddbf210e5c156967
     </script>
 </body>
 </html>
