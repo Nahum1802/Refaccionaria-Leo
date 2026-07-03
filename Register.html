@@ -182,13 +182,7 @@
                 numInterior: document.getElementById('num-interior').value.trim()
             };
 
-            const API = window.location.origin + '/refaccionaria';
-
-<<<<<<< HEAD
-            fetch(`${API}/auth/register.php`, {
-=======
-            fetch(`${URL_NGROK}/refaccionaria/auth/register.php`, {
->>>>>>> 6cde1bbf1e9babab32f2d8deddbf210e5c156967
+            fetch(`${API_BASE}/auth/register.php`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(datos)
@@ -196,26 +190,42 @@
             .then(r => r.json())
             .then(data => {
                 if (data.status === 'success') {
-                    alert('✅ ¡Cuenta creada exitosamente! Ahora inicia sesión.');
-                    window.location.href = 'Login.html';
+                    mostrarToast('✅ ¡Cuenta creada exitosamente! Ahora inicia sesión.', true);
+                    setTimeout(() => { window.location.href = 'Login.html'; }, 2000);
                 } else {
-                    alert(data.error || 'Error al registrar');
+                    mostrarToast(data.error || 'Error al registrar', false);
                     btn.classList.remove('opacity-50', 'pointer-events-none');
                     document.getElementById('btn-texto').textContent = 'Crear mi cuenta';
                 }
             })
-<<<<<<< HEAD
             .catch(() => {
-                alert('Error de conexión con el servidor.');
+                mostrarToast('Error de conexión con el servidor.', false);
                 btn.classList.remove('opacity-50', 'pointer-events-none');
                 document.getElementById('btn-texto').textContent = 'Crear mi cuenta';
-=======
-            .catch(error => {
-                console.error('Error de red en fetch:', error);
-                alert('No se pudo conectar con el servidor de la refaccionaria.');
-                restablecerBoton(btn);
->>>>>>> 6cde1bbf1e9babab32f2d8deddbf210e5c156967
             });
+        }
+
+        function mostrarToast(mensaje, esExito = true) {
+            const contenedor = document.getElementById('toast-container') || (() => {
+                const div = document.createElement('div');
+                div.id = 'toast-container';
+                div.style.cssText = 'position:fixed;bottom:2rem;right:2rem;z-index:9999;display:flex;flex-direction:column;gap:0.5rem';
+                document.body.appendChild(div);
+                return div;
+            })();
+            const toast = document.createElement('div');
+            toast.style.cssText = `background:#1a1a1a;border:1px solid ${esExito ? 'rgba(74,222,128,0.35)' : 'rgba(248,113,113,0.35)'};border-radius:14px;padding:1rem 1.5rem;color:white;font-size:14px;box-shadow:0 8px 32px rgba(0,0,0,0.5);transform:translateY(100px);opacity:0;transition:transform 0.4s ease,opacity 0.4s ease;max-width:340px`;
+            toast.textContent = mensaje;
+            contenedor.appendChild(toast);
+            requestAnimationFrame(() => {
+                toast.style.transform = 'translateY(0)';
+                toast.style.opacity = '1';
+            });
+            setTimeout(() => {
+                toast.style.transform = 'translateY(100px)';
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 400);
+            }, 4000);
         }
 
         const menuBtn = document.getElementById('menu-btn');
