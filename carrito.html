@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Carrito | Refaccionaria Leo</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://*.googleapis.com https://*.gstatic.com https://*.jsdelivr.net; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https:;">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="config.js"></script>
@@ -53,7 +54,7 @@
                 </div>
                 <div class="flex justify-between text-white/50 mb-6 text-[15px] border-b border-white/10 pb-6">
                     <span>Envío a domicilio</span>
-                    <span class="text-[#4ade80]">+$15.00</span>
+                    <span class="text-[#4ade80]" id="envio-monto">+$150.00</span>
                 </div>
                 
                 <div class="flex justify-between items-end mb-8">
@@ -90,10 +91,7 @@
         async function cargarCarrito() {
             const contenedor = document.getElementById("lista-carrito");
             try {
-                const response = await fetch(`${API_BASE}/carrito/ver.php?id_usuario=${usuarioSesion.id_usuario}`, {
-                    method: 'GET',
-                    headers: { 'ngrok-skip-browser-warning': 'true' }
-                });
+                const response = await fetch(`${API_BASE}/carrito/ver.php?id_usuario=${usuarioSesion.id_usuario}`);
                 const data = await response.json();
 
                 contenedor.innerHTML = "";
@@ -131,10 +129,11 @@
                 });
 
                 const subtotal = parseFloat(data.total);
-                const envio = 150.00;
+                const envio = data.costo_envio ? parseFloat(data.costo_envio) : 150.00;
                 totalGlobal = subtotal + envio;
 
                 document.getElementById("resumen-subtotal").textContent = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(subtotal);
+                document.getElementById("envio-monto").textContent = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(envio);
                 document.getElementById("resumen-total").textContent = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(totalGlobal);
 
             } catch (error) {
@@ -153,7 +152,6 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         id_usuario: usuarioSesion.id_usuario,
-                        id_direccion: 1, 
                         metodo_pago: 'mercado_pago'
                     })
                 });
@@ -176,10 +174,26 @@
                 window.location.href = dataMP.init_point;
 
             } catch (error) {
-                alert(error.message);
-                btn.innerHTML = `<span>🤝 Pagar con Mercado Pago</span>`;
+                mostrarToastCarrito(error.message, false);
+                btn.innerHTML = `<span>Pagar</span>`;
                 btn.classList.remove("pointer-events-none", "opacity-75");
             }
+        }
+
+        function mostrarToastCarrito(mensaje, esExito = true) {
+            const contenedor = document.getElementById('toast-container') || (() => {
+                const div = document.createElement('div');
+                div.id = 'toast-container';
+                div.style.cssText = 'position:fixed;bottom:2rem;right:2rem;z-index:9999;display:flex;flex-direction:column;gap:0.5rem';
+                document.body.appendChild(div);
+                return div;
+            })();
+            const toast = document.createElement('div');
+            toast.style.cssText = `background:#1a1a1a;border:1px solid ${esExito ? 'rgba(74,222,128,0.35)' : 'rgba(248,113,113,0.35)'};border-radius:14px;padding:1rem 1.5rem;color:white;font-size:14px;box-shadow:0 8px 32px rgba(0,0,0,0.5);transform:translateY(100px);opacity:0;transition:transform 0.4s ease,opacity 0.4s ease;max-width:340px`;
+            toast.textContent = mensaje;
+            contenedor.appendChild(toast);
+            requestAnimationFrame(() => { toast.style.transform = 'translateY(0)'; toast.style.opacity = '1'; });
+            setTimeout(() => { toast.style.transform = 'translateY(100px)'; toast.style.opacity = '0'; setTimeout(() => toast.remove(), 400); }, 4000);
         }
     </script>
 </body>
