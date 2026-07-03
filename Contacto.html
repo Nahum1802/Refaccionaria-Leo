@@ -168,14 +168,14 @@
                         </div>
                         <div class="ml-auto text-[20px] text-white/20 transition-all duration-200 group-hover:text-amarillo group-hover:translate-x-1">›</div>
                     </a>
-                    <a href="mmartinezh@gmail.com" class="flex items-center gap-4 bg-gris-oscuro border border-white/5 rounded-[14px] py-[1.1rem] px-5 no-underline transition-all duration-200 hover:border-amarillo/30 hover:bg-amarillo/5 hover:translate-x-1 group">
+                    <a href="mailto:irePol.5m2h@gmail.com?subject=Consulta%20de%20Refaccionaria%20Leo" class="flex items-center gap-4 bg-gris-oscuro border border-white/5 rounded-[14px] py-[1.1rem] px-5 no-underline transition-all duration-200 hover:border-amarillo/30 hover:bg-amarillo/5 hover:translate-x-1 group">
                         <div class="w-[46px] h-[46px] bg-amarillo/10 border border-amarillo/20 rounded-[11px] flex items-center justify-center text-[20px] shrink-0">✉️</div>
                             <div>
                                 <div class="text-[11px] font-bold tracking-[1.5px] uppercase text-white/30 mb-[3px]">Correo electrónico</div>
-                                    <a href="mailto:irePol.5m2h@gmail.com?subject=Consulta%20de%20Refaccionaria%20Leo" class="text-[15px] font-semibold text-white no-underline hover:text-amarillo transition-colors">
+                                <div class="text-[15px] font-semibold text-white">
                                     irePol.5m2h@gmail.com
-                                    </a>
                                 </div>
+                            </div>
                         <div class="ml-auto text-[20px] text-white/20 transition-all duration-200 group-hover:text-amarillo group-hover:translate-x-1">›</div>
                     </a>
                     <div class="flex items-center gap-4 bg-gris-oscuro border border-white/5 rounded-[14px] py-[1.1rem] px-5 cursor-default">
@@ -317,7 +317,7 @@
             </div>
         </div>
         <div class="border-t border-white/5 max-w-[1200px] mx-auto py-6 px-8 flex items-center justify-between text-[13px] text-white/20">
-            <span>© 2025 Refaccionaria Leo — Todos los derechos reservados</span>
+            <span>© <span id="copyright-year"></span> Refaccionaria Leo — Todos los derechos reservados</span>
             <span>Chimalhuacán, Estado de México</span>
         </div>
     </footer>
@@ -410,6 +410,8 @@
         menuBtn.addEventListener('click', () => {
             mobileMenu.classList.toggle('hidden');
         });
+
+        document.getElementById('copyright-year').textContent = new Date().getFullYear();
     </script>
 </body>
 </html>
