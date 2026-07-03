@@ -1,10 +1,21 @@
-const API_BASE = 'https://renter-marrow-engraver.ngrok-free.dev/refaccionaria';
-document.addEventListener("DOMContentLoaded", () => {
+const API_BASE = window.location.origin + '/refaccionaria';
+
+function verificarSesion() {
     const sesionData = localStorage.getItem("usuario");
+    if (!sesionData) return null;
+    try {
+        return JSON.parse(sesionData);
+    } catch {
+        localStorage.removeItem("usuario");
+        return null;
+    }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const usuario = verificarSesion();
     const btnLogin = document.getElementById('nav-login');
     const btnPerfil = document.getElementById('nav-perfil');
-    if (sesionData) {
-        const usuario = JSON.parse(sesionData);
+    if (usuario) {
         if (btnLogin) btnLogin.classList.add('hidden');
         if (btnPerfil) {
             btnPerfil.classList.remove('hidden');
