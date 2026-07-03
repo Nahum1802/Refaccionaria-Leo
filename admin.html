@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Dueño | Refaccionaria Leo</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://*.googleapis.com https://*.gstatic.com https://*.jsdelivr.net; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; frame-src 'self' https://www.google.com; connect-src 'self' https:;">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -30,10 +31,11 @@
         .badge.pagado { background: rgba(74,222,128,0.1); color: #4ade80; border-color: rgba(74,222,128,0.2); }
         .badge.en_linea { background: rgba(96,165,250,0.1); color: #60a5fa; border-color: rgba(96,165,250,0.2); }
         .badge.fisico { background: rgba(250,204,21,0.1); color: #FACC15; border-color: rgba(250,204,21,0.2); }
+        .badge.activo { background: rgba(74,222,128,0.1); color: #4ade80; border-color: rgba(74,222,128,0.2); }
+        .badge.inactivo { background: rgba(248,113,113,0.1); color: #f87171; border-color: rgba(248,113,113,0.2); }
         
         select option { background-color: #0a0a0a; color: white; }
         
-        /* Personalización para el input de archivo */
         input[type="file"]::file-selector-button {
             background: #FACC15; color: black; border: none; padding: 8px 16px; border-radius: 6px; font-family: 'Barlow', sans-serif; font-weight: bold; cursor: pointer; transition: background 0.2s; margin-right: 12px;
         }
@@ -41,6 +43,11 @@
 
         .toast { transform: translateY(100px); opacity: 0; transition: transform 0.4s ease, opacity 0.4s ease; pointer-events: none; }
         .toast.visible { transform: translateY(0); opacity: 1; }
+
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 500; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; padding: 1rem; }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-content { background: #1a1a1a; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 2rem; max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto; transform: scale(0.95); transition: transform 0.3s ease; }
+        .modal-overlay.active .modal-content { transform: scale(1); }
     </style>
 </head>
 <body class="font-barlow bg-negro text-gris-claro overflow-x-hidden m-0 p-0 box-border min-h-screen flex flex-col">
@@ -52,7 +59,7 @@
             <div class="max-w-[1200px] mx-auto px-8 flex items-center justify-between relative">
                 <a href="index.html" class="flex items-center gap-[10px] no-underline">
                     <div class="w-[36px] h-[36px] bg-amarillo rounded-[6px] flex items-center justify-center font-bebas text-[18px] text-black overflow-hidden">
-                        <img src="img/bardahl-top-logo-mobile.webp" alt="Logotipo de Refaccionaria Leo" class="w-full h-full object-cover">
+                        <img src="IMG/bardahl-top-logo-mobile.webp" alt="Logotipo de Refaccionaria Leo" class="w-full h-full object-cover">
                     </div>
                     <div class="font-bebas text-[22px] tracking-[2px] text-white">Refaccionaria <span class="text-amarillo">Leo</span></div>
                 </a>
@@ -187,6 +194,21 @@
                 </form>
             </div>
 
+            <div class="bg-gris-oscuro border border-white/5 rounded-2xl p-8 mb-8 reveal">
+                <div class="absolute top-0 left-0 w-full h-[3px] bg-[#60a5fa]"></div>
+                <h3 class="font-bebas text-[28px] tracking-[2px] mb-6 flex items-center gap-2">📋 Todos los <span class="text-[#60a5fa]">Productos</span></h3>
+                <div class="overflow-x-auto border border-white/5 rounded-xl hide-scrollbar">
+                    <table class="w-full whitespace-nowrap">
+                        <thead>
+                            <tr><th>ID</th><th>Nombre</th><th>Precio</th><th>Stock</th><th>Estado</th><th>Acciones</th></tr>
+                        </thead>
+                        <tbody id="tabla-productos-body">
+                            <tr><td colspan="6" class="text-center py-8 text-white/30">Cargando productos...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
             <div class="bg-gris-oscuro border border-white/5 rounded-2xl p-8 reveal">
                 <h3 class="font-bebas text-[28px] tracking-[2px] mb-6 border-b border-white/10 pb-4">Últimas <span class="text-white">Ventas y Pedidos</span></h3>
                 <div class="overflow-x-auto border border-white/5 rounded-xl hide-scrollbar">
@@ -209,6 +231,67 @@
         <div>
             <div class="font-bold mb-[3px]" id="toast-title">¡Operación exitosa!</div>
             <div class="text-[13px] text-white/50" id="toast-desc">El inventario ha sido actualizado.</div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-editar">
+        <div class="modal-content">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="font-bebas text-[28px] tracking-[2px]">✏️ Editar <span class="text-amarillo">Producto</span></h3>
+                <button onclick="cerrarModalEditar()" class="text-white/40 hover:text-white text-[24px] cursor-pointer bg-transparent border-none">&times;</button>
+            </div>
+            <form id="form-editar-producto" onsubmit="guardarEdicionProducto(event)">
+                <input type="hidden" id="edit-id-producto">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div class="md:col-span-2">
+                        <label class="block text-[11px] font-bold tracking-[1.5px] uppercase text-white/40 mb-2">Nombre</label>
+                        <input type="text" id="edit-nombre" required class="w-full bg-white/5 border border-white/10 rounded-[10px] py-3 px-4 text-[14px] text-white outline-none focus:border-amarillo/50">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold tracking-[1.5px] uppercase text-white/40 mb-2">Marca</label>
+                        <input type="text" id="edit-marca" required class="w-full bg-white/5 border border-white/10 rounded-[10px] py-3 px-4 text-[14px] text-white outline-none focus:border-amarillo/50">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold tracking-[1.5px] uppercase text-white/40 mb-2">SKU</label>
+                        <input type="text" id="edit-sku" class="w-full bg-white/5 border border-white/10 rounded-[10px] py-3 px-4 text-[14px] text-white outline-none focus:border-amarillo/50">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold tracking-[1.5px] uppercase text-white/40 mb-2">Categoría</label>
+                        <select id="edit-categoria" class="w-full bg-white/5 border border-white/10 rounded-[10px] py-3 px-4 text-[14px] text-white outline-none focus:border-amarillo/50">
+                            <option value="1">Motor</option>
+                            <option value="2">Frenos</option>
+                            <option value="3">Suspensión</option>
+                            <option value="4">Eléctrico</option>
+                            <option value="5">Filtros</option>
+                            <option value="6">Afinación</option>
+                            <option value="7">Transmisión</option>
+                            <option value="8">Carrocería</option>
+                            <option value="9">Lubricantes</option>
+                            <option value="10">Otros</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold tracking-[1.5px] uppercase text-white/40 mb-2">Precio ($)</label>
+                        <input type="number" id="edit-precio" required min="1" step="0.01" class="w-full bg-white/5 border border-white/10 rounded-[10px] py-3 px-4 text-[14px] text-white outline-none focus:border-amarillo/50">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold tracking-[1.5px] uppercase text-white/40 mb-2">Stock</label>
+                        <input type="number" id="edit-stock" required min="0" class="w-full bg-white/5 border border-white/10 rounded-[10px] py-3 px-4 text-[14px] text-white outline-none focus:border-amarillo/50">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold tracking-[1.5px] uppercase text-white/40 mb-2">Stock Mínimo</label>
+                        <input type="number" id="edit-stock-minimo" required min="1" class="w-full bg-white/5 border border-white/10 rounded-[10px] py-3 px-4 text-[14px] text-white outline-none focus:border-amarillo/50">
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-[11px] font-bold tracking-[1.5px] uppercase text-white/40 mb-2">Descripción</label>
+                    <textarea id="edit-descripcion" required rows="3" class="w-full bg-white/5 border border-white/10 rounded-[10px] py-3 px-4 text-[14px] text-white outline-none focus:border-amarillo/50 resize-none"></textarea>
+                </div>
+                <div class="flex justify-end gap-3 pt-4 border-t border-white/5">
+                    <button type="button" onclick="cerrarModalEditar()" class="bg-white/10 text-white/70 font-bold text-[13px] tracking-[2px] uppercase py-3 px-6 rounded-[10px] border-none cursor-pointer hover:bg-white/20 transition">Cancelar</button>
+                    <button type="submit" class="bg-amarillo text-black font-bold text-[13px] tracking-[2px] uppercase py-3 px-6 rounded-[10px] border-none cursor-pointer hover:bg-yellow-500 transition shadow-[0_4px_20px_rgba(250,204,21,0.25)]">Guardar Cambios</button>
+                </div>
+            </form>
         </div>
     </div>
     <script src="config.js"></script>
@@ -238,7 +321,7 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ id_rol: usuarioSesion.id_rol })
                 });
-                
+
                 const data = await response.json();
                 if (!response.ok) throw new Error(data.error || "Error del servidor");
 
@@ -286,7 +369,131 @@
                         `;
                     });
                 }
+
+                cargarTodosProductos();
             } catch (error) { mostrarToast("Error de conexión", error.message, false); }
+        }
+
+        async function cargarTodosProductos() {
+            const tbProductos = document.getElementById("tabla-productos-body");
+            try {
+                const response = await fetch(`${API_BASE}/admin/todos_productos.php`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id_rol: usuarioSesion.id_rol })
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || "Error al cargar productos");
+
+                tbProductos.innerHTML = "";
+                if (!data.productos || data.productos.length === 0) {
+                    tbProductos.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-white/40">No hay productos registrados.</td></tr>`;
+                    return;
+                }
+
+                data.productos.forEach(p => {
+                    const estado = p.activo == 1 ? 'activo' : 'inactivo';
+                    const estadoTexto = p.activo == 1 ? 'Activo' : 'Inactivo';
+                    const precio = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(p.precio || 0);
+                    tbProductos.innerHTML += `
+                        <tr>
+                            <td class="font-bold text-white/50">#${p.id_producto}</td>
+                            <td class="font-medium text-white">${p.nombre}</td>
+                            <td class="text-white font-bold">${precio}</td>
+                            <td class="${p.stock <= p.stock_minimo ? 'text-red-400 font-bold' : 'text-white/70'}">${p.stock}</td>
+                            <td><span class="badge ${estado}">${estadoTexto}</span></td>
+                            <td>
+                                <div class="flex gap-2">
+                                    <button onclick="abrirModalEditar(${p.id_producto})" class="bg-blue-500/10 text-blue-400 border border-blue-500/20 text-[10px] font-bold uppercase tracking-[1px] py-1.5 px-3 rounded cursor-pointer hover:bg-blue-500/20 transition">Editar</button>
+                                    <button onclick="eliminarProducto(${p.id_producto})" class="bg-red-500/10 text-red-400 border border-red-500/20 text-[10px] font-bold uppercase tracking-[1px] py-1.5 px-3 rounded cursor-pointer hover:bg-red-500/20 transition">Eliminar</button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (error) {
+                tbProductos.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-red-400">Error al cargar productos: ${error.message}</td></tr>`;
+            }
+        }
+
+        // ========== EDITAR PRODUCTO ==========
+        function abrirModalEditar(idProducto) {
+            fetch(`${API_BASE}/admin/producto_detalle.php`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id_rol: usuarioSesion.id_rol, id_producto: idProducto })
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.status !== 'success' || !data.producto) throw new Error(data.error || 'Error al obtener producto');
+                const p = data.producto;
+                document.getElementById('edit-id-producto').value = p.id_producto;
+                document.getElementById('edit-nombre').value = p.nombre;
+                document.getElementById('edit-marca').value = p.marca;
+                document.getElementById('edit-sku').value = p.sku || '';
+                document.getElementById('edit-categoria').value = p.id_categoria;
+                document.getElementById('edit-precio').value = p.precio;
+                document.getElementById('edit-stock').value = p.stock;
+                document.getElementById('edit-stock-minimo').value = p.stock_minimo;
+                document.getElementById('edit-descripcion').value = p.descripcion;
+                document.getElementById('modal-editar').classList.add('active');
+            })
+            .catch(error => mostrarToast('Error', error.message, false));
+        }
+
+        function cerrarModalEditar() {
+            document.getElementById('modal-editar').classList.remove('active');
+        }
+
+        async function guardarEdicionProducto(event) {
+            event.preventDefault();
+            const idProducto = document.getElementById('edit-id-producto').value;
+            const data = {
+                id_rol: usuarioSesion.id_rol,
+                id_usuario: usuarioSesion.id_usuario,
+                id_producto: idProducto,
+                nombre: document.getElementById('edit-nombre').value.trim(),
+                marca: document.getElementById('edit-marca').value.trim(),
+                sku: document.getElementById('edit-sku').value.trim(),
+                id_categoria: document.getElementById('edit-categoria').value,
+                precio: parseFloat(document.getElementById('edit-precio').value),
+                stock: parseInt(document.getElementById('edit-stock').value),
+                stock_minimo: parseInt(document.getElementById('edit-stock-minimo').value),
+                descripcion: document.getElementById('edit-descripcion').value.trim()
+            };
+
+            try {
+                const response = await fetch(`${API_BASE}/admin/editar_producto.php`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const res = await response.json();
+                if (!response.ok) throw new Error(res.error || 'Error al editar producto');
+
+                mostrarToast('Producto Actualizado', `"${res.nombre || data.nombre}" editado correctamente.`, true);
+                cerrarModalEditar();
+                cargarDashboard();
+            } catch (error) {
+                mostrarToast('Error', error.message, false);
+            }
+        }
+
+        // ========== ELIMINAR PRODUCTO ==========
+        function eliminarProducto(idProducto) {
+            if (!confirm('¿Estás seguro de eliminar este producto? Esta acción no se puede deshacer.')) return;
+            fetch(`${API_BASE}/admin/eliminar_producto.php`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id_rol: usuarioSesion.id_rol, id_producto: idProducto })
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.status !== 'success') throw new Error(data.error || 'Error al eliminar');
+                mostrarToast('Producto Eliminado', data.mensaje || 'Producto eliminado del catálogo.', true);
+                cargarDashboard();
+            })
+            .catch(error => mostrarToast('Error', error.message, false));
         }
 
         async function procesarAjusteStock(event) {
@@ -316,9 +523,6 @@
             finally { btn.disabled = false; btn.innerHTML = btnTextOriginal; btn.classList.remove("opacity-50"); }
         }
 
-        // ==========================================
-        // NUEVA FUNCIÓN: AGREGAR PRODUCTO A LA BD
-        // ==========================================
         async function agregarProducto(event) {
             event.preventDefault();
             const btn = document.getElementById("btn-submit-producto");
@@ -328,13 +532,9 @@
 
             const form = event.target;
             const formData = new FormData(form);
-            
-            // Adjuntamos tu rol para que el PHP de seguridad te deje pasar
             formData.append('id_rol', usuarioSesion.id_rol);
 
             try {
-                // Fíjate que al usar FormData, NO le ponemos "Content-Type" manual. 
-                // El navegador le pone automáticamente el "multipart/form-data" correcto para subir la imagen.
                 const response = await fetch(`${API_BASE}/admin/agregar_producto.php`, {
                     method: 'POST',
                     body: formData
@@ -344,7 +544,8 @@
                 if (!response.ok) throw new Error(data.error || "Ocurrió un error al guardar el producto");
 
                 mostrarToast("¡Producto Guardado!", `El producto ${data.nombre} fue añadido al catálogo.`, true);
-                form.reset(); // Limpiamos el formulario para el siguiente
+                form.reset();
+                cargarDashboard();
                 
             } catch (error) {
                 mostrarToast("Error", error.message, false);
